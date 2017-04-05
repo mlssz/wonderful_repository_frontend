@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ex</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+  <link rel="stylesheet" href="/static/css/iconfont/material-icons.css" type="text/css" media="all">
+  <link rel="stylesheet" href="/static/css/Roboto/roboto.css" type="text/css" media="all">
+</head>
+<body>
+      <div id='root'></div>
+      <div id='container'></div>
+      <script src="/static/dist/signPage.js"></script>
+    <div id="tips_box" style="display:none;">
+        <p>点击右上角菜单<br>选择用浏览器打开</p>
+    </div>
+    <script type="text/javascript" >
+        function isWeixinBrowser(){
+          var ua = navigator.userAgent.toLowerCase();
+          return (/micromessenger/.test(ua)) ? true : false ;
+        }
+        
+        window.onload = function (){
+          var tipbox = document.getElementById('tips_box');
+
+          tipbox.addEventListener('click', function() {
+            tipbox.style.display = 'none'
+          })
+
+          if(isWeixinBrowser()){
+            tipbox.style.display = 'block'
+          }else{
+            window.ReactInit({
+              key: 'value'
+            });
+          }
+        }
+    </script>
+      <style type="text/css">
+        #tips_box {background:rgba(0,0,0,0.9) url(http://cdn.lydiabox.com/assets/officialsite/img/arrow.png) no-repeat top right; position:absolute; top:0; left:0; width:100%; height:100%; text-align:center; line-height:40px; padding-top:80px;}
+        #tips_box img {margin-left:5px; margin-right:5px; width:32px; height:32px; display:inline; vertical-align:middle;}
+        #tips_box button {background:none; border:1px solid #fff; border-radius:3px; color:#fff; font-size:18px; width:120px; height:50px; line-height:50px; position:absolute; bottom:140px; left:50%; margin-left:-60px; cursor:pointer;}
+        #tips_box {background-size:52px 40px; color: #f5f5f5;}
+        body{
+          background-color: rgb(36,38,40)
+        }
+      </script>
+</body>
+</html> 
