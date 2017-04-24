@@ -14,21 +14,15 @@ export default class Mean extends React.Component {
         super(props)
         this.state = {
             open: false,
+            page: <Putaway/>,
+            title: "入库",
         }
-        this.handleToggle = this.handleToggle.bind(this)
-        this.handleNestedListToggle = this.handleNestedListToggle.bind(this)
     }
 
-    handleToggle() {
+    changePage(page, title) {
         this.setState({
-            open: !this.state.open,
-        })
-    }
-
-    handleNestedListToggle(item) {
-        console.log(item.state.open)
-        this.setState({
-            open: item.state.open,
+            page,
+            title
         })
     }
 
