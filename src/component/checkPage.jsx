@@ -159,7 +159,7 @@ export default class CheckPage extends Component {
         <Paper style={paperStyle} zDepth={1}
             children={<RepositoryInfoLine materials={repo.stored_count} available_space={repo.available_space} />}
         />
-          <img src="/static/img/Locations.png" style={{width: 426, margin: "20px auto"}}/>
+          <img src="/static/img/locations.png" style={{width: 426, margin: "20px auto"}}/>
           <div style={locationStyle}>
           <h1>A区</h1>
             {A}
