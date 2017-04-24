@@ -1,25 +1,25 @@
-import React from 'react';
+import React from "react"
 
 export default class SelectPageNum extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
 			startPage: 1,
 			select: 1,
 		}
-		this.changePage = this.changePage.bind(this);
+		this.changePage = this.changePage.bind(this)
 	}
 
 	changePage(i) {
-		this.props.setPageNum(i);
+		this.props.setPageNum(i)
 		this.setState({
 			select: i
 		})
 	}
 
 	render() {
-		let startPage = this.state.startPage;
-		startPage = startPage - 7 < 0 ? 1 : startPage - 7;
+		let startPage = this.state.startPage
+		startPage = startPage - 7 < 0 ? 1 : startPage - 7
 		return (
 			<div style={{textAlign:"center",marginTop:20}}>
 				<Number number={startPage+0} changePage={this.changePage} selected={startPage+0===this.state.select}/>
@@ -36,7 +36,7 @@ export default class SelectPageNum extends React.Component {
 
 class Number extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 	}
 
 	render() {
@@ -44,17 +44,17 @@ class Number extends React.Component {
 			paddingLeft: 10,
 			paddingRight: 10,
 			borderWidth: 1,
-			borderStyle: 'solid',
-			borderColor: 'white',
+			borderStyle: "solid",
+			borderColor: "white",
 		}
 		let item_select = {
 			paddingLeft: 10,
 			paddingRight: 10,
 			borderWidth: 1,
-			borderStyle: 'solid',
-			borderColor: 'black',
-			backgroundColor: '#0BACD6',
-			color: 'white',
+			borderStyle: "solid",
+			borderColor: "black",
+			backgroundColor: "#0BACD6",
+			color: "white",
 		}
 		return (
 			<span style={this.props.selected?item_select:item_normal} onClick={()=>this.props.changePage(this.props.number)}>
