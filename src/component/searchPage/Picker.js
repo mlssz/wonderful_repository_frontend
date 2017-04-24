@@ -12,6 +12,8 @@ export default class Picker extends React.Component {
 		this.setState({
 			select: i
 		})
+		let type = ['all', 'in', 'move', 'out'];
+		this.props.setPageType(type[i - 1]);
 	}
 
 	render() {
@@ -37,6 +39,9 @@ export default class Picker extends React.Component {
 			paddingRight: 10,
 			fontSize: 20,
 			color: 'gray',
+			borderWidth: 1,
+			borderStyle: 'solid',
+			borderColor: 'white',
 		};
 		return (
 			<div style={picker}>

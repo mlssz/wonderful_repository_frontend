@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import Mean from './component/mean.js'
-import SearchPage from './component/SearchPage.js'
 import injectTapEventPlugin from "react-tap-event-plugin"
 
 injectTapEventPlugin()
@@ -9,6 +8,18 @@ injectTapEventPlugin()
 class Body extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			page: false,
+			title: '标题',
+		}
+		this.changePage = this.changePage.bind(this);
+	}
+
+	changePage(page, title) {
+		this.setState({
+			page,
+			title
+		});
 	}
 
 	render() {
@@ -39,11 +50,11 @@ class Body extends React.Component {
 			<div className='body' style={bodyStyle}>
 				<div style={leftStyle}>
 					<div style={headStyle}>WonderFul</div>
-					<Mean/>
+					<Mean changePage={this.changePage}/>
 				</div>
 				<div style={rightStyle}>
-					<div style={headStyle}>标题</div>
-					<SearchPage/>
+					<div style={headStyle}>{this.state.title}</div>
+					{this.state.page}
 				</div>
 			</div>
 		)

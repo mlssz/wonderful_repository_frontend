@@ -5,7 +5,8 @@ import {
 } from 'material-ui/List';
 import FontIcon from 'material-ui/FontIcon';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
+import SearchPage from './SearchPage.js'
+import Putaway from './Putaway.js';
 
 export default class Mean extends React.Component {
 
@@ -43,6 +44,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={1}
                       primaryText="入库"
+                      onClick={()=>this.props.changePage(<Putaway/>,'入库')}
                     />,
                     <ListItem
                       key={2}
@@ -63,6 +65,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={6}
                       primaryText="信息查询"
+                      onClick={()=>this.props.changePage(<SearchPage/>,'信息查询')}
                     />,
                     <ListItem
                       key={7}

@@ -8,6 +8,7 @@ import {
 	TableRowColumn
 } from 'material-ui/Table';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import SelfTableRow from './TableRow.js'
 
 export default class ShowTable extends React.Component {
 	constructor(props) {
@@ -35,26 +36,7 @@ export default class ShowTable extends React.Component {
 				    <TableBody
 				    	displayRowCheckbox={false}
 				    	showRowHover={true}>
-				      <TableRow>
-				        <TableRowColumn>1</TableRowColumn>
-				        <TableRowColumn>John Smith</TableRowColumn>
-				        <TableRowColumn>Employed</TableRowColumn>
-				      </TableRow>
-				      <TableRow>
-				        <TableRowColumn>2</TableRowColumn>
-				        <TableRowColumn>Randal White</TableRowColumn>
-				        <TableRowColumn>Unemployed</TableRowColumn>
-				      </TableRow>
-				      <TableRow>
-				        <TableRowColumn>3</TableRowColumn>
-				        <TableRowColumn>Stephanie Sanders</TableRowColumn>
-				        <TableRowColumn>Employed</TableRowColumn>
-				      </TableRow>
-				      <TableRow>
-				        <TableRowColumn>4</TableRowColumn>
-				        <TableRowColumn>Steve Brown</TableRowColumn>
-				        <TableRowColumn>Employed</TableRowColumn>
-				      </TableRow>
+				    	<SelfTableRow/>
 				    </TableBody>
 				</Table>
 			</MuiThemeProvider>
