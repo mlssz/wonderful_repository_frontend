@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import Mean from "./component/mean.js"
 import injectTapEventPlugin from "react-tap-event-plugin"
+import Putaway from "./component/Putaway.js"
 
 injectTapEventPlugin()
 
@@ -9,8 +10,8 @@ class Body extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			page: false,
-			title: "标题",
+			page: <Putaway/>,
+			title: "入库",
 		}
 		this.changePage = this.changePage.bind(this)
 	}
