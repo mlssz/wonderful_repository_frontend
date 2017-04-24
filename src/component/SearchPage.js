@@ -1,29 +1,29 @@
-import React from 'react';
-import ShowTable from './searchPage/showTable.js'
-import Picker from './searchPage/Picker.js'
-import SelectPageNum from './searchPage/SelectPageNum.js'
+import React from "react"
+import ShowTable from "./searchPage/showTable.js"
+import Picker from "./searchPage/Picker.js"
+import SelectPageNum from "./searchPage/SelectPageNum.js"
 
 export default class SearchPage extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 		this.state = {
 			pageNum: 1,
-			pageType: 'all',
+			pageType: "all",
 		}
-		this.setPageNum = this.setPageNum.bind(this);
-		this.setPageType = this.setPageType.bind(this);
+		this.setPageNum = this.setPageNum.bind(this)
+		this.setPageType = this.setPageType.bind(this)
 	}
 
 	setPageNum(pageNum) {
 		this.setState({
 			pageNum
-		});
+		})
 	}
 
 	setPageType(pageType) {
 		this.setState({
 			pageType
-		});
+		})
 	}
 
 	render() {

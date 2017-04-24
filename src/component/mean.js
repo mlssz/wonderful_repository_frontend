@@ -1,36 +1,36 @@
-import React from 'react';
+import React from "react"
 import {
     List,
     ListItem
-} from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import SearchPage from './SearchPage.js'
-import Putaway from './Putaway.js';
+} from "material-ui/List"
+import FontIcon from "material-ui/FontIcon"
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import SearchPage from "./SearchPage.js"
+import Putaway from "./Putaway.js"
 
 export default class Mean extends React.Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             open: false,
-        };
-        this.handleToggle = this.handleToggle.bind(this);
-        this.handleNestedListToggle = this.handleNestedListToggle.bind(this);
+        }
+        this.handleToggle = this.handleToggle.bind(this)
+        this.handleNestedListToggle = this.handleNestedListToggle.bind(this)
     }
 
     handleToggle() {
         this.setState({
             open: !this.state.open,
-        });
-    };
+        })
+    }
 
     handleNestedListToggle(item) {
         console.log(item.state.open)
         this.setState({
             open: item.state.open,
-        });
-    };
+        })
+    }
 
     render() {
         return (
@@ -44,7 +44,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={1}
                       primaryText="入库"
-                      onClick={()=>this.props.changePage(<Putaway/>,'入库')}
+                      onClick={()=>this.props.changePage(<Putaway/>,"入库")}
                     />,
                     <ListItem
                       key={2}
@@ -65,7 +65,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={6}
                       primaryText="信息查询"
-                      onClick={()=>this.props.changePage(<SearchPage/>,'信息查询')}
+                      onClick={()=>this.props.changePage(<SearchPage/>,"信息查询")}
                     />,
                     <ListItem
                       key={7}
@@ -90,6 +90,6 @@ export default class Mean extends React.Component {
                 />
                 </List>
             </MuiThemeProvider>
-        );
+        )
     }
 }
