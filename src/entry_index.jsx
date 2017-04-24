@@ -2,6 +2,8 @@ import React from "react"
 import ReactDOM from "react-dom"
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
+import {Card} from 'material-ui/Card'
+
 import Mean from "./component/mean.js"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import injectTapEventPlugin from "react-tap-event-plugin"
@@ -10,27 +12,9 @@ import Putaway from "./component/Putaway.js"
 injectTapEventPlugin()
 
 let bodyStyle = {
-    display: "flex",
-    padding: 0,
-    margin: 0,
-    minHeight: "100%",
-}
-let leftStyle = {
-    display: "inline-block",
-    width: "200px",
-    backgroundColor: "#EAEAEA",
-    height: "100%",
-}
-let headStyle = {
-    padding: 5,
-    backgroundColor: "#EAEAEA",
-    height: "20px",
-    textAlign: "center",
-    fontSize: "20px",
-    lineHeight: "20px",
-}
-let rightStyle = {
-    flex: 1,
+  maxWidth: 1000,
+  margin: "50px auto",
+  padding: 24
 }
 
 class Body extends React.Component {
@@ -72,9 +56,9 @@ class Body extends React.Component {
                     >
                         <Mean changePage={this.changePage}/>
                     </Drawer>
-                    <div className="body" style={bodyStyle}>
+                    <Card style={bodyStyle}>
                         {this.state.page}
-                    </div>
+                    </Card>
                 </div>
             </MuiThemeProvider>
         )
