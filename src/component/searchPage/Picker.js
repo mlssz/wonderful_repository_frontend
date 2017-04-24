@@ -12,7 +12,7 @@ export default class Picker extends React.Component {
 		this.setState({
 			select: i
 		})
-		let type = ["all", "in", "move", "out"]
+		let type = ["all", "500", "501", "502"]
 		this.props.setPageType(type[i - 1])
 	}
 

@@ -10,28 +10,20 @@ let inputStyle = {
 };
 
 export default class PutAway extends React.Component {
-
 	constructor(props) {
-		super(props)
+		super(props);
 		this.state = {
 			number: 1,
 			goods: [{
+				code: "",
 				type: "",
 				num: "",
-				estimated_export_time: "",
-				description: ""
+				out: ""
 			}],
 		}
-		this.addRow = this.addRow.bind(this);
 		this.renderRow = this.renderRow.bind(this);
+		this.addRow = this.addRow.bind(this);
 		this.updateGoods = this.updateGoods.bind(this);
-	}
-
-	addRow() {
-		let number = this.state.number
-		this.setState({
-			number: number + 1
-		})
 	}
 
 	renderRow() {
@@ -40,6 +32,13 @@ export default class PutAway extends React.Component {
 		for (let i = 0; i < number; i++)
 			dom.push(<Row key={i} index={i} updateGoods={this.updateGoods}/>)
 		return dom;
+	}
+
+	addRow() {
+		let number = this.state.number
+		this.setState({
+			number: number + 1
+		})
 	}
 
 	updateGoods(good, index) {
@@ -65,6 +64,7 @@ export default class PutAway extends React.Component {
       		</div>
 		)
 	}
+
 }
 
 class Row extends React.Component {
@@ -72,45 +72,18 @@ class Row extends React.Component {
 		super(props)
 		this.state = {
 			good: {
+				code: "",
 				type: "",
 				num: "",
-				estimated_export_time: "",
-				description: ""
+				out: ""
 			}
 		}
 		this.updateValue = this.updateValue.bind(this);
 	}
 
-	updateValue(val) {
+	updateValue(val, type) {
 		let good = this.state.good;
-		good.type = val;
-		this.setState({
-			good
-		})
-		this.props.updateGoods(good, this.props.index)
-	}
-
-	updateNum(val) {
-		let good = this.state.good;
-		good.num = val;
-		this.setState({
-			good
-		})
-		this.props.updateGoods(good, this.props.index)
-	}
-
-	updateTime(val) {
-		let good = this.state.good;
-		good.estimated_export_time = val;
-		this.setState({
-			good
-		})
-		this.props.updateGoods(good, this.props.index)
-	}
-
-	updateDes(val) {
-		let good = this.state.good;
-		good.description = val;
+		good[type] = val;
 		this.setState({
 			good
 		})
@@ -120,29 +93,29 @@ class Row extends React.Component {
 	render() {
 		return (
 			<div style={{display:"flex"}}>
+				<TextField
+                    floatingLabelText="物资编码"
+                    style={inputStyle}
+                    value={this.state.good.code}
+                    onChange={(e,val)=>this.updateValue(val,"code")}
+                />
                 <TextField
                     floatingLabelText="物资类型"
                     style={inputStyle}
                     value={this.state.good.type}
-                    onChange={(e,val)=>this.updateValue(val)}
+                    onChange={(e,val)=>this.updateValue(val,"type")}
                 />
                 <TextField
                     floatingLabelText="数量"
                     style={inputStyle}
                     value={this.state.good.num}
-                    onChange={(e,val)=>this.updateNum(val)}
+                    onChange={(e,val)=>this.updateValue(val,"num")}
                 />
                 <TextField
-                    floatingLabelText="估计出库时间"
+                    floatingLabelText="去向"
                     style={inputStyle}
-                    value={this.state.good.estimated_export_time}
-                    onChange={(e,val)=>this.updateTime(val)}
-                />
-                <TextField
-                    floatingLabelText="物资描述"
-                    style={inputStyle}
-                    value={this.state.good.description}
-                    onChange={(e,val)=>this.updateDes(val)}
+                    value={this.state.good.out}
+                    onChange={(e,val)=>this.updateValue(val,"out")}
                 />
             </div>
 		)

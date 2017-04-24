@@ -21,7 +21,8 @@ export default class SelfTableRow extends React.Component {
 		};
 		let status = ['未开始', '进行中', '已完成', '已取消']
 		return (
-			<TableRow>
+			<TableRow
+				hoverable={true}>
 				<TableRowColumn>{this.props.index}</TableRowColumn>
 				<TableRowColumn>{action[good.action]||"异常"}</TableRowColumn>
 				<TableRowColumn>{material.id}</TableRowColumn>

@@ -27,25 +27,21 @@ export default class ShowTable extends React.Component {
         return (
             <MuiThemeProvider>
                 <Table>
-                  <TableHeader
-                      displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>#</TableHeaderColumn>
-                      <TableHeaderColumn>操作</TableHeaderColumn>
-                      <TableHeaderColumn>类型</TableHeaderColumn>
-                      <TableHeaderColumn>起始位置</TableHeaderColumn>
-                      <TableHeaderColumn>到达位置</TableHeaderColumn>
-                      <TableHeaderColumn>执行状态</TableHeaderColumn>
-                      <TableHeaderColumn>创建时间</TableHeaderColumn>
-                      <TableHeaderColumn>更新时间</TableHeaderColumn>
-                      <TableHeaderColumn>操作文员</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody
-                      displayRowCheckbox={false}
-                      showRowHover={true}>
+                    <TableBody displayRowCheckbox={false}>
+                        <TableRow>
+                            <TableRowColumn style={{color:"gray"}}>#</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>操作</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>编号</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>类型</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>起始位置</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>到达位置</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>执行状态</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>创建时间</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>更新时间</TableRowColumn>
+                            <TableRowColumn style={{color:"gray"}}>操作文员</TableRowColumn>
+                        </TableRow>
                         {this.showRow()}
-                  </TableBody>
+                    </TableBody>
                 </Table>
             </MuiThemeProvider>
         )

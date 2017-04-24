@@ -43,16 +43,10 @@ class Number extends React.Component {
 		let item_normal = {
 			paddingLeft: 10,
 			paddingRight: 10,
-			borderWidth: 1,
-			borderStyle: "solid",
-			borderColor: "white",
 		}
 		let item_select = {
 			paddingLeft: 10,
 			paddingRight: 10,
-			borderWidth: 1,
-			borderStyle: "solid",
-			borderColor: "black",
 			backgroundColor: "#0BACD6",
 			color: "white",
 		}
