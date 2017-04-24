@@ -7,6 +7,7 @@ import FontIcon from "material-ui/FontIcon"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import SearchPage from "./SearchPage.js"
 import Putaway from "./Putaway.js"
+import CheckPage from "./checkPage.jsx"
 
 export default class Mean extends React.Component {
 
@@ -61,6 +62,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={5}
                       primaryText="盘点"
+                      onClick={()=>this.props.changePage(<CheckPage/>, "盘点")}
                     />,
                     <ListItem
                       key={6}
