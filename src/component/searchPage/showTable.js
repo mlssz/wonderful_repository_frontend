@@ -19,7 +19,7 @@ export default class ShowTable extends React.Component {
     showRow() {
         let goods = this.props.goods;
         return (
-            goods.map((good, i) => <SelfTableRow good={good} key={i}/>)
+            goods.map((good, i) => <SelfTableRow good={good} key={i} index={i}/>)
         )
     }
 
