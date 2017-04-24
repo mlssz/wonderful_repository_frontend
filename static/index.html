@@ -1,37 +1,10 @@
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>ex</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
-    <link rel="stylesheet" href="/static/css/iconfont/material-icons.css" type="text/css" media="all">
-    <link rel="stylesheet" href="/static/css/Roboto/roboto.css" type="text/css" media="all">
-  </head>
-  <body>
-    <div id='root'>
-    </div>
-    <script src="/static/dist/loginPage.js"></script>
-    <div id="tips_box" style="display:none;">
-        <p>点击右上角菜单<br>选择用浏览器打开</p>
-    </div>
-    <script type="text/javascript" >
-        function isWeixinBrowser(){
-          var ua = navigator.userAgent.toLowerCase();
-          return (/micromessenger/.test(ua)) ? true : false ;
-        }
-        
-        window.onload = function (){
-          var tipbox = document.getElementById('tips_box');
+	<head>
+		<meta charset="utf-8">
 
-          window.ReactInit({
-            key: 'value'
-          });
-        }
-    </script>
-    <style type="text/css">
-      body{
-        background-color: rgb(36,38,40)
-      }
-    </script>
-
-  </body>
-</html> 
+	</head>
+	<body style="margin:0">
+		<div id='content'></div>
+		<script src="/static/dist/signPage.js"></script>
+	</body>
+</html>

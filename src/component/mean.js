@@ -1,0 +1,92 @@
+import React from 'react';
+import {
+    List,
+    ListItem
+} from 'material-ui/List';
+import FontIcon from 'material-ui/FontIcon';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+
+export default class Mean extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            open: false,
+        };
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleNestedListToggle = this.handleNestedListToggle.bind(this);
+    }
+
+    handleToggle() {
+        this.setState({
+            open: !this.state.open,
+        });
+    };
+
+    handleNestedListToggle(item) {
+        console.log(item.state.open)
+        this.setState({
+            open: item.state.open,
+        });
+    };
+
+    render() {
+        return (
+            <MuiThemeProvider>
+                <List>
+                <ListItem
+                    primaryText="物资"
+                    initiallyOpen={false}
+                    primaryTogglesNestedList={true}
+                    nestedItems={[
+                    <ListItem
+                      key={1}
+                      primaryText="入库"
+                    />,
+                    <ListItem
+                      key={2}
+                      primaryText="移动"
+                    />,
+                    <ListItem
+                      key={3}
+                      primaryText="出库"
+                    />,
+                    <ListItem
+                      key={4}
+                      primaryText="异常"
+                    />,
+                    <ListItem
+                      key={5}
+                      primaryText="盘点"
+                    />,
+                    <ListItem
+                      key={6}
+                      primaryText="信息查询"
+                    />,
+                    <ListItem
+                      key={7}
+                      primaryText="出库统计"
+                    />,
+                  ]}
+                />                
+                <ListItem
+                    primaryText="人员"
+                    initiallyOpen={false}
+                    primaryTogglesNestedList={true}
+                    nestedItems={[
+                    <ListItem
+                      key={1}
+                      primaryText="管理"
+                    />,
+                    <ListItem
+                      key={2}
+                      primaryText="查看任务记录"
+                    />
+                  ]}
+                />
+                </List>
+            </MuiThemeProvider>
+        );
+    }
+}

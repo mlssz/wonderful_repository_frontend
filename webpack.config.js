@@ -14,8 +14,8 @@ let webpack = require("webpack")
 let defaultStaticDir = "static"
 let entry_dir = join(__dirname, "./src")
 
-let _static_dir = process.env.STATICDIR ? 
-  process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, "").trim() : defaultStaticDir
+let _static_dir = process.env.STATICDIR ?
+    process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, "").trim() : defaultStaticDir
 
 let static_dir = join(__dirname, _static_dir)
 let node_env = process.env.NODE_ENV
@@ -31,25 +31,25 @@ let webpackDefineConfig = {
 
 if (!isDebug) {
     plugins = plugins.concat([
-      // split vendor js into its own file
-      new webpack.optimize.CommonsChunkPlugin({
-        name: "vendor",
-        minChunks: function (module) {
-          // any required modules inside node_modules are extracted to vendor
-          return (
-            module.resource && /\.js$/.test(module.resource) &&
-            module.resource.indexOf(
-              join(__dirname, "./node_modules")
-            ) === 0
-          )
-        }
-      }),
-      // extract webpack runtime and module manifest to its own file in order to
-      // prevent vendor hash from being updated whenever app bundle is updated
-      new webpack.optimize.CommonsChunkPlugin({
-        name: "manifest",
-        chunks: ["vendor"]
-      })
+        // split vendor js into its own file
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            minChunks: function(module) {
+                // any required modules inside node_modules are extracted to vendor
+                return (
+                    module.resource && /\.js$/.test(module.resource) &&
+                    module.resource.indexOf(
+                        join(__dirname, "./node_modules")
+                    ) === 0
+                )
+            }
+        }),
+        // extract webpack runtime and module manifest to its own file in order to
+        // prevent vendor hash from being updated whenever app bundle is updated
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "manifest",
+            chunks: ["vendor"]
+        })
     ])
 }
 
@@ -63,17 +63,13 @@ plugins = plugins.concat([
         }),
         new webpack.DefinePlugin(webpackDefineConfig)
     ])
-// ----------------------------------Plugin---------------------------------------
+    // ----------------------------------Plugin---------------------------------------
 
 let webpackconfig = {
     devtool: isDebug ? "eval" : "#source-map",
     entry: {
-      //name: path
-      rootPage: [join(entry_dir, "./entry_root.jsx")],
-      signPage: [join(entry_dir, "./entry_index.jsx")],
-      loginPage: [join(entry_dir, "./entry_login.jsx")],
-      errorPage: [join(entry_dir, "./entry_error.jsx")],
-      materil: [join(entry_dir,"./entry.jsx")],
+        //name: path
+        signPage: [join(entry_dir, "./entry_index.jsx")],
     },
     output: {
         //where compiled files be put

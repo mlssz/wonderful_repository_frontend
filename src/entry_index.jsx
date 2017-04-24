@@ -1,31 +1,54 @@
-/* the page manager 
- *
- *
- * Author: Mephis Pheies
- * Email: mephistommm@gmail.com
- * Update: 09.03.2016
- */
-import React from "react"
-import ReactDOM from "react-dom"
+import React from 'react';
+import ReactDOM from "react-dom";
+import Mean from './component/mean.js'
+import SearchPage from './component/SearchPage.js'
 import injectTapEventPlugin from "react-tap-event-plugin"
- 
-import PageCard from "./component/card/PageCard.jsx"
-import {GeekCardFoot} from "./component/AuthorAbout.jsx"
 
 injectTapEventPlugin()
 
-let headImage = require("./img/Head.jpg")
+class Body extends React.Component {
+	constructor(props) {
+		super(props);
+	}
 
-// a glue fucntion to glue django template and React.
-window.ReactInit = function glue() {
+	render() {
+		let bodyStyle = {
+			display: 'flex',
+			padding: 0,
+			margin: 0,
+			minHeight: '100%',
+		}
+		let leftStyle = {
+			display: 'inline-block',
+			width: '200px',
+			backgroundColor: '#EAEAEA',
+			height: '100%',
+		}
+		let headStyle = {
+			padding: 5,
+			backgroundColor: '#EAEAEA',
+			height: '20px',
+			textAlign: 'center',
+			fontSize: '20px',
+			lineHeight: '20px',
+		}
+		let rightStyle = {
+			flex: 1,
+		}
+		return (
+			<div className='body' style={bodyStyle}>
+				<div style={leftStyle}>
+					<div style={headStyle}>WonderFul</div>
+					<Mean/>
+				</div>
+				<div style={rightStyle}>
+					<div style={headStyle}>标题</div>
+					<SearchPage/>
+				</div>
+			</div>
+		)
+	}
 
-  let __PageCard = (props) => (<PageCard {...props}
-                          title={"Sign Up!"}
-                          subtitle={"2016“龙驰杯”浙江·高校·Hackathon !"}
-                          img={headImage}
-                          foot={<GeekCardFoot />}/>)
-
-  ReactDOM.render(
-    <__PageCard />,
-    document.getElementById("root"))
 }
+
+ReactDOM.render(<Body/>, document.getElementById('content'));
