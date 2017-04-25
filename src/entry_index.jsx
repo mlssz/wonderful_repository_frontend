@@ -294,7 +294,7 @@ class Body extends React.Component {
         this.showMean = this.showMean.bind(this)
     }
 
-    changePage(page, title, params) {
+    changePage(page, title, params = {}) {
         this.setState({
             page,
             title,

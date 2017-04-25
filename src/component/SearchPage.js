@@ -10,7 +10,7 @@ export default class SearchPage extends React.Component {
 		this.state = {
 			goods: this.props.goods,
 			showGoods: [],
-			pageNum: 1,
+			pageNum: this.props.params.pageNum || 1,
 			pageType: "all",
 		}
 		this.setPageNum = this.setPageNum.bind(this)

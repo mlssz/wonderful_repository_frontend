@@ -9,6 +9,7 @@ import SearchPage from "./SearchPage.js"
 import Putaway from "./Putaway.js"
 import CheckPage from "./checkPage.jsx"
 import Move from './Move.js'
+import GoodsInf from './GoodsInf.jsx'
 
 export default class Mean extends React.Component {
 
@@ -51,12 +52,13 @@ export default class Mean extends React.Component {
                     />,
                     <ListItem
                       key={6}
-                      primaryText="信息查询"
-                      onClick={()=>this.props.changePage(SearchPage,"信息查询")}
+                      primaryText="任务查询"
+                      onClick={()=>this.props.changePage(SearchPage,"任务查询")}
                     />,
                     <ListItem
                       key={7}
-                      primaryText="出库统计"
+                      primaryText="物品查询"
+                      onClick={()=>this.props.changePage(GoodsInf,"物品查询")}
                     />,
                   ]}
                 />                
