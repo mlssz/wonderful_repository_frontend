@@ -4,6 +4,8 @@ import {
 	TableRowColumn
 } from "material-ui/Table"
 
+import {humanise_task_var} from "../../libs/humanise_map.js"
+
 export default class SelfTableRow extends React.Component {
 	constructor(props) {
 		super(props)
@@ -14,23 +16,18 @@ export default class SelfTableRow extends React.Component {
 		let material = good.material || {};
 		let staff = good.staff || {};
 		let place = parseGood(good);
-		let action = {
-			"500": '入库',
-			"501": "移动",
-			"502": "出库",
-			"6XX": "异常",
-		};
-		let status = ['未开始', '进行中', '已完成', '已取消']
 		return (
 			<TableRow
-				hoverable={true}>
+          hoverable={true}
+          onClick={this.props.onClick}
+      >
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{action[good.action]||"异常"}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{humanise_task_var(good.action)}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{material.id||"1491451593158"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{material.type||"tester"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{place.from||"----"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{place.to||"----"}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{status[good.status]}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{humanise_task_var(good.status)}</TableRowColumn>
 				<TableRowColumn title={place.startTime}>{place.startTime}</TableRowColumn>
 				<TableRowColumn title={place.endTime}>{place.endTime}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{staff.name||"----"}</TableRowColumn>

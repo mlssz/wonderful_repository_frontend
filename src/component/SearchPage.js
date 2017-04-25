@@ -45,7 +45,7 @@ export default class SearchPage extends React.Component {
 		return (
 			<div>
 				<Picker setPageType={this.setPageType}/>
-				<ShowTable goods={this.state.showGoods}/>
+				<ShowTable goods={this.state.showGoods} changePage={this.props.changePage}/>
 				<SelectPageNum setPageNum={this.setPageNum}/>
 			</div>
 		)

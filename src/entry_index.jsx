@@ -18,7 +18,7 @@ let goods = [{
     "publish_time": "2017-04-06T04:57:36.801Z",
     "start_time": "2017-04-06T04:57:36.801Z",
     "end_time": "2017-04-06T04:57:36.801Z",
-    "remark": "",
+    "remark": "this just a test\n dont be serious.",
     "staff": {
         "name": "因幡帝",
         "account": "inaba_tewi",
