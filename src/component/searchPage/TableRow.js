@@ -11,7 +11,8 @@ export default class SelfTableRow extends React.Component {
 
 	render() {
 		let good = this.props.good;
-		let material = good.material;
+		let material = good.material || {};
+		let staff = good.staff || {};
 		let place = parseGood(good);
 		let action = {
 			"500": '入库',
@@ -25,14 +26,14 @@ export default class SelfTableRow extends React.Component {
 				hoverable={true}>
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{action[good.action]||"异常"}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{material.id}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{material.type}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{place.from}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{place.to}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{material.id||"1491451593158"}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{material.type||"tester"}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{place.from||"----"}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{place.to||"----"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{status[good.status]}</TableRowColumn>
 				<TableRowColumn title={place.startTime}>{place.startTime}</TableRowColumn>
 				<TableRowColumn title={place.endTime}>{place.endTime}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{good.staff.name}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{staff.name||"----"}</TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -40,12 +41,18 @@ export default class SelfTableRow extends React.Component {
 }
 
 function parseGood(good) {
+	if (good.material == undefined)
+		return {};
 	let to = good.material.to_repository + '仓' + good.material.to_location + '架' + good.material.to_layer + '层';
 	let from = good.material.from_repository + '仓' + good.material.from_location + '架' + good.material.from_layer + '层';
 	let st = new Date(good.start_time);
 	let startTime = st.getFullYear() + '-' + (st.getMonth() + 1) + '-' + st.getDate() + ' ' + st.getHours() + ':' + st.getMinutes() + ':' + st.getSeconds();
 	let et = new Date(good.end_time);
 	let endTime = et.getFullYear() + '-' + (et.getMonth() + 1) + '-' + et.getDate() + ' ' + et.getHours() + ':' + et.getMinutes() + ':' + et.getSeconds();
+	if (good.material.from_repository == 0)
+		from = "----";
+	if (good.material.to_repository == -1)
+		to = "----";
 	return ({
 		to: to,
 		from: from,

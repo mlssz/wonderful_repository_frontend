@@ -1,7 +1,7 @@
 import React from "react"
 import {
-    List,
-    ListItem
+  List,
+  ListItem
 } from "material-ui/List"
 import FontIcon from "material-ui/FontIcon"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
@@ -12,13 +12,13 @@ import Move from './Move.js'
 
 export default class Mean extends React.Component {
 
-    constructor(props) {
-        super(props)
-    }
+  constructor(props) {
+    super(props)
+  }
 
-    render() {
-        return (
-            <MuiThemeProvider>
+  render() {
+    return (
+      <MuiThemeProvider>
                 <List>
                 <ListItem
                     primaryText="物资"
@@ -28,17 +28,17 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={1}
                       primaryText="入库"
-                      onClick={()=>this.props.changePage(<Putaway changePage={this.props.changePage}/>,"入库")}
+                      onClick={()=>this.props.changePage(Putaway,"入库")}
                     />,
                     <ListItem
                       key={2}
                       primaryText="移动"
-                      onClick={()=>this.props.changePage(<Move type='move'/>,"移动")}
+                      onClick={()=>this.props.changePage(Move,"移动",{type:0})}
                     />,
                     <ListItem
                       key={3}
                       primaryText="出库"
-                      onClick={()=>this.props.changePage(<Move type='out'/>,"出库")}
+                      onClick={()=>this.props.changePage(Move,"出库",{type:1})}
                     />,
                     <ListItem
                       key={4}
@@ -47,12 +47,12 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={5}
                       primaryText="盘点"
-                      onClick={()=>this.props.changePage(<CheckPage/>, "盘点")}
+                      onClick={()=>this.props.changePage(CheckPage, "盘点")}
                     />,
                     <ListItem
                       key={6}
                       primaryText="信息查询"
-                      onClick={()=>this.props.changePage(<SearchPage/>,"信息查询")}
+                      onClick={()=>this.props.changePage(SearchPage,"信息查询")}
                     />,
                     <ListItem
                       key={7}
@@ -77,6 +77,6 @@ export default class Mean extends React.Component {
                 />
                 </List>
             </MuiThemeProvider>
-        )
-    }
+    )
+  }
 }

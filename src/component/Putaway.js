@@ -27,7 +27,8 @@ export default class PutAway extends React.Component {
 				type: "",
 				num: "",
 				estimated_export_time: "",
-				description: ""
+				description: "",
+				action: 500,
 			}],
 		}
 		this.addRow = this.addRow.bind(this);
@@ -62,7 +63,9 @@ export default class PutAway extends React.Component {
 	ensure() {
 		let goods = this.state.goods.filter(isEmpty);
 		if (goods.length)
-			this.props.changePage(<EnsurePutaway goods={goods} changePage={this.props.changePage} />);
+			this.props.changePage(EnsurePutaway, "确认入库", {
+				goods: goods
+			});
 		else
 			alert("请填写内容!!")
 	}
@@ -92,7 +95,8 @@ class Row extends React.Component {
 				type: "",
 				num: "",
 				estimated_export_time: "",
-				description: ""
+				description: "",
+				action: 500,
 			}
 		}
 		this.updateValue = this.updateValue.bind(this);
