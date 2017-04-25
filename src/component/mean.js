@@ -1,7 +1,7 @@
 import React from "react"
 import {
-  List,
-  ListItem
+    List,
+    ListItem
 } from "material-ui/List"
 import FontIcon from "material-ui/FontIcon"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
@@ -12,13 +12,13 @@ import Move from './Move.js'
 
 export default class Mean extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
+    constructor(props) {
+        super(props)
+    }
 
-  render() {
-    return (
-      <MuiThemeProvider>
+    render() {
+        return (
+            <MuiThemeProvider>
                 <List>
                 <ListItem
                     primaryText="物资"
@@ -28,7 +28,7 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={1}
                       primaryText="入库"
-                      onClick={()=>this.props.changePage(<Putaway/>,"入库")}
+                      onClick={()=>this.props.changePage(<Putaway changePage={this.props.changePage}/>,"入库")}
                     />,
                     <ListItem
                       key={2}
@@ -77,6 +77,6 @@ export default class Mean extends React.Component {
                 />
                 </List>
             </MuiThemeProvider>
-    )
-  }
+        )
+    }
 }

@@ -30,19 +30,16 @@ export default class ShowTable extends React.Component {
                     <TableBody displayRowCheckbox={false} selectable={false}>
                         <TableRow>
                             <TableRowColumn style={{color:"gray",overflow:"visible"}}>#</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>操作</TableRowColumn>
                             <TableRowColumn style={{color:"gray",overflow:"visible"}}>编号</TableRowColumn>
+                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>数量</TableRowColumn>
                             <TableRowColumn style={{color:"gray",overflow:"visible"}}>类型</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>起始位置</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>到达位置</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>执行状态</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>创建时间</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>更新时间</TableRowColumn>
-                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>操作文员</TableRowColumn>
+                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>估计出库时间</TableRowColumn>
+                            <TableRowColumn style={{color:"gray",overflow:"visible"}}>分配位置</TableRowColumn>
                         </TableRow>
                         {this.showRow()}
                     </TableBody>
                 </Table>
+
             </MuiThemeProvider>
         )
     }

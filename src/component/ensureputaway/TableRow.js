@@ -11,28 +11,15 @@ export default class SelfTableRow extends React.Component {
 
 	render() {
 		let good = this.props.good;
-		let material = good.material;
-		let place = parseGood(good);
-		let action = {
-			"500": '入库',
-			"501": "移动",
-			"502": "出库",
-			"6XX": "异常",
-		};
-		let status = ['未开始', '进行中', '已完成', '已取消']
 		return (
 			<TableRow
 				hoverable={true}>
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{action[good.action]||"异常"}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{material.id}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{material.type}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{place.from}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{place.to}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{status[good.status]}</TableRowColumn>
-				<TableRowColumn title={place.startTime}>{place.startTime}</TableRowColumn>
-				<TableRowColumn title={place.endTime}>{place.endTime}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{good.staff.name}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>12345678911</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{good.num}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{good.type}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{good.estimated_export_time}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>系统分配</TableRowColumn>
 			</TableRow>
 		)
 	}

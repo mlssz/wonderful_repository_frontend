@@ -3,11 +3,19 @@ import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import EnsurePutaway from './ensureputaway/EnsurePutaway.js'
 
 let inputStyle = {
 	flex: 1,
 	margin: "0 10",
 };
+
+function isEmpty(good) {
+	for (let i in good)
+		if (good[i] === "")
+			return false;
+	return true;
+}
 
 export default class PutAway extends React.Component {
 
@@ -25,6 +33,7 @@ export default class PutAway extends React.Component {
 		this.addRow = this.addRow.bind(this);
 		this.renderRow = this.renderRow.bind(this);
 		this.updateGoods = this.updateGoods.bind(this);
+		this.ensure = this.ensure.bind(this);
 	}
 
 	addRow() {
@@ -50,6 +59,14 @@ export default class PutAway extends React.Component {
 		})
 	}
 
+	ensure() {
+		let goods = this.state.goods.filter(isEmpty);
+		if (goods.length)
+			this.props.changePage(<EnsurePutaway goods={goods} changePage={this.props.changePage} />);
+		else
+			alert("请填写内容!!")
+	}
+
 	render() {
 		return (
 			<div style={{width:"100%"}}>
@@ -58,7 +75,7 @@ export default class PutAway extends React.Component {
                 		{this.renderRow()}
 		                <div style={{textAlign:"center",marginTop:"10px",display:"flex",justifyContent:"space-around"}}>
 			                <RaisedButton label="增加入库" primary={true} onClick={this.addRow}/>
-			                <RaisedButton label="确认入库" primary={true}/>
+			                <RaisedButton label="确认入库" primary={true} onClick={this.ensure}/>
 		                </div>
                 	</div>
                 </MuiThemeProvider>

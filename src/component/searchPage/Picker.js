@@ -18,7 +18,6 @@ export default class Picker extends React.Component {
 
 	render() {
 		let picker = {
-			marginTop: 20,
 			textAlign: "center",
 		}
 		let item_select = {
