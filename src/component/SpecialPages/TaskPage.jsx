@@ -16,6 +16,9 @@ import {
   humanise_staff_var,
   humanise_material_var
 } from "../../libs/humanise_map.js"
+import {
+  key_value_table
+} from "../../libs/showdata.jsx"
 
 let headStyle = {
   fontSize: 20,
@@ -38,17 +41,32 @@ export default class TaskPage extends Component {
 
   render() {
     let task = this.props.params
-    let staff = task.staff !== undefined ? (
-      <div>
-        <p style={normalText}> name : {task.staff.name} </p>
-        <p style={normalText}> account : {task.staff.account} </p>
-        <p style={normalText}> permission: {humanise_staff_var(task.staff.permission)}</p>
-        <p style={normalText}> sex : {task.staff.sex} </p>
-        <p style={normalText}> age : {task.staff.age} </p>
-      </div>
-    ) : task.staff
-    let origin = task.material.from_repository === 0 ? (<p style={normalText}> 入库 </p>) : (<p style={normalText}> 原位置 : {task.material.from_repository}仓{task.material.from_location}号位置{task.material.from_layer}</p>)
-    let destination = task.material.to_repository === -1 ? (<p style={normalText}> 出库 </p>) : (<p style={normalText}> 新位置 : {task.material.to_repository}仓{task.material.to_location}号位置{task.material.to_layer}</p>)
+    let task_kvmap = {
+          "发布时间" : task.publish_time,
+          "开始执行时间" : task.start_time,
+          "结束时间" : task.end_time,
+    }
+    let staff = task.staff
+    let staff_kvmap = staff === undefined ? undefined : {
+      "姓名": staff.name,
+      "账户": staff.account,
+      "职位": humanise_staff_var(staff.permission),
+      "性别": staff.sex ? "男" : "女",
+      "年龄": staff.age
+    }
+    let material = task.material
+    let material_kvmap = material === undefined ? undefined : {
+      "物资id" : material.id ,
+      "物资类型" : material.type ,
+      "物资状态" : humanise_material_var(material.status),
+      "原位置": material.from_repository === 0 ? undefined : `${material.from_repository}仓${material.from_location}号位置${material.from_layer}`,
+      "新位置": material.to_repository === -1 ? undefined : `${material.to_repository}仓${material.to_location}号位置${material.to_layer}`,
+      "宽" : material.width ,
+      "长" : material.length ,
+      "高" : material.height ,
+      "物资描述" : material.description,
+    }
+
 
     return (
       <div>
@@ -59,9 +77,7 @@ export default class TaskPage extends Component {
       <CardText>
         <CardHeader title={<p style={headStyle}>时间</p>}/>
         <CardText>
-          <p style={normalText}><span>发布时间</span> : <span>{task.publish_time}</span></p>
-          <p style={normalText}><span>开始执行时间</span> : <span>{task.start_time}</span></p>
-          <p style={normalText}><span>结束时间</span> : <span>{task.end_time}</span></p>
+          {key_value_table(task_kvmap)}
         </CardText>
         <Divider />
 
@@ -73,21 +89,13 @@ export default class TaskPage extends Component {
 
         <CardHeader title={<p  style={headStyle}>物资</p>}/>
         <CardText>
-          <p style={normalText}> 物资id : {task.material.id} </p>
-          <p style={normalText}> 物资类型 : {task.material.type} </p>
-          <p style={normalText}> 物资状态 : {humanise_material_var(task.material.status)}</p>
-          {origin}
-          {destination}
-          <p style={normalText}> 宽 : {task.material.width} </p>
-          <p style={normalText}> 长 : {task.material.length} </p>
-          <p style={normalText}> 高 : {task.material.height} </p>
-          <p style={normalText}> 物资描述 : {task.material.description}</p>
+          {key_value_table(material_kvmap)}
         </CardText>
 
         <Divider />
         <CardHeader title={<p  style={headStyle}>人员</p>}/>
         <CardText>
-          {staff}
+          {key_value_table(staff_kvmap)}
         </CardText>
       </CardText>
     </div>

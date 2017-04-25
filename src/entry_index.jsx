@@ -39,7 +39,7 @@ let goods = [{
         "width": 1,
         "length": 2,
         "status": 300,
-        "from_repository": 2,
+        "from_repository": 0,
         "from_location": 0,
         "from_layer": 0,
         "to_repository": 12,
