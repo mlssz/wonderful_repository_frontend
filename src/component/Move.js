@@ -14,9 +14,12 @@ let inputStyle = {
 };
 
 function isEmpty(good) {
-	for (let i in good)
+	for (let i in good) {
+		if (i == "out")
+			continue;
 		if (good[i] === "")
 			return false;
+	}
 	return true;
 }
 
@@ -41,9 +44,10 @@ export default class Move extends React.Component {
 
 	renderRow() {
 		let number = this.state.number;
+		let good = this.props.params.good || false;
 		let dom = [];
 		for (let i = 0; i < number; i++)
-			dom.push(<Row key={i} index={i} updateGoods={this.updateGoods} type={this.props.params.type}/>)
+			dom.push(<Row key={i} good={good} index={i} updateGoods={this.updateGoods} type={this.props.params.type}/>)
 		return dom;
 	}
 
@@ -116,10 +120,23 @@ class Row extends React.Component {
 				num: "",
 				out: "",
 				action: !this.props.type ? 501 : 502,
-				dataSource: [],
-			}
+			},
+			dataSource: [],
 		}
 		this.updateValue = this.updateValue.bind(this);
+	}
+
+	componentWillMount() {
+		let goods = this.props.good;
+		let index = this.props.index;
+		let good = this.state.good;
+		good.type = "其他";
+		good.code = goods.id;
+		if (index === 0 && goods) {
+			this.setState({
+				good: good,
+			})
+		}
 	}
 
 	updateValue(val, type) {
@@ -133,24 +150,29 @@ class Row extends React.Component {
 
 	handleUpdateInput(value) {
 		let datas = ["1491451593158", "1491451593159", "1492222593158", "12359756304569", "1987563198534", "5219876025973", "6489752036975", "1023685219763"];
+		let good = this.state.good;
+		good.type = value.length === 13 ? "其他" : "";
+		good.code = value;
 		this.setState({
 			dataSource: datas.filter((data) => data.indexOf(value) >= 0) || [],
-			code: value
+			good: good,
 		});
 	};
 
 	render() {
 		return (
-			<div style={{display:"flex"}}>
+			<div>
                 <AutoComplete
 		         	hintText="物资编码"
 		          	dataSource={this.state.dataSource||[]}
+		          	value={this.state.good.code}
 		          	onUpdateInput={this.handleUpdateInput.bind(this)}
 		        />
                 <TextField
                     floatingLabelText="物资类型"
                     style={inputStyle}
                     value={this.state.good.type}
+                    disabled={true}
                     onChange={(e,val)=>this.updateValue(val,"type")}
                 />
                 <TextField
@@ -162,7 +184,7 @@ class Row extends React.Component {
                 {
                 	!this.props.type?
                     <TextField
-                        floatingLabelText="去向"
+                        floatingLabelText="去向(空则自动分配)"
                         style={inputStyle}
                         value={this.state.good.out}
                         onChange={(e,val)=>this.updateValue(val,"out")}/>:false

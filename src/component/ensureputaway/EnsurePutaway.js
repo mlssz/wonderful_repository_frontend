@@ -58,7 +58,6 @@ export default class PutAway extends React.Component {
 			good.material.from_repository = 0;
 			oriGoods.unshift(good);
 		}
-		console.log(this.props.params.goods)
 		this.props.changePage(Putaway, "入库");
 	}
 

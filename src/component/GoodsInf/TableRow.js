@@ -8,20 +8,26 @@ import {
 	humanise_task_var
 } from "../../libs/humanise_map.js"
 import FlatButton from 'material-ui/FlatButton';
+import Move from '../Move.js'
 
 export default class SelfTableRow extends React.Component {
 	constructor(props) {
 		super(props)
 	}
 
+	doSomeThing(action, good) {
+		let value = ["移动", "出库"][action]
+		this.props.changePage(Move, value, {
+			type: action,
+			good: good
+		})
+	}
+
 	render() {
 		let good = this.props.good;
 		let place = parseGood(good);
 		return (
-			<TableRow
-          hoverable={true}
-          onClick={this.props.onClick}
-      >
+			<TableRow hoverable={true}>
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.id||"1491451593158"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.type||"----"}</TableRowColumn>
@@ -31,8 +37,8 @@ export default class SelfTableRow extends React.Component {
 				<TableRowColumn style={{overflow:"visible"}}>{place.endTime||"----"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{place.changeTime}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>
-					<FlatButton label="移动" primary={true} style={{minWidth:40,marginRight:5}} labelStyle={{paddingLeft:10,paddingRight:10}}/>
-					<FlatButton label="出库" Secondary={true} style={{minWidth:40}} labelStyle={{paddingLeft:10,paddingRight:10}}/>
+					<FlatButton label="移动" style={{minWidth:40,marginRight:5}} labelStyle={{paddingLeft:10,paddingRight:10,color:'#33D4E7'}} onClick={()=>this.doSomeThing(0,good)}/>
+					<FlatButton label="出库" style={{minWidth:40}} labelStyle={{paddingLeft:10,paddingRight:10,color:'#F9B0D7'}} onClick={()=>this.doSomeThing(1,good)}/>
 				</TableRowColumn>
 			</TableRow>
 		)

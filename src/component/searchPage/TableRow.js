@@ -4,7 +4,9 @@ import {
 	TableRowColumn
 } from "material-ui/Table"
 
-import {humanise_task_var} from "../../libs/humanise_map.js"
+import {
+	humanise_task_var
+} from "../../libs/humanise_map.js"
 
 export default class SelfTableRow extends React.Component {
 	constructor(props) {

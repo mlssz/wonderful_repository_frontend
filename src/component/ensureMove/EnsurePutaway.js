@@ -46,19 +46,18 @@ export default class PutAway extends React.Component {
 		for (let i in goods) {
 			let good = model;
 			good.action = goods[i].action;
-			good.material.description = goods[i].description;
-			good.material.id = Math.floor(Math.random() * Date.now() + Date.now());
+			good.material.id = goods[i].code;
 			good.material.location_update_time = (+new Date());
 			good.start_time = (+new Date());
 			good.publish_time = (+new Date());
 			good.end_time = (+new Date());
 			good.num = goods[i].num;
 			good.material.type = goods[i].type;
-			good.material.estimated_export_time = new Date(goods[i].estimated_export_time);
-			good.material.from_repository = 0;
+			good.material.estimated_export_time = new Date() + 100000;
+			good.material.to_repository = goods[i].action == 502 ? -1 : good.material.to_repository;
+			good.material.from_repository = Math.floor(Math.random() * 5);
 			oriGoods.unshift(good);
 		}
-		console.log(this.props.params.goods)
 		this.props.changePage(Putaway, "入库");
 	}
 

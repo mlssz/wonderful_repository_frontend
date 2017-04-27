@@ -11,15 +11,17 @@ export default class SelfTableRow extends React.Component {
 
 	render() {
 		let good = this.props.good;
-		let random = Math.floor(Math.random() * Date.now() + Date.now());
+		let action = ["移动", "出库"][good.action - 501];
+		let place = Math.floor(Math.random() * 5 + 1) + "仓" + Math.floor(Math.random() * 20 + 1) + "区" + Math.floor(Math.random() * 3 + 1) + "层"
 		return (
 			<TableRow
 				hoverable={true}>
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{random}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{action}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{good.code}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.num}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.type}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{good.estimated_export_time}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{good.estimated_export_time||place}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>系统分配</TableRowColumn>
 			</TableRow>
 		)
