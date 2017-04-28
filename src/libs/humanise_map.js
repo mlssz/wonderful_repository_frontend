@@ -67,3 +67,20 @@ export const humanise_staff_var = num => {
 
   return value
 }
+
+export const humanise_material_position = (repository, location, layer) => {
+  if (repository === 0) {
+    return "入库"
+  }
+  if (repository === -1) {
+    return "出库"
+  }
+
+  return `${repository}仓${location}号位置${layer}`
+}
+
+export const humanise_date = end_time => {
+
+	let et = new Date(end_time)
+	return et.getFullYear() + "-" + (et.getMonth() + 1) + "-" + et.getDate() + " " + et.getHours() + ":" + et.getMinutes() + ":" + et.getSeconds()
+}
