@@ -9,7 +9,16 @@ import {
   CardTitle,
   CardText
 } from 'material-ui/Card'
+import {
+  Step,
+  Stepper,
+  StepButton,
+  StepContent,
+} from 'material-ui/Stepper'
+import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
+
+import TaskPage from './TaskPage.jsx'
 
 import {
   humanise_material_var,
@@ -18,7 +27,6 @@ import {
 } from "../../libs/humanise_map.js"
 import {
   key_value_table,
-  migrationSteps
 } from "../showData.jsx"
 
 const migrations = [{
@@ -75,6 +83,45 @@ let inheadStyle = {
   fontSize: 20
 }
 
+const migrationSteps = (migrations, changePage)=> {
+    let steps = migrations.map((m, i) => (
+              <Step active={true} key={i}>
+                <StepButton>
+                  {humanise_date(m.date)}
+                </StepButton>
+                <StepContent>
+                  <div style={{
+                    padding: 16,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}>
+                    <span>
+                      <span style={{margin: 10}}>
+                        {humanise_material_position(m.from_repository, m.from_location, m.from_layer)}
+                      </span>
+                      <span style={{margin: 10}}>
+                        --->
+                      </span>
+                      <span style={{margin: 10}}>
+                        {humanise_material_position(m.to_repository, m.to_location, m.to_layer)}
+                      </span>
+                    </span>
+                    <span>
+                      <FlatButton label="查看任务" onTouchTap={() => changePage(TaskPage, "Task", m._id)} />
+                    </span>
+                  </div>
+                </StepContent>
+              </Step>
+    ))
+
+    return (
+            <Stepper orientation="vertical">
+              {steps}
+            </Stepper>
+      )
+}
+
 export default class MaterialPage extends Component {
 
   constructor(props) {
@@ -100,7 +147,7 @@ export default class MaterialPage extends Component {
     let time_kvmap = {
       "入库时间": humanise_date(material.import_time),
       "预计出库时间": humanise_date(material.estimated_export_time),
-      "位置更新时间": humanise_date(material.Location_update_time)
+      "位置更新时间": humanise_date(material.location_update_time)
     }
 
 
@@ -125,7 +172,7 @@ export default class MaterialPage extends Component {
           <Divider />
           <CardHeader title={<p  style={inheadStyle}>移动记录</p>}/>
           <CardText>
-            {migrationSteps(migrations)}
+            {migrationSteps(migrations, this.props.changePage)}
           </CardText>
         </CardText>
       </div>

@@ -27,7 +27,9 @@ export default class SelfTableRow extends React.Component {
 		let good = this.props.good;
 		let place = parseGood(good);
 		return (
-			<TableRow hoverable={true}>
+			<TableRow
+				hoverable={true}
+				onTouchTap={this.props.onTouchTap}>
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.id||"1491451593158"}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.type||"----"}</TableRowColumn>

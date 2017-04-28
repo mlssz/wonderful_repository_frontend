@@ -22,7 +22,7 @@ export default class ShowTable extends React.Component {
     let goods = this.props.goods;
     let random = Math.floor(Math.random() * 100);
     return (
-      goods.map((good, i) => <SelfTableRow good={good} onClick={() => this.handleOnClick(good)} key={i+good._id+random} index={i}/>)
+      goods.map((good, i) => <SelfTableRow good={good} onTouchTap={() => this.handleOnClick(good)} key={i+good._id+random} index={i}/>)
     )
   }
 

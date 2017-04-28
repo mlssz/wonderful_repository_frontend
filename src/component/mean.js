@@ -29,17 +29,17 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={1}
                       primaryText="入库"
-                      onClick={()=>this.props.changePage(Putaway,"入库")}
+                      onTouchTap={()=>this.props.changePage(Putaway,"入库")}
                     />,
                     <ListItem
                       key={2}
                       primaryText="移动"
-                      onClick={()=>this.props.changePage(Move,"移动",{type:0})}
+                      onTouchTap={()=>this.props.changePage(Move,"移动",{type:0})}
                     />,
                     <ListItem
                       key={3}
                       primaryText="出库"
-                      onClick={()=>this.props.changePage(Move,"出库",{type:1})}
+                      onTouchTap={()=>this.props.changePage(Move,"出库",{type:1})}
                     />,
                     <ListItem
                       key={4}
@@ -48,17 +48,17 @@ export default class Mean extends React.Component {
                     <ListItem
                       key={5}
                       primaryText="盘点"
-                      onClick={()=>this.props.changePage(CheckPage, "盘点")}
+                      onTouchTap={()=>this.props.changePage(CheckPage, "盘点")}
                     />,
                     <ListItem
                       key={6}
                       primaryText="任务查询"
-                      onClick={()=>this.props.changePage(SearchPage,"任务查询")}
+                      onTouchTap={()=>this.props.changePage(SearchPage,"任务查询")}
                     />,
                     <ListItem
                       key={7}
                       primaryText="物品查询"
-                      onClick={()=>this.props.changePage(GoodsInf,"物品查询")}
+                      onTouchTap={()=>this.props.changePage(GoodsInf,"物品查询")}
                     />,
                   ]}
                 />                
