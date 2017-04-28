@@ -12,6 +12,8 @@ export default class SelfTableRow extends React.Component {
 	render() {
 		let good = this.props.good;
 		let random = Math.floor(Math.random() * Date.now() + Date.now());
+		let et = new Date(good.estimated_export_time);
+		let time = et.getFullYear() + '-' + (et.getMonth() + 1) + '-' + et.getDate();
 		return (
 			<TableRow
 				hoverable={true}>
@@ -19,7 +21,7 @@ export default class SelfTableRow extends React.Component {
 				<TableRowColumn style={{overflow:"visible"}}>{random}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.num}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.type}</TableRowColumn>
-				<TableRowColumn style={{overflow:"visible"}}>{good.estimated_export_time}</TableRowColumn>
+				<TableRowColumn style={{overflow:"visible"}}>{time}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>系统分配</TableRowColumn>
 			</TableRow>
 		)

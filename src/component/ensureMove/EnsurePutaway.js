@@ -32,6 +32,14 @@ let model = {
 	}
 };
 
+function makeModel(models) {
+	let model = {};
+	for (let i in models) {
+		model[i] = models[i];
+	}
+	return model;
+}
+
 export default class PutAway extends React.Component {
 
 	constructor(props) {
@@ -44,7 +52,7 @@ export default class PutAway extends React.Component {
 		let goods = (this.props.params.goods);
 		let oriGoods = this.props.goods;
 		for (let i in goods) {
-			let good = model;
+			let good = makeModel(model);
 			good.action = goods[i].action;
 			good.material.id = goods[i].code;
 			good.material.location_update_time = (+new Date());

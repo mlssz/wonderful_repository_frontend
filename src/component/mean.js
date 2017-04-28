@@ -13,13 +13,13 @@ import GoodsInf from './GoodsInf.jsx'
 
 export default class Mean extends React.Component {
 
-  constructor(props) {
-    super(props)
-  }
+    constructor(props) {
+      super(props)
+    }
 
-  render() {
-    return (
-      <MuiThemeProvider>
+    render() {
+      return (
+        <MuiThemeProvider>
                 <List>
                 <ListItem
                     primaryText="物资"
@@ -42,10 +42,6 @@ export default class Mean extends React.Component {
                       onTouchTap={()=>this.props.changePage(Move,"出库",{type:1})}
                     />,
                     <ListItem
-                      key={4}
-                      primaryText="异常"
-                    />,
-                    <ListItem
                       key={5}
                       primaryText="盘点"
                       onTouchTap={()=>this.props.changePage(CheckPage, "盘点")}
@@ -62,23 +58,27 @@ export default class Mean extends React.Component {
                     />,
                   ]}
                 />                
-                <ListItem
-                    primaryText="人员"
-                    initiallyOpen={false}
-                    primaryTogglesNestedList={true}
-                    nestedItems={[
-                    <ListItem
-                      key={1}
-                      primaryText="管理"
-                    />,
-                    <ListItem
-                      key={2}
-                      primaryText="查看任务记录"
-                    />
-                  ]}
-                />
                 </List>
             </MuiThemeProvider>
-    )
+      )
+    }
   }
-}
+  //     <ListItem
+  //       key={4}
+  //       primaryText="异常"
+  //     />,
+  // <ListItem
+  //     primaryText="人员"
+  //     initiallyOpen={false}
+  //     primaryTogglesNestedList={true}
+  //     nestedItems={[
+  //     <ListItem
+  //       key={1}
+  //       primaryText="管理"
+  //     />,
+  //     <ListItem
+  //       key={2}
+  //       primaryText="查看任务记录"
+  //     />
+  //   ]}
+  // />

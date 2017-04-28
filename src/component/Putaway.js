@@ -1,6 +1,7 @@
 import React from 'react'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import DatePicker from 'material-ui/DatePicker'
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import EnsurePutaway from './ensureputaway/EnsurePutaway.js'
@@ -140,7 +141,7 @@ class Row extends React.Component {
 
 	render() {
 		return (
-			<div style={{display:"flex"}}>
+			<div style={{display:"flex",alignItems:'flex-end'}}>
                 <TextField
                     floatingLabelText="物资类型"
                     style={inputStyle}
@@ -153,12 +154,14 @@ class Row extends React.Component {
                     value={this.state.good.num}
                     onChange={(e,val)=>this.updateNum(val)}
                 />
-                <TextField
-                    floatingLabelText="估计出库时间"
-                    style={inputStyle}
-                    value={this.state.good.estimated_export_time}
-                    onChange={(e,val)=>this.updateTime(val)}
-                />
+                <DatePicker 
+                	hintText="估计出库时间"
+                	container="inline" 
+                	autoOk={true}
+                	style={inputStyle}
+                	onChange={(e,val)=>this.updateTime(+val)}
+                	defaultDate={new Date()}
+                	mode="landscape" />
                 <TextField
                     floatingLabelText="物资描述"
                     style={inputStyle}
