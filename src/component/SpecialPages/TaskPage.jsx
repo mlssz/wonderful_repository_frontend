@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider'
 import FlatButton from 'material-ui/FlatButton'
 
 import MaterialPage from "./MaterialPage.jsx"
+import StaffPage from "./StaffPage.jsx"
 import {
   humanise_date,
   humanise_task_var,
@@ -52,7 +53,48 @@ export default class TaskPage extends Component {
   }
 
   render() {
-    let task = this.props.params
+    // This should request to backend
+    let task = typeof this.props.params !== "string" ? this.props.params : {
+      "_id": "dsafdsadsaf32413141kl2",
+      "action": 500,
+      "status": 1,
+      "publish_time": "2017-04-06T04:57:36.801Z",
+      "start_time": "2017-04-06T04:57:36.801Z",
+      "end_time": "2017-04-06T04:57:36.801Z",
+      "remark": "this just a test\n dont be serious.",
+      "staff": {
+          "_id": "dsafdsadsaf32413141kl2",
+          "name": "因幡帝",
+          "account": "inaba_tewi",
+          "passwd": "123456",
+          "sex": 0,
+          "age": 222,
+          "permission": 1,
+          "signup_time": 1491451593158,
+          "last_login_time": 1491451593158
+      },
+      "material": {
+          "_id": "dsafdsadsaf32413141kl2",
+          "id": this.props.params,
+          "type": "tester",
+          "description": "wonderful repository",
+          "import_time": "2017-04-06T04:57:36.801Z",
+          "estimated_export_time": "2017-04-06T04:57:36.801Z",
+          "height": 1,
+          "width": 1,
+          "length": 2,
+          "status": 300,
+          "from_repository": 0,
+          "from_location": 0,
+          "from_layer": 0,
+          "to_repository": 12,
+          "to_location": 1,
+          "to_layer": 0,
+          "last_migrations": "1234",
+          "location_update_time": "2017-04-06T04:57:36.801Z"
+      }
+    }
+
     let task_kvmap = {
           "发布时间" : humanise_date(task.publish_time),
           "开始执行时间" : humanise_date(task.start_time),
@@ -110,7 +152,11 @@ export default class TaskPage extends Component {
 
           <Divider />
 
-          <p  style={headStyle}><span>人员</span><FlatButton label="查看详情" /></p>
+          <p  style={headStyle}>
+            <span>人员</span>
+            <FlatButton label="查看详情" onTouchTap={
+              () => this.props.changePage(StaffPage, "Staff", staff)} />
+          </p>
           <CardText>
             {key_value_table(staff_kvmap)}
           </CardText>

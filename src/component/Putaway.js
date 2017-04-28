@@ -77,8 +77,8 @@ export default class PutAway extends React.Component {
                 	<div>
                 		{this.renderRow()}
 		                <div style={{textAlign:"center",marginTop:"10px",display:"flex",justifyContent:"space-around"}}>
-			                <RaisedButton label="增加入库" primary={true} onClick={this.addRow}/>
-			                <RaisedButton label="确认入库" primary={true} onClick={this.ensure}/>
+			                <RaisedButton label="增加入库" primary={true} onTouchTap={this.addRow}/>
+			                <RaisedButton label="确认入库" primary={true} onTouchTap={this.ensure}/>
 		                </div>
                 	</div>
                 </MuiThemeProvider>

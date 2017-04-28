@@ -94,8 +94,8 @@ export default class Move extends React.Component {
                 	<div>
                 		{this.renderRow()}
 		                <div style={{textAlign:"center",marginTop:"10px",display:"flex",justifyContent:"space-around"}}>
-			                <RaisedButton label={!this.state.type?"增加移动":"增加出库"} primary={true} onClick={this.addRow}/>
-			                <RaisedButton label={!this.state.type?"确认移动":"确认出库"} primary={true} onClick={this.ensure}/>
+			                <RaisedButton label={!this.state.type?"增加移动":"增加出库"} primary={true} onTouchTap={this.addRow}/>
+			                <RaisedButton label={!this.state.type?"确认移动":"确认出库"} primary={true} onTouchTap={this.ensure}/>
 		                </div>
                 	</div>
                 </MuiThemeProvider>

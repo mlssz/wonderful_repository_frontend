@@ -20,7 +20,7 @@ export default class SelfTableRow extends React.Component {
 		return (
 			<TableRow
           hoverable={true}
-          onClick={this.props.onClick}
+          onTouchTap={this.props.onTouchTap}
       >
 				<TableRowColumn style={{overflow:"visible"}}>{this.props.index}</TableRowColumn>
 				<TableRowColumn style={{overflow:"visible"}}>{good.id||"1491451593158"}</TableRowColumn>

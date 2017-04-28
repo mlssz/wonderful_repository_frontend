@@ -71,8 +71,8 @@ export default class PutAway extends React.Component {
 			<div>
 				<ShowTable goods={this.props.params.goods}/>
 				<div style={{display:"flex",justifyContent:"space-around"}}>
-				<RaisedButton label="取消" primary={true} onClick={this.cancle.bind(this)}/>
-				<RaisedButton label="确认" primary={true} onClick={this.ensure.bind(this)}/>
+				<RaisedButton label="取消" primary={true} onTouchTap={this.cancle.bind(this)}/>
+				<RaisedButton label="确认" primary={true} onTouchTap={this.ensure.bind(this)}/>
 				</div>
 			</div>
 		)

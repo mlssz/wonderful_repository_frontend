@@ -51,7 +51,7 @@ class Number extends React.Component {
 			color: "white",
 		}
 		return (
-			<span style={this.props.selected?item_select:item_normal} onClick={()=>this.props.changePage(this.props.number)}>
+			<span style={this.props.selected?item_select:item_normal} onTouchTap={()=>this.props.changePage(this.props.number)}>
 				{this.props.number}
 			</span>
 		)
