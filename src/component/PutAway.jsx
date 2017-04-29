@@ -5,8 +5,6 @@ import {
 	Stepper,
 	StepLabel,
 } from 'material-ui/Stepper';
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {
@@ -25,19 +23,16 @@ export default class ReactClassName extends React.Component {
 	render() {
 		return (
 			<div>
-				<Stepper activeStep={this.state.stepIndex} style={{width:'80%',margin:'0 auto'}}>
-	        <Step>
-	          <StepLabel>填写入库表单</StepLabel>
-	        </Step>
-	        <Step>
-	          <StepLabel>确认入库表单</StepLabel>
-	        </Step>
-	        <Step>
-	          <StepLabel>完成入库</StepLabel>
-	        </Step>
-	      </Stepper> 
-	      <TaskForm />
-	    </div>
+				<Stepper activeStep={this.state.stepIndex} style={{width:'60%',margin:'0 auto'}}>
+			        <Step>
+			          <StepLabel>填写入库单</StepLabel>
+			        </Step>
+			        <Step>
+			          <StepLabel>完成入库</StepLabel>
+			        </Step>
+		      	</Stepper>
+		      	<TaskForm />
+	    	</div>
 		)
 	}
 }
