@@ -36,7 +36,50 @@ export default class ReactClassName extends React.Component {
 								/>
 							]}
 					/>
-
+					<ListItem
+						primaryText="移动管理"
+							initiallyOpen={true}
+							primaryTogglesNestedList={true}
+							nestedItems={[
+								<ListItem
+									  key={1}
+									  primaryText="移动"
+								/>
+							]}
+					/>
+					<ListItem
+						primaryText="出库管理"
+							initiallyOpen={true}
+							primaryTogglesNestedList={true}
+							nestedItems={[
+								<ListItem
+									  key={1}
+									  primaryText="出库"
+								/>
+							]}
+					/>
+					<ListItem
+						primaryText="盘点管理"
+							initiallyOpen={true}
+							primaryTogglesNestedList={true}
+							nestedItems={[
+								<ListItem
+									  key={1}
+									  primaryText="盘点"
+								/>
+							]}
+					/>
+					<ListItem
+						primaryText="统计"
+							initiallyOpen={true}
+							primaryTogglesNestedList={true}
+							nestedItems={[
+								<ListItem
+									  key={1}
+									  primaryText="统计"
+								/>
+							]}
+					/>
 				</List>
         	</Drawer>
 		)
