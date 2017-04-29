@@ -3,7 +3,7 @@ import {
 	HashRouter,
 	Route
 } from 'react-router-dom'
-import PutAway from './PutAway.js'
+import PutAway from './PutAway.jsx'
 
 export default class HashTable extends React.Component {
 	constructor(props) {
@@ -12,9 +12,11 @@ export default class HashTable extends React.Component {
 
 	render() {
 		return (
-			<HashRouter>
-				<Route exact path="/" component={PutAway}/>
-				<Route path="/putaway" component={PutAway}/>
+			<HashRouter hashType="noslash">
+				<div>
+					<Route exact path="/" component={PutAway}/>
+					<Route path="/putaway" component={PutAway}/>
+				</div>
 			</HashRouter>
 		)
 	}

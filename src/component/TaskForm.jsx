@@ -1,0 +1,170 @@
+import React from 'react'
+import SelectField from 'material-ui/SelectField';
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
+import MenuItem from 'material-ui/MenuItem'
+import TextField from 'material-ui/TextField'
+import DatePicker from 'material-ui/DatePicker'
+import RaisedButton from 'material-ui/RaisedButton'
+
+import {
+	styles,
+	types,
+	parsetime,
+	objIsEmpty
+} from '../libs/common.js'
+
+export default class TaskForm extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			task: {},
+			error: {},
+			locationVisible: false,
+		};
+		this.handleChange = this.handleChange.bind(this);
+		this.cancel = this.cancel.bind(this);
+		this.putaway = this.putaway.bind(this);
+	}
+
+	componentWillMount() {
+		let task = {
+			type: undefined,
+			num: '',
+			desc: '',
+			// repository_id: '',
+			// location_id: '',
+			// layer: '',
+			estimated_export_time: undefined,
+		}
+		this.setState({
+			task
+		})
+	}
+
+	handleChange(value, type) {
+		let task = this.state.task;
+		let error = this.state.error;
+		task[type] = value;
+		error[type] = '';
+		this.setState({
+			task
+		});
+	}
+
+	renderMenuItem(items) {
+		return items.map((item, index) => <MenuItem value={index} key={index} primaryText={item} />)
+	}
+
+	cancel() {
+		let task = this.state.task;
+		for (let i in task) {
+			task[i] = undefined;
+			if (i === 'num' || i === 'desc')
+				task[i] = '';
+		}
+		this.setState({
+			task
+		})
+	}
+
+	putaway() {
+		let task = this.state.task;
+		let [isEmpty, emptyKeys] = objIsEmpty(task);
+		if (isEmpty) {
+			let error = {};
+			emptyKeys.map((key) => error[key] = '请填写完整!');
+			this.setState({
+				error
+			});
+			return false;
+		}
+		sessionStorage.setItem("task", JSON.stringify(task));
+	}
+
+	render() {
+		return (
+			<MuiThemeProvider>
+				<div style={styles.container}>
+					<SelectField
+	          floatingLabelText="类型"
+						floatingLabelStyle={{color:'gray'}}
+	          value={this.state.task.type}
+	          errorText={this.state.error.type}
+	          style={styles.formItem}
+	          onChange={(e,i,v)=>this.handleChange(v,'type')}
+	        >
+	        	{this.renderMenuItem(types)}
+	        </SelectField>
+	       	<br/>
+	        <TextField
+			      floatingLabelText="数量"
+			      floatingLabelStyle={{color:'gray'}}
+			      value={this.state.task.num}
+			      errorText={this.state.error.num}
+			      style={styles.formItem}
+			      onChange={(e,v)=>this.handleChange(v,'num')}
+			    />
+			    <br/>
+			    <div>
+				    <SelectField
+		          floatingLabelText="仓"
+							floatingLabelStyle={{color:'gray'}}
+		          value={this.state.task.repository_id}
+		          errorText={this.state.error.repository_id}
+		          style={{width:100}}
+		          onChange={(e,i,v)=>this.handleChange(v,'repository_id')}
+		        >
+		        	{this.renderMenuItem([1,2,3])}
+		        </SelectField>
+		        <SelectField
+		          floatingLabelText="区"
+							floatingLabelStyle={{color:'gray'}}
+		          value={this.state.task.location_id}
+		          errorText={this.state.error.location_id}
+		          style={{width:100}}
+		          onChange={(e,i,v)=>this.handleChange(v,'location_id')}
+		        >
+		        	{this.renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
+		        </SelectField>
+		        <SelectField
+		          floatingLabelText="层"
+							floatingLabelStyle={{color:'gray'}}
+		          value={this.state.task.layer}
+		          errorText={this.state.error.layer}
+		          style={{width:100}}
+		          onChange={(e,i,v)=>this.handleChange(v,'layer')}
+		        >
+		        	{this.renderMenuItem([1,2,3,4,5])}
+		        </SelectField>
+			    	<p style={{width:300,color:'gray',margin:0,fontSize:12}}>
+							入库地址(空则为系统分配)
+			    	</p>
+			    </div>
+	        <br/>
+			    <DatePicker 
+			    	floatingLabelText="估计出库时间"
+			    	floatingLabelStyle={{color:'gray'}}
+			    	value={this.state.task.estimated_export_time}
+			    	errorText={this.state.error.estimated_export_time}
+			    	style={styles.formItem}
+						onChange={(e,v)=>this.handleChange(v,'estimated_export_time')}/>
+			    <br/>
+					<TextField
+			      floatingLabelText="物资描述"
+			      floatingLabelStyle={{color:'gray'}}
+			      value={this.state.task.desc}
+			      errorText={this.state.error.desc}
+			      multiLine={true}
+			      style={styles.formItem}
+			      onChange={(e,v)=>this.handleChange(v,'desc')}
+			    />
+			    <br/>
+					<div style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'80%',margin:'20 auto'}}>
+						<RaisedButton label="重新填写" primary={true} onTouchTap={this.cancel}/>
+						<RaisedButton label="确认" primary={true} onTouchTap={this.putaway}/>
+					</div>
+				</div>
+			</MuiThemeProvider>
+		)
+	}
+}
