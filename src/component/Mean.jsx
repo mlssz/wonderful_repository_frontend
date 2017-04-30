@@ -21,16 +21,23 @@ export default class ReactClassName extends React.Component {
 
 	render() {
 		return (
-			<Drawer open={this.props.visible} >
+			<Drawer
+				docked={false}
+				open={this.props.visible}
+				onRequestChange={()=>this.props.closeMean()}>
 				<List>
-
 					<ListItem
 						primaryText="入库管理"
-							initiallyOpen={true}
+							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
 								<ListItem
 									  key={1}
+									  primaryText="入库管理"
+									  onClick={()=>this.handleClick("putawayManage")}
+								/>,
+								<ListItem
+									  key={2}
 									  primaryText="入库"
 									  onClick={()=>this.handleClick("putaway")}
 								/>
@@ -38,29 +45,41 @@ export default class ReactClassName extends React.Component {
 					/>
 					<ListItem
 						primaryText="移动管理"
-							initiallyOpen={true}
+							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
 								<ListItem
 									  key={1}
+									  primaryText="移动管理"
+									  onClick={()=>this.handleClick("moveManage")}
+								/>,
+								<ListItem
+									  key={2}
 									  primaryText="移动"
+									  onClick={()=>this.handleClick("move")}
 								/>
 							]}
 					/>
 					<ListItem
 						primaryText="出库管理"
-							initiallyOpen={true}
+							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
 								<ListItem
 									  key={1}
+									  primaryText="出库管理"
+									  onClick={()=>this.handleClick("outManage")}
+								/>,
+								<ListItem
+									  key={2}
 									  primaryText="出库"
+									  onClick={()=>this.handleClick("out")}
 								/>
 							]}
 					/>
 					<ListItem
 						primaryText="盘点管理"
-							initiallyOpen={true}
+							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
 								<ListItem
@@ -72,7 +91,7 @@ export default class ReactClassName extends React.Component {
 					/>
 					<ListItem
 						primaryText="统计"
-							initiallyOpen={true}
+							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
 								<ListItem

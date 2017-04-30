@@ -31,7 +31,7 @@ export default class ReactClassName extends React.Component {
 			          <StepLabel>完成入库</StepLabel>
 			        </Step>
 		      	</Stepper>
-		      	<TaskForm />
+		      	<TaskForm/>
 	    	</div>
 		)
 	}

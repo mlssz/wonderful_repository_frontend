@@ -12,12 +12,13 @@ import {
 	parsetime,
 	objIsEmpty,
 	changeHash
-} from '../libs/common.js'
+} from '../../libs/common.js'
 
 export default class TaskForm extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			secondType: [],
 			task: {},
 			error: {},
 			locationVisible: false,
@@ -25,13 +26,14 @@ export default class TaskForm extends React.Component {
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
 		this.putaway = this.putaway.bind(this);
+		this.setType = this.setType.bind(this);
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('task'));
+		let task = JSON.parse(sessionStorage.getItem('intask'));
 		if (!task)
 			task = {
-				type: null,
+				type: [],
 				num: '',
 				description: '',
 				// repository_id: '',
@@ -54,16 +56,49 @@ export default class TaskForm extends React.Component {
 		});
 	}
 
-	renderMenuItem(items) {
-		return items.map((item, index) => <MenuItem value={item} key={index} primaryText={item} />)
+	setType(value) {
+		let task = this.state.task;
+		let error = this.state.error;
+		task.type[0] = value;
+		error.type = '';
+		this.setState({
+			task,
+		});
+	}
+
+	setSecondType(value) {
+		let task = this.state.task;
+		let error = this.state.error;
+		task.type[1] = value;
+		error.type = '';
+		this.setState({
+			task,
+		});
+	}
+
+	renderMenuItem(items, type = 1) {
+		let MenuItems = [];
+		if (type === 1) {
+			return items.map((i, index) => <MenuItem value={i} key={index} primaryText={i} />)
+		}
+		if (type === 2) {
+			for (let i in items) {
+				let item = <MenuItem value={i} key={i} primaryText={i} />;
+				MenuItems.push(item);
+			}
+			return MenuItems;
+		}
 	}
 
 	cancel() {
+		sessionStorage.removeItem('intask');
 		let task = this.state.task;
 		for (let i in task) {
 			task[i] = null;
-			if (i === 'num' || i === 'desc')
+			if (i === 'num' || i === 'description')
 				task[i] = '';
+			if (i === 'type')
+				task[i] = {};
 		}
 		this.setState({
 			task
@@ -82,27 +117,36 @@ export default class TaskForm extends React.Component {
 			return false;
 		}
 		//delete when add backend
-		console.log(task);
 		sessionStorage.setItem('task', JSON.stringify(task));
 		changeHash('putawayEnsure');
 	}
 
 	render() {
-		console.log(this.state.task)
 		return (
 			<MuiThemeProvider>
 				<div style={styles.container}>
-					<SelectField
+				<SelectField
 	          	floatingLabelText="类型"
 				floatingLabelStyle={{color:'gray'}}
-				value={this.state.task.type}
+				value={this.state.task.type[0]}
 				errorText={this.state.error.type}
 				style={styles.formItem}
-				onChange={(e,i,v)=>this.handleChange(v,'type')}
+				onChange={(e,i,v)=>this.setType(v)}
 	        >
-	        	{this.renderMenuItem(types)}
+	        	{this.renderMenuItem(types,2)}
 	        </SelectField>
 	       	<br/>
+	       	<SelectField
+	          	floatingLabelText="详细"
+				floatingLabelStyle={{color:'gray'}}
+				value={this.state.task.type[1]}
+				errorText={this.state.error.type}
+				style={styles.formItem}
+				onChange={(e,i,v)=>this.setSecondType(v)}
+	        >
+	        	{this.renderMenuItem(types[this.state.task.type[0]]||[])}
+	        </SelectField>
+	        <br/>
 	        <TextField
 				floatingLabelText="数量"
 				floatingLabelStyle={{color:'gray'}}
@@ -124,7 +168,7 @@ export default class TaskForm extends React.Component {
 		        	{this.renderMenuItem([1,2,3])}
 		        </SelectField>
 		        <SelectField
-					floatingLabelText="区"
+					floatingLabelText="架"
 					floatingLabelStyle={{color:'gray'}}
 					value={this.state.task.location_id}
 					errorText={this.state.error.location_id}

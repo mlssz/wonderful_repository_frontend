@@ -2,8 +2,6 @@ import React from 'react'
 import {
 	Table,
 	TableBody,
-	TableHeader,
-	TableHeaderColumn,
 	TableRow,
 	TableRowColumn
 } from 'material-ui/Table'
@@ -14,10 +12,10 @@ import {
 	formName,
 	randomNum,
 	makeId,
-	parseToPlace,
+	parsePlace,
 	parsetime,
 	changeHash
-} from '../libs/common.js'
+} from '../../libs/common.js'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {
@@ -33,16 +31,17 @@ export default class ReactClassName extends React.Component {
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('task'));
+		let task = JSON.parse(sessionStorage.getItem('intask'));
 		if (task.repository_id === undefined) {
 			task.repository_id = randomNum(1, 3);
 			task.location_id = randomNum(1, 10);
 			task.layer = randomNum(1, 3);
 		}
+		console.log(task)
 		task.id = makeId();
-		let to = parseToPlace(task);
+		let to = parsePlace(task);
 		task.to = to;
-		sessionStorage.setItem('task', JSON.stringify(task));
+		task.type = task.type.join('-');
 		this.setState({
 			task
 		})
@@ -53,10 +52,11 @@ export default class ReactClassName extends React.Component {
 		let tableBody = [];
 		for (let i in task) {
 			if (!!formName[i]) {
+				let tag = !(i === 'estimated_export_time');
 				let row =
 					<TableRow key={i}>
-				        <TableRowColumn>{formName[i]}</TableRowColumn>
-				        <TableRowColumn>{!(i === "estimated_export_time")?task[i]:parsetime(task[i],0)}</TableRowColumn>
+				        <TableRowColumn style={{fontSize:16}}>{formName[i]}</TableRowColumn>
+				        <TableRowColumn style={{fontSize:16}}>{tag?task[i]:parsetime(task[i],0)}</TableRowColumn>
 			    	</TableRow>
 				tableBody.push(row);
 			}
@@ -69,7 +69,7 @@ export default class ReactClassName extends React.Component {
 	}
 
 	putaway() {
-		// sessionStorage.removeItem('task');
+		sessionStorage.removeItem('intask');
 		this.setState({
 			mes: '入库成功，3秒后返回入库页面',
 			open: true,
