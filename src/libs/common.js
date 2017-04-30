@@ -1,3 +1,5 @@
+import JsBarcode from 'jsbarcode'
+
 export const types = {
 	"生活电器": ["生活电器"],
 	"电脑办公": ["电脑办公"],
@@ -56,8 +58,10 @@ export const parsetime = function(time, type = 1) {
 	if (time === 0)
 		return '';
 	let t = new Date(time);
-	if (type)
+	if (type === 1)
 		return t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() + ':' + t.getSeconds();
+	else if (type === 2)
+		return t.getFullYear().toString().slice(2) + (t.getMonth() + 1) + t.getDate() + t.getHours() + t.getMinutes() + t.getSeconds();
 	else
 		return t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate();
 }
@@ -126,24 +130,37 @@ export const copyObj = function(obj) {
 	return copy;
 }
 
-export const tableToExcel = function(table) {
-	var oXL = new ActiveXObject("Excel.Application");
-	//创建AX对象excel
-	var oWB = oXL.Workbooks.Add();
-	//获取workbook对象
-	var oSheet = oWB.ActiveSheet;
-	//激活当前sheet
-	var sel = document.body.createTextRange();
-	sel.moveToElementText(table);
-	//把表格中的内容移到TextRange中   
-	sel.select();
-	//全选TextRange中内容   
-	sel.execCommand("Copy");
-	//复制TextRange中内容    
-	oSheet.Paste();
-	//粘贴到活动的EXCEL中         
-	oXL.Visible = true;
-	//设置excel可见属性  
+export const downloadBarCode = function(code) {
+	function base64Img2Blob(code) {
+		var parts = code.split(';base64,');
+		var contentType = parts[0].split(':')[1];
+		var raw = window.atob(parts[1]);
+		var rawLength = raw.length;
+
+		var uInt8Array = new Uint8Array(rawLength);
+
+		for (var i = 0; i < rawLength; ++i) {
+			uInt8Array[i] = raw.charCodeAt(i);
+		}
+		return new Blob([uInt8Array], {
+			type: contentType
+		});
+	}
+
+	function downloadFile(fileName, content) {
+		var aLink = document.createElement('a');
+		var blob = base64Img2Blob(content); //new Blob([content]);
+		var evt = document.createEvent("HTMLEvents");
+		evt.initEvent("click", false, false); //initEvent 不加后两个参数在FF下会报错
+		aLink.download = fileName;
+		aLink.href = URL.createObjectURL(blob);
+		aLink.dispatchEvent(evt);
+		aLink.click();
+	}
+	let canvas = document.createElement('canvas');
+	JsBarcode(canvas, code);
+	downloadFile(code + ".png", canvas.toDataURL("image/png"));
+
 }
 
 export const testTask = [{
@@ -299,6 +316,86 @@ export const testMove = [{
 		"from_location": 1,
 		"from_layer": 3,
 		"to_repository": 2,
+		"to_location": 1,
+		"to_layer": 0,
+		"last_migrations": "1234",
+		"location_update_time": "2017-04-06T04:57:36.801Z"
+	}
+}]
+
+export const testOut = [{
+	"_id": "dsafdsadsaf32413141kl2",
+	"action": 500,
+	"status": 1,
+	"publish_time": "2017-04-06T04:57:36.801Z",
+	"start_time": "2017-04-06T04:57:36.801Z",
+	"end_time": "2017-04-06T04:57:36.801Z",
+	"remark": "",
+	"staff": {
+		"_id": "dsafdsadsaf32413141kl2",
+		"name": "因幡帝",
+		"account": "inaba_tewi",
+		"passwd": "123456",
+		"sex": 0,
+		"age": 222,
+		"permission": 1,
+		"signup_time": 1491451593158,
+		"last_login_time": 1491451593158
+	},
+	"material": {
+		"_id": "dsafdsadsaf32413141kl2",
+		"id": 1491451599188,
+		"type": "生活电器-生活电器",
+		"description": "wonderful repository",
+		"import_time": "2017-04-06T04:57:36.801Z",
+		"estimated_export_time": "2017-04-06T04:57:36.801Z",
+		"height": 1,
+		"width": 1,
+		"length": 2,
+		"status": 300,
+		"from_repository": 4,
+		"from_location": 8,
+		"from_layer": 1,
+		"to_repository": 0,
+		"to_location": 1,
+		"to_layer": 4,
+		"last_migrations": "1234",
+		"location_update_time": "2017-04-06T04:57:36.801Z"
+	}
+}, {
+	"_id": "dsafdsadsaf32413141kl2",
+	"action": 500,
+	"status": 1,
+	"publish_time": "2017-04-06T04:57:36.801Z",
+	"start_time": "2017-04-06T04:57:36.801Z",
+	"end_time": "2017-04-06T04:57:36.801Z",
+	"remark": "",
+	"staff": {
+		"_id": "dsafdsadsaf32413141kl2",
+		"name": "因幡帝",
+		"account": "inaba_tewi",
+		"passwd": "123456",
+		"sex": 0,
+		"age": 222,
+		"permission": 1,
+		"signup_time": 1491451593158,
+		"last_login_time": 1491451593158
+	},
+	"material": {
+		"_id": "dsafdsadsaf32413141kl2",
+		"id": 1491410563200,
+		"type": "酒水饮料-酒水饮料",
+		"description": "wonderful repository",
+		"import_time": "2017-04-05T04:57:36.801Z",
+		"estimated_export_time": "2017-04-06T04:57:36.801Z",
+		"height": 1,
+		"width": 1,
+		"length": 2,
+		"status": 300,
+		"from_repository": 1,
+		"from_location": 8,
+		"from_layer": 4,
+		"to_repository": 0,
 		"to_location": 1,
 		"to_layer": 0,
 		"last_migrations": "1234",

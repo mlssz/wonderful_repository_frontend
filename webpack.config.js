@@ -88,7 +88,7 @@ let webpackconfig = {
             }
         }, {
             test: /\.json$/,
-            loader: "json"
+            loader: "json-loader"
         }, { //Only do this use to local css!
             test: /\.css$/,
             loader: "style-loader!css-loader?modules",

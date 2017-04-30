@@ -5,10 +5,14 @@ export default class BarCode extends React.Component {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			canvas: document.createElement('canvas')
+		}
 	}
 
-	componentDidMount() {
-		JsBarcode("#barcode", this.props.content, {
+	componentWillMount() {
+		let canvas = this.state.canvas;
+		JsBarcode(canvas, this.props.content, {
 			format: this.props.format || "CODE128",
 			width: this.props.width || 2,
 			height: this.props.height || 100,
@@ -16,13 +20,15 @@ export default class BarCode extends React.Component {
 			lineColor: this.props.lineColor || "black",
 			textPosition: this.props.textPosition || "bottom",
 		});
-
+		this.setState({
+			canvas
+		})
 	}
 
 	render() {
 		return (
 			<div>
-                <svg id="barcode"></svg>
+                {this.state.canvas}
             </div>
 		)
 	}

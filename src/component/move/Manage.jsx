@@ -26,6 +26,7 @@ import {
 	parsetime,
 	parseTaskPlace,
 	changeHash,
+	downloadBarCode
 } from '../../libs/common.js'
 
 import * as sortTask from '../../libs/sortTask.js'
@@ -38,6 +39,7 @@ export default class Manage extends React.Component {
 			sort: 1,
 		}
 		this.handleChange = this.handleChange.bind(this);
+		this.meunClick = this.meunClick.bind(this);
 	}
 
 	componentWillMount() {
@@ -105,6 +107,28 @@ export default class Manage extends React.Component {
 		changeHash('move');
 	}
 
+	meunClick(event, child) {
+		// let table = document.getElementsByClassName('tablePrint')[1];
+		// var newWin = window.open("");
+		// newWin.document.write(tableToPrint.outerHTML);
+		// newWin.document.close();
+		// newWin.focus();
+		// newWin.print();
+		// newWin.close();
+		if (child.key === 'printTable') {
+			let table2excel = new Table2Excel();
+			let name = '移动单' + parsetime(new Date(), 2);
+			table2excel.export(document.getElementsByClassName('tablePrint')[1], name);
+		}
+		if (child.key === 'printBar') {
+			let task = this.state.task;
+			let codes = [];
+			for (let i in task) {
+				downloadBarCode(task[i].material.id);
+			}
+		}
+	}
+
 	render() {
 		return (
 			<div>
@@ -130,13 +154,16 @@ export default class Manage extends React.Component {
 			                <NavigationExpandMoreIcon />
 			              </IconButton>
 			            }
+			            onItemTouchTap={this.meunClick}
 			          >
-			            <MenuItem primaryText="打印移动单" />
+						<MenuItem primaryText="打印移动单" key='printTable'/>
+			            <MenuItem primaryText="打印条形码" key='printBar'/>
 			          </IconMenu>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
-					selectable={false}>
+					selectable={false}
+					className='tablePrint'>
 				    <TableBody
 				    	displayRowCheckbox={false}
 				    	deselectOnClickaway={false}>
