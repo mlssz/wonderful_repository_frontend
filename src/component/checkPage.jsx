@@ -12,6 +12,7 @@ import MenuItem from 'material-ui/MenuItem'
 import TimePicker from 'material-ui/TimePicker'
 import {blue300, indigo900, red300, pink900} from "material-ui/styles/colors"
 
+import {RegCtlTextField} from "./textfields/InputContrlTextField.jsx"
 import InfoDialog from "./tools/InfoDialog.jsx"
 import BetweenButtons from "./buttons/BetweenButtons.jsx"
 import {general_table} from "./showData.jsx"
@@ -313,6 +314,7 @@ class AutoCheckConfig extends Component {
     this.handleTimePickerChange = this.handleTimePickerChange.bind(this)
     this.cancelAutoCheck = this.cancelAutoCheck.bind(this)
     this.changeAutoCheck = this.changeAutoCheck.bind(this)
+    this.handleOtherChangeType3 = this.handleOtherChangeType3.bind(this)
   }
 
   handleTypeChange(_, index) {
@@ -324,6 +326,13 @@ class AutoCheckConfig extends Component {
     this.setState({
       update: Object.assign({}, this.state.update,{other: index})
     })
+  }
+  handleOtherChangeType3(num) {
+    let n = Math.floor(this.state.update.other / 60) * 60 + num
+    this.setState({
+      update: Object.assign({}, this.state.update, {other: n})
+    })
+    console.log(n)
   }
   handleTimePickerChange(_, date) {
     this.setState({
@@ -396,34 +405,68 @@ class AutoCheckConfig extends Component {
 
         <Paper style={this.paperStyle} zDepth={1} children={info_line} />
 
-      <div style={{margin: "30px 0"}}>
+      <div style={{
+        margin: "30px 0",
+        display: "flex",
+        height: 204,
+        justifyContent: "center",
+        alignItems: "center"
+      }}>
         <SelectField floatingLabelText="自动方式"
+          style={{margin: "0 16px"}}
           value={this.state.update.type}
           onChange={this.handleTypeChange} >
          {type_select.map((k, i) => (<MenuItem value={i} primaryText={k} />))}
         </SelectField>
         {this.state.update.type !== 1 ? undefined : (
           <SelectField floatingLabelText="星期"
-            value={this.state.update.other}
-            onChange={this.handleOtherChange} >
+                      style={{margin: "0 16px"}}
+                      value={this.state.update.other}
+                      onChange={this.handleOtherChange} >
           {weekday_select.map((k, i) => (<MenuItem value={i} primaryText={k} />))}
           </SelectField>
          )}
         {this.state.update.type !== 2 ? undefined : (
           <SelectField floatingLabelText="月"
+                       style={{margin: "0 16px"}}
                        value={this.state.update.other}
                        onChange={this.handleOtherChange} >
             {dateday_select.map((k, i) => (<MenuItem value={i} primaryText={k} />))}
           </SelectField>
         )}
+        {this.state.update.type !== 3 ? undefined : (
+          <div style={{margin: "0 24px"}}>
+            <RegCtlTextField
+                reg={/^\d+$/}
+                style={{width: 130, margin: "20px 0"}}
+                hintText="1"
+                floatingLabelText="小时"
+                callback={v => this.handleOtherChangeType3(Number.parseInt(v) * 3600)}
+                errString="请填写大于0的整数" />
+          <br />
+          +
+          <br />
+          <RegCtlTextField
+                reg={/^\d+$/}
+                style={{width: 130, margin: 0}}
+                hintText="0"
+                floatingLabelText="分钟"
+                callback={v => this.handleOtherChangeType3(Number.parseInt(v) * 60)}
+                errString="请填写大于0的整数" />
+          </div>
+        )}
+        {this.state.update.type !== 3 ? undefined : <span style={{padding: "26px 0 0 0"}}>从</span>}
         {this.state.update.type === -1 ? undefined : (
           <TimePicker
+              style={{padding: "24px 0 0 16px"}}
+              textFieldStyle={{width: 100}}
               format="24hr"
               hintText="时间"
               value={new Date(this.state.update.time)}
               onChange={this.handleTimePickerChange}
           />
         )}
+        {this.state.update.type !== 3 ? undefined : <span style={{padding: "26px 0 0 0"}}>开始</span>}
       </div>
         <BetweenButtons buttons={buttons} />
       </div>
