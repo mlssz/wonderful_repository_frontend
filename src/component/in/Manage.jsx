@@ -105,6 +105,16 @@ export default class Manage extends React.Component {
 		changeHash('putaway');
 	}
 
+	meunClick(event, child) {
+		let table = document.getElementsByClassName('tablePrint')[1];
+		var newWin = window.open("");
+		newWin.document.write(tableToPrint.outerHTML);
+		newWin.document.close();
+		newWin.focus();
+		newWin.print();
+		newWin.close();
+	}
+
 	render() {
 		return (
 			<div>
@@ -130,13 +140,16 @@ export default class Manage extends React.Component {
 			                <NavigationExpandMoreIcon />
 			              </IconButton>
 			            }
+			            onItemTouchTap={this.meunClick}
 			          >
-			            <MenuItem primaryText="打印入库单" />
+			            <MenuItem primaryText="打印入库单" key='printTable'/>
+			            <MenuItem primaryText="打印条形码" key='printBar'/>
 			          </IconMenu>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
-					selectable={false}>
+					selectable={false}
+					className="tablePrint">
 				    <TableBody
 				    	displayRowCheckbox={false}
 				    	deselectOnClickaway={false}>

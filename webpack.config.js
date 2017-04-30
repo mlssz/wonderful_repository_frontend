@@ -104,6 +104,9 @@ let webpackconfig = {
         }, {
             test: /\.(ttf|eot|svg)$/,
             loader: "file-loader"
+        }, {
+            test: /\.min\.js$/,
+            loader: 'script',
         }]
     },
     plugins: plugins,

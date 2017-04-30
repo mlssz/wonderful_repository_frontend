@@ -102,7 +102,7 @@ export default class Manage extends React.Component {
 	}
 
 	addPutaway() {
-		changeHash('putaway');
+		changeHash('move');
 	}
 
 	render() {

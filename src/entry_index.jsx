@@ -11,7 +11,6 @@ import HashTable from "./component/HashTable.jsx"
 import {
     titleMap
 } from "./libs/common.js"
-
 injectTapEventPlugin();
 
 class Body extends React.Component {
