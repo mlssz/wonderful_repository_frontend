@@ -43,7 +43,7 @@ class Body extends React.Component {
     render() {
         let paperStyle = {
             width: "80%",
-            minHeight: "100%",
+            minWidth: 840,
             margin: "20 auto",
         };
         return (

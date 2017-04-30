@@ -85,6 +85,7 @@ export default class ReactClassName extends React.Component {
 								<ListItem
 									  key={1}
 									  primaryText="盘点"
+									  onClick={()=>this.handleClick("check")}
 								/>
 							]}
 					/>
