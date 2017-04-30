@@ -29,7 +29,7 @@ export default class HashTable extends React.Component {
 					<Route path="/putawayManage" component={Manage}/>
 					<Route path="/putaway" component={PutAway}/>
 					<Route path="/putawayEnsure" component={EnsureAction}/>
-          <Route path="/check" component={CheckPage} />
+          			<Route path="/check" component={CheckPage} />
 					<Route path='/move' component={Move}/>
 					<Route path='/moveEnsure' component={MoveEnsure}/>
 					<Route path='/moveManage' component={MoveManage}/>
