@@ -55,8 +55,8 @@ export const humanise_schedule = schedule => {
   if (type === -1) return "未设置"
 
   if (type === 0) return `每天 ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} 自动盘点`
-  if (type === 1) return `每周 周${other} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} 自动盘点`
-  if (type === 2) return `每月 ${other}号 ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} 自动盘点`
+  if (type === 1) return `每周 周${other+1} ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} 自动盘点`
+  if (type === 2) return `每月 ${other+1}号 ${time.getHours()}:${time.getMinutes()}:${time.getSeconds()} 自动盘点`
 
   if (type === 3) {
     let days = Math.floor(other / DAY)
