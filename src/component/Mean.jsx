@@ -21,7 +21,7 @@ export default class ReactClassName extends React.Component {
 
 	render() {
 		return (
-			<Drawer open={this.props.visible}>
+			<Drawer open={this.props.visible} >
 				<List>
 
 					<ListItem
@@ -66,6 +66,7 @@ export default class ReactClassName extends React.Component {
 								<ListItem
 									  key={1}
 									  primaryText="盘点"
+									  onClick={()=>this.handleClick("check")}
 								/>
 							]}
 					/>

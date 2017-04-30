@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom'
 import PutAway from './PutAway.jsx'
 import EnsureAction from './EnsureAction.jsx'
+import CheckPage from "./checkPage.jsx"
 
 export default class HashTable extends React.Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ export default class HashTable extends React.Component {
 					<Route exact path="/" component={PutAway}/>
 					<Route path="/putaway" component={PutAway}/>
 					<Route path="/putawayEnsure" component={EnsureAction}/>
+          <Route path="/check" component={CheckPage} />
 				</div>
 			</HashRouter>
 		)
