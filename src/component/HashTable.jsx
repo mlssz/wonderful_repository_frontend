@@ -17,6 +17,7 @@ import OutEnsure from './out/EnsureAction.jsx'
 import OutManage from './out/Manage.jsx'
 
 import Stat from './stat/Stat.jsx'
+import MaterialPage from "./SpecialPages/MaterialPage.jsx"
 
 import GoodsManage from './goods/Manage.jsx'
 
@@ -42,6 +43,7 @@ export default class HashTable extends React.Component {
 					<Route path='/outManage' component={OutManage}/>
 					<Route path='/stat' component={Stat}/>
 					<Route path='/goodsManage' component={GoodsManage}/>
+          			<Route path='/material/:id' component={MaterialPage} />
 				</div>
 			</HashRouter>
 		)

@@ -157,7 +157,7 @@ export default class TaskForm extends React.Component {
 			return false;
 		}
 		//delete when add backend
-		sessionStorage.setItem('movetask', JSON.stringify(task));
+		sessionStorage.setItem(sessionName, JSON.stringify(task));
 		changeHash('moveEnsure');
 	}
 

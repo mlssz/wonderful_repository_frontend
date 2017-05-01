@@ -15,6 +15,7 @@ import {
   StepButton,
   StepContent,
 } from 'material-ui/Stepper'
+import {Tabs, Tab} from "material-ui/Tabs"
 import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
 
@@ -29,48 +30,6 @@ import {
   key_value_table,
 } from "../showData.jsx"
 
-const migrations = [{
-  "_id": "dsafdsaf32141314",
-  "material": "dsafdsaf32141314",
-  "date": "2017-04-06T04:57:36.801Z",
-  "from_repository": 1,
-  "from_location": 12,
-  "from_layer": 0,
-  "to_repository": 1,
-  "to_location": 3,
-  "to_layer": 0,
-}, {
-  "_id": "dsafdsaf32141314",
-  "material": "dsafdsaf32141314",
-  "date": "2017-04-06T04:57:36.801Z",
-  "from_repository": 1,
-  "from_location": 4,
-  "from_layer": 0,
-  "to_repository": 1,
-  "to_location": 12,
-  "to_layer": 0,
-}, {
-  "_id": "dsafdsaf32141314",
-  "material": "dsafdsaf32141314",
-  "date": "2017-04-06T04:57:36.801Z",
-  "from_repository": 1,
-  "from_location": 23,
-  "from_layer": 0,
-  "to_repository": 1,
-  "to_location": 4,
-  "to_layer": 0,
-}, {
-  "_id": "dsafdsaf32141314",
-  "material": "dsafdsaf32141314",
-  "date": "2017-04-06T04:57:36.801Z",
-  "from_repository": 0,
-  "from_location": 0,
-  "from_layer": 0,
-  "to_repository": 1,
-  "to_location": 23,
-  "to_layer": 0,
-}]
-
 let headStyle = {
   fontSize: 20,
   fontWeight: 500,
@@ -83,7 +42,160 @@ let inheadStyle = {
   fontSize: 20
 }
 
-const migrationSteps = (migrations, changePage)=> {
+
+export default class MaterialPage extends Component {
+
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    let tabs = [
+      {
+        label: "基础信息",
+        component: MaterialBase
+      },
+      {
+        label: "移动记录",
+        component: MaterialMigrations
+      },
+    ]
+
+    return (
+      <Tabs>
+        {tabs.map((t, i) => (
+           <Tab label={t.label} value={i.toString()} key={i}>
+            <t.component style={this.tabStyle} />
+           </Tab>
+         ))}
+      </Tabs>
+    )
+  }
+}
+MaterialPage.propTypes = {
+  style: React.PropTypes.object
+}
+MaterialPage.defaultProps = {
+  style: {}
+}
+
+class MaterialBase extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {"state":1}
+  }
+
+  render() {
+    let material = {
+      "_id": "dsafdsadsaf32413141kl2",
+      "id": 1491451593158,
+      "type": "生活电器-生活电器",
+      "description": "wonderful repository",
+      "import_time": "2017-04-06T04:57:36.801Z",
+      "estimated_export_time": "2017-04-06T04:57:36.801Z",
+      "height": 1,
+      "width": 1,
+      "length": 2,
+      "status": 300,
+      "repository_id": -1,
+      "location_id": 0,
+      "layer": 0,
+      "last_migrations": "1234",
+      "location_update_time": "2017-04-06T04:57:36.801Z"
+    }
+    let material_kvmap =  {
+      "物资状态" : humanise_material_var(material.status),
+      "当前位置": material.repository_id === undefined ? undefined : humanise_material_position(material.repository_id, material.location_id, material.layer),
+      "原位置": material.from_repository === undefined ? undefined : humanise_material_position(material.from_repository, material.from_location, material.from_layer),
+      "新位置": material.to_repository === undefined ? undefined : humanise_material_position(material.to_repository, material.to_location, material.to_layer),
+      "宽" : material.width ,
+      "长" : material.length ,
+      "高" : material.height ,
+      "物资描述" : material.description,
+    }
+    let time_kvmap = {
+      "入库时间": humanise_date(material.import_time),
+      "预计出库时间": humanise_date(material.estimated_export_time),
+      "位置更新时间": humanise_date(material.location_update_time)
+    }
+
+
+
+    return (
+        <CardText>
+          <CardHeader
+              title={<p style={inheadStyle}> <span>物资id</span> : <span>{material.id}</span></p>}
+              subtitle={<p style={inheadStyle}> <span>物资类型</span> : <span>{material.type}</span> </p>} />
+          <CardText>
+            {key_value_table(material_kvmap)}
+          </CardText>
+          <Divider />
+
+          <CardHeader title={<p  style={inheadStyle}>时间</p>}/>
+          <CardText>
+            {key_value_table(time_kvmap)}
+          </CardText>
+        </CardText>
+    )
+  }
+}
+MaterialBase.propTypes = {
+  style: React.PropTypes.object
+}
+MaterialBase.defaultProps = {
+  style: {}
+}
+
+class MaterialMigrations extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    const migrations = [{
+      "_id": "dsafdsaf32141314",
+      "material": "dsafdsaf32141314",
+      "date": "2017-04-06T04:57:36.801Z",
+      "from_repository": 1,
+      "from_location": 12,
+      "from_layer": 0,
+      "to_repository": 1,
+      "to_location": 3,
+      "to_layer": 0,
+    }, {
+      "_id": "dsafdsaf32141314",
+      "material": "dsafdsaf32141314",
+      "date": "2017-04-06T04:57:36.801Z",
+      "from_repository": 1,
+      "from_location": 4,
+      "from_layer": 0,
+      "to_repository": 1,
+      "to_location": 12,
+      "to_layer": 0,
+    }, {
+      "_id": "dsafdsaf32141314",
+      "material": "dsafdsaf32141314",
+      "date": "2017-04-06T04:57:36.801Z",
+      "from_repository": 1,
+      "from_location": 23,
+      "from_layer": 0,
+      "to_repository": 1,
+      "to_location": 4,
+      "to_layer": 0,
+    }, {
+      "_id": "dsafdsaf32141314",
+      "material": "dsafdsaf32141314",
+      "date": "2017-04-06T04:57:36.801Z",
+      "from_repository": 0,
+      "from_location": 0,
+      "from_layer": 0,
+      "to_repository": 1,
+      "to_location": 23,
+      "to_layer": 0,
+    }]
+
     let steps = migrations.map((m, i) => (
               <Step active={true} key={i}>
                 <StepButton>
@@ -108,7 +220,7 @@ const migrationSteps = (migrations, changePage)=> {
                       </span>
                     </span>
                     <span>
-                      <FlatButton label="查看任务" onTouchTap={() => changePage(TaskPage, "Task", m._id)} />
+                      <FlatButton label="查看任务" onTouchTap={console.log} />
                     </span>
                   </div>
                 </StepContent>
@@ -116,72 +228,17 @@ const migrationSteps = (migrations, changePage)=> {
     ))
 
     return (
-            <Stepper orientation="vertical">
-              {steps}
-            </Stepper>
-      )
-}
-
-export default class MaterialPage extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      "state": 1
-    }
-
-  }
-
-  render() {
-    let material = this.props.params
-    let material_kvmap =  {
-      "物资状态" : humanise_material_var(material.status),
-      "当前位置": material.repository_id === undefined ? undefined : humanise_material_position(material.repository_id, material.location_id, material.layer),
-      "原位置": material.from_repository === undefined ? undefined : humanise_material_position(material.from_repository, material.from_location, material.from_layer),
-      "新位置": material.to_repository === undefined ? undefined : humanise_material_position(material.to_repository, material.to_location, material.to_layer),
-      "宽" : material.width ,
-      "长" : material.length ,
-      "高" : material.height ,
-      "物资描述" : material.description,
-    }
-    let time_kvmap = {
-      "入库时间": humanise_date(material.import_time),
-      "预计出库时间": humanise_date(material.estimated_export_time),
-      "位置更新时间": humanise_date(material.location_update_time)
-    }
-
-
-    return (
-      <div>
-        <CardHeader
-            title={<p style={{fontSize:26}}> <span>物资id</span> : <span>{material.id}</span></p>}
-            subtitle={<p style={{fontSize:26}}> <span>物资类型</span> : <span>{material.type}</span> </p>} />
-
-        <CardText>
-          <CardHeader title={<p style={inheadStyle}>基本信息</p>}/>
-          <CardText>
-            {key_value_table(material_kvmap)}
-          </CardText>
-          <Divider />
-
-          <CardHeader title={<p  style={inheadStyle}>时间</p>}/>
-          <CardText>
-            {key_value_table(time_kvmap)}
-          </CardText>
-
-          <Divider />
-          <CardHeader title={<p  style={inheadStyle}>移动记录</p>}/>
-          <CardText>
-            {migrationSteps(migrations, this.props.changePage)}
-          </CardText>
-        </CardText>
-      </div>
+      <CardText>
+          <Stepper orientation="vertical">
+            {steps}
+          </Stepper>
+      </CardText>
     )
   }
 }
-MaterialPage.propTypes = {
+MaterialMigrations.propTypes = {
   style: React.PropTypes.object
 }
-MaterialPage.defaultProps = {
+MaterialMigrations.defaultProps = {
   style: {}
 }

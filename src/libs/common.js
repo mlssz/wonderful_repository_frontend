@@ -407,6 +407,7 @@ export const testOut = [{
 	}
 }]
 
+
 export const testGoods = [{
 	"_id": "dsafdsaf32141314",
 	"number": 133412,
@@ -475,4 +476,46 @@ export const testGoods = [{
 	"status": 300,
 	"last_migrations": "1234",
 	"location_update_time": "2017-08-18T04:57:36.801Z"
+}]
+
+export const testMigrations = [{
+	"_id": "dsafdsaf32141314",
+	"material": "dsafdsaf32141314",
+	"date": "2017-04-06T04:57:36.801Z",
+	"from_repository": 1,
+	"from_location": 12,
+	"from_layer": 0,
+	"to_repository": 1,
+	"to_location": 3,
+	"to_layer": 0,
+}, {
+	"_id": "dsafdsaf32141314",
+	"material": "dsafdsaf32141314",
+	"date": "2017-04-06T04:57:36.801Z",
+	"from_repository": 1,
+	"from_location": 4,
+	"from_layer": 0,
+	"to_repository": 1,
+	"to_location": 12,
+
+}, {
+	"_id": "dsafdsaf32141314",
+	"material": "dsafdsaf32141314",
+	"date": "2017-04-06T04:57:36.801Z",
+	"from_repository": 1,
+	"from_location": 23,
+	"from_layer": 0,
+	"to_repository": 1,
+	"to_location": 4,
+	"to_layer": 0,
+}, {
+	"_id": "dsafdsaf32141314",
+	"material": "dsafdsaf32141314",
+	"date": "2017-04-06T04:57:36.801Z",
+	"from_repository": 0,
+	"from_location": 0,
+	"from_layer": 0,
+	"to_repository": 1,
+	"to_location": 23,
+	"to_layer": 0,
 }]
