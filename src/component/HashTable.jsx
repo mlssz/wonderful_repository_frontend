@@ -18,6 +18,7 @@ import OutManage from './out/Manage.jsx'
 
 import Stat from './stat/Stat.jsx'
 import MaterialPage from "./SpecialPages/MaterialPage.jsx"
+import TaskPage from "./SpecialPages/TaskPage.jsx"
 
 export default class HashTable extends React.Component {
 	constructor(props) {
@@ -41,6 +42,7 @@ export default class HashTable extends React.Component {
 					<Route path='/outManage' component={OutManage}/>
 					<Route path='/stat' component={Stat}/>
           <Route path='/material/:id' component={MaterialPage} />
+          <Route path='/task/:id' component={TaskPage} />
 				</div>
 			</HashRouter>
 		)
