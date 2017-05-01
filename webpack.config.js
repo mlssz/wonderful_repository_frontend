@@ -1,35 +1,48 @@
-/* you should put all src file to ./src .
-   npm install -g webpack webpack-dev-server
-   npm install --save-dev \
-      webpack webpack-dev-server \
-      babel-loader babel-core babel-preset-es2015\
-      css-loader style-loader \
-      url-loader file-loader \
-      react react-dom babel-preset-react \
+/* webpack.conf.js --- configuration for webpack
+ *
+ * Maintainer: Mephis Pheies ( MephistoMMM )
+ * Email: mephistommm@gmail.com
+ */
 
-*/
-
-let join = require("path").join
-let webpack = require("webpack")
-let defaultStaticDir = "static"
+let join = require("path").join;
+let webpack = require("webpack");
+let HtmlWebpackPlugin = require("html-webpack-plugin");
+let defaultStaticDir = "static";
 let entry_dir = join(__dirname, "./src")
 
 let _static_dir = process.env.STATICDIR ?
-    process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, "").trim() : defaultStaticDir
+  process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
 
-let static_dir = join(__dirname, _static_dir)
-let node_env = process.env.NODE_ENV
-
-let isDebug = node_env === "production" ? false : true
-
-// ----------------------------------Plugin---------------------------------------
-let plugins = []
+let static_dir = join(__dirname, _static_dir);
+let node_env = process.env.NODE_ENV;
 
 let webpackDefineConfig = {
-    "__ENV": JSON.stringify(node_env)
+  "__ENV__": JSON.stringify(node_env)
 }
 
-if (!isDebug) {
+let dist = node_env === "production" ? "prodist" : "dist";
+let index = node_env === "production" ? "index.html" : "index_test.html";
+
+// https://github.com/ampedandwired/html-webpack-plugin
+let htmlWebpackPluginConfig = {
+  filename: join(static_dir, `./${index}`),
+  template: "template.html",
+  inject: true,
+};
+let plugins = []
+
+let isDebug = true;
+if (node_env === "production") {
+    isDebug = false;
+    Object.assign(htmlWebpackPluginConfig, {
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        removeAttributeQuotes: true
+        // more options:
+        // https://github.com/kangax/html-minifier#options-quick-reference
+      }
+    })
     plugins = plugins.concat([
         // split vendor js into its own file
         new webpack.optimize.CommonsChunkPlugin({
@@ -53,29 +66,29 @@ if (!isDebug) {
     ])
 }
 
+let uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
+
 plugins = plugins.concat([
-        //UglifyJs Plugin will minify output(bundle.js) JS codes.
-        //http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-        new webpack.optimize.UglifyJsPlugin({
+        new uglifyJsPlugin({
+            //UglifyJs Plugin will minify output(bundle.js) JS codes.http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
             compress: {
                 warnings: false
             }
         }),
-        new webpack.DefinePlugin(webpackDefineConfig)
-    ])
-    // ----------------------------------Plugin---------------------------------------
+        new webpack.DefinePlugin(webpackDefineConfig),
+        new HtmlWebpackPlugin(htmlWebpackPluginConfig)
+])
 
 let webpackconfig = {
     devtool: isDebug ? "eval" : "#source-map",
     entry: {
-        //name: path
         signPage: [join(entry_dir, "./entry_index.jsx")],
     },
     output: {
         //where compiled files be put
-        path: join(static_dir, "./dist"),
+        path: join(static_dir, `./${dist}`),
         //url for develop server
-        publicPath: `/${_static_dir}/dist/`, //uri while web set run
+        publicPath: `/${_static_dir}/${dist}/`, //uri while web set run
         filename: "[name].js"
     },
     module: {
@@ -86,9 +99,9 @@ let webpackconfig = {
             query: {
                 presets: ["es2015", "react"]
             }
-        }, {
+        }, { 
             test: /\.json$/,
-            loader: "json-loader"
+            loader: "json",
         }, { //Only do this use to local css!
             test: /\.css$/,
             loader: "style-loader!css-loader?modules",
@@ -104,13 +117,9 @@ let webpackconfig = {
         }, {
             test: /\.(ttf|eot|svg)$/,
             loader: "file-loader"
-        }, {
-            test: /\.min\.js$/,
-            loader: 'script',
         }]
     },
-    plugins: plugins,
-
+    plugins: plugins, 
     // a server for front end development
     devServer: {
         hot: true,
@@ -118,7 +127,7 @@ let webpackconfig = {
         historyApiFallback: {
             rewrites: [{
                 from: /^\/(|index.html)$/,
-                to: `/${_static_dir}/index.html`
+                to: `/${_static_dir}/${index}`
             }],
         },
         proxy: {
@@ -128,6 +137,8 @@ let webpackconfig = {
             },
         }
     }
-}
+};
 
-module.exports = webpackconfig
+module.exports = webpackconfig;
+
+/* webpack.conf.js ends here */
