@@ -19,6 +19,7 @@ import OutManage from './out/Manage.jsx'
 import Stat from './stat/Stat.jsx'
 import MaterialPage from "./SpecialPages/MaterialPage.jsx"
 import TaskPage from "./SpecialPages/TaskPage.jsx"
+import StaffPage from "./SpecialPages/StaffPage.jsx"
 
 import GoodsManage from './goods/Manage.jsx'
 
@@ -45,6 +46,7 @@ export default class HashTable extends React.Component {
 					<Route path='/stat' component={Stat}/>
           <Route path='/material/:id' component={MaterialPage} />
           <Route path='/task/:id' component={TaskPage} />
+          <Route path='/staff/:id' component={StaffPage} />
 					<Route path='/goodsManage' component={GoodsManage}/>
 				</div>
 			</HashRouter>

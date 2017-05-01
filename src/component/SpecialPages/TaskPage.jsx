@@ -15,6 +15,7 @@ import {Tabs, Tab} from "material-ui/Tabs"
 
 import {CenterButtons} from "../buttons/BetweenButtons.jsx"
 
+import {changeHash} from "../../libs/common.js"
 import {
   humanise_date,
   humanise_task_var,
@@ -206,7 +207,7 @@ class TaskMaterial extends Component {
           <CardText>
           <p  style={headStyle}>
             <span>物资</span>
-            <FlatButton label="查看详情" onTouchTap={console.log}/>
+            <FlatButton label="查看详情" onTouchTap={() => changeHash(`/material/${material._id}`)}/>
           </p>
           <CardText>
             {key_value_table(material_kvmap)}
@@ -242,7 +243,7 @@ class TaskStaff extends Component {
         <CardText>
           <p  style={headStyle}>
             <span>人员</span>
-            <FlatButton label="查看详情" onTouchTap={console.log} />
+            <FlatButton label="查看详情" onTouchTap={() => changeHash(`/staff/${staff._id}`)} />
           </p>
           <CardText>
             {key_value_table(staff_kvmap)}
@@ -275,7 +276,7 @@ class TaskMore extends Component {
     ]
 
     return (
-        <CardText style={{height: 86, padding:"50px 0"}}>
+        <CardText style={{height: 86, padding:"50px 24px 0 24px"}}>
           <CenterButtons buttons={buttons} />
         </CardText>
     )

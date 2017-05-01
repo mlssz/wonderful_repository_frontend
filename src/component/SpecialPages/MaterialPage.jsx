@@ -19,6 +19,7 @@ import {Tabs, Tab} from "material-ui/Tabs"
 import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
 
+import {changeHash} from "../../libs/common.js"
 import {
   humanise_material_var,
   humanise_date,
@@ -210,7 +211,7 @@ class MaterialMigrations extends Component {
                       </span>
                     </span>
                     <span>
-                      <FlatButton label="查看任务" onTouchTap={console.log} />
+                      <FlatButton label="查看任务" onTouchTap={() => changeHash(`/task/${m._id}`)} />
                     </span>
                   </div>
                 </StepContent>
