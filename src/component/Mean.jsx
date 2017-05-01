@@ -97,6 +97,7 @@ export default class ReactClassName extends React.Component {
 								<ListItem
 									  key={1}
 									  primaryText="统计"
+									  onClick={()=>this.handleClick("stat")}
 								/>
 							]}
 					/>

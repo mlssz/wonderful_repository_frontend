@@ -16,6 +16,8 @@ import Out from './out/out.jsx'
 import OutEnsure from './out/EnsureAction.jsx'
 import OutManage from './out/Manage.jsx'
 
+import Stat from './stat/Stat.jsx'
+
 export default class HashTable extends React.Component {
 	constructor(props) {
 		super(props);
@@ -25,7 +27,7 @@ export default class HashTable extends React.Component {
 		return (
 			<HashRouter hashType="noslash">
 				<div>
-					<Route exact path="/" component={Manage}/>
+					<Route exact path="/" component={Stat}/>
 					<Route path="/putawayManage" component={Manage}/>
 					<Route path="/putaway" component={PutAway}/>
 					<Route path="/putawayEnsure" component={EnsureAction}/>
@@ -36,6 +38,7 @@ export default class HashTable extends React.Component {
 					<Route path='/out' component={Out}/>
 					<Route path='/outEnsure' component={OutEnsure}/>
 					<Route path='/outManage' component={OutManage}/>
+					<Route path='/stat' component={Stat}/>
 				</div>
 			</HashRouter>
 		)
