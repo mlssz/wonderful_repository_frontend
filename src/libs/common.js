@@ -21,16 +21,20 @@ export const styles = {
 }
 
 export const titleMap = {
-	"": "入库",
+	"": "统计",
+	"#": "统计",
+	"#stat": "统计",
+	"#chenk": "盘点",
 	"#putaway": "入库管理",
 	"#putawayEnsure": "入库管理",
-	"#putawayEnsure": "入库管理",
+	"#putawayManage": "入库管理",
 	"#move": "移动管理",
 	"#moveEnsure": "移动管理",
 	"#moveManage": "移动管理",
 	"#out": "出库管理",
 	"#outEnsure": "出库管理",
 	"#outManage": "出库管理",
+	"#goodsManage": "物品管理"
 }
 
 export const formName = {
@@ -386,8 +390,8 @@ export const testOut = [{
 		"id": 1491410563200,
 		"type": "酒水饮料-酒水饮料",
 		"description": "wonderful repository",
-		"import_time": "2017-04-05T04:57:36.801Z",
-		"estimated_export_time": "2017-04-06T04:57:36.801Z",
+		"import_time": "2017-01-10T04:57:36.801Z",
+		"estimated_export_time": "2017-02-06T04:57:36.801Z",
 		"height": 1,
 		"width": 1,
 		"length": 2,
@@ -399,6 +403,76 @@ export const testOut = [{
 		"to_location": 1,
 		"to_layer": 0,
 		"last_migrations": "1234",
-		"location_update_time": "2017-04-06T04:57:36.801Z"
+		"location_update_time": "2017-01-10T04:57:36.801Z"
 	}
+}]
+
+export const testGoods = [{
+	"_id": "dsafdsaf32141314",
+	"number": 133412,
+	"id": 1491420493158,
+	"type": "酒水饮料",
+	"description": "wonderful repository",
+	"import_time": "2017-02-06T04:57:36.801Z",
+	"estimated_export_time": "2017-08-06T04:57:36.801Z",
+	"height": 1,
+	"width": 1,
+	"length": 2,
+	"repository_id": 2,
+	"location_id": 1,
+	"layer": 2,
+	"status": 300,
+	"last_migrations": "1234",
+	"location_update_time": "2017-04-29T04:57:36.801Z"
+}, {
+	"_id": "dsafdsaf32141314",
+	"number": 133412,
+	"id": 1491056593158,
+	"type": "生活电器",
+	"description": "wonderful repository",
+	"import_time": "2017-04-06T04:57:36.801Z",
+	"estimated_export_time": "2017-04-06T04:57:36.801Z",
+	"height": 1,
+	"width": 1,
+	"length": 2,
+	"repository_id": 1,
+	"location_id": 9,
+	"layer": 2,
+	"status": 300,
+	"last_migrations": "1234",
+	"location_update_time": "2017-04-06T04:57:36.801Z"
+}, {
+	"_id": "dsafdsaf32141314",
+	"number": 133412,
+	"id": 1491439573158,
+	"type": "生活电器",
+	"description": "wonderful repository",
+	"import_time": "2017-02-20T04:57:36.801Z",
+	"estimated_export_time": "2017-02-25T04:57:36.801Z",
+	"height": 1,
+	"width": 1,
+	"length": 2,
+	"repository_id": 2,
+	"location_id": 3,
+	"layer": 1,
+	"status": 300,
+	"last_migrations": "1234",
+	"location_update_time": "2017-02-20T04:57:36.801Z"
+}, {
+	"_id": "dsafdsaf32141314",
+	"number": 133412,
+	"id": 1491451593158,
+	"type": "生活电器",
+	"description": "wonderful repository",
+	"import_time": "2017-04-06T04:57:36.801Z",
+	"estimated_export_time": "2017-10-20T04:57:36.801Z",
+	"height": 1,
+	"width": 1,
+	"length": 2,
+	"repository_id": 1,
+	"location_id": 8,
+	"layer": 2,
+	"status": 300,
+	"last_migrations": "1234",
+	"location_update_time": "2017-08-18T04:57:36.801Z"
 }]

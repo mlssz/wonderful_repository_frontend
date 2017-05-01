@@ -90,7 +90,7 @@ export default class ReactClassName extends React.Component {
 							]}
 					/>
 					<ListItem
-						primaryText="统计"
+						primaryText="统计与查询"
 							initiallyOpen={false}
 							primaryTogglesNestedList={true}
 							nestedItems={[
@@ -98,6 +98,11 @@ export default class ReactClassName extends React.Component {
 									  key={1}
 									  primaryText="统计"
 									  onClick={()=>this.handleClick("stat")}
+								/>,
+								<ListItem
+									  key={2}
+									  primaryText="物品管理"
+									  onClick={()=>this.handleClick("goodsManage")}
 								/>
 							]}
 					/>

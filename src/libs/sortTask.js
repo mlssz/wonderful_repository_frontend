@@ -19,10 +19,10 @@ export const sortByFromPlace = function(taska, taskb) {
 	let materialb = taskb.material;
 	if (materiala.from_repository > materialb.from_repository)
 		return true;
-	else if (materiala.from_repository = materialb.from_repository) {
+	else if (materiala.from_repository === materialb.from_repository) {
 		if (materiala.from_location > materialb.from_location)
 			return true;
-		else if (materiala.from_location = materialb.from_location) {
+		else if (materiala.from_location === materialb.from_location) {
 			if (materiala.from_layer > materialb.from_layer)
 				return true
 		}
@@ -35,10 +35,10 @@ export const sortByToPlace = function(taska, taskb) {
 	let materialb = taskb.material;
 	if (materiala.to_repository > materialb.to_repository) {
 		return true;
-	} else if (materiala.to_repository = materialb.to_repository) {
+	} else if (materiala.to_repository === materialb.to_repository) {
 		if (materiala.to_location > materialb.to_location)
 			return true;
-		else if (materiala.to_location = materialb.to_location) {
+		else if (materiala.to_location === materialb.to_location) {
 			if (materiala.to_layer > materialb.to_layer)
 				return true
 		}

@@ -18,6 +18,8 @@ import {
 
 let placeFrom = [];
 
+let sessionName = 'movetask';
+
 export default class TaskForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -36,17 +38,19 @@ export default class TaskForm extends React.Component {
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('task'));
+		let task = JSON.parse(sessionStorage.getItem(sessionName));
 		if (!task)
 			task = {
 				type: [],
 				num: '',
-				// id:'',
+				// id: '',
 				// placeFrom:'',
 				// repository_id: '',
 				// location_id: '',
 				// layer: '',
 			}
+		if (task.id && task.id.length === 13)
+			task = this.fillContent(task, task.id);
 		this.setState({
 			task
 		})
@@ -72,6 +76,16 @@ export default class TaskForm extends React.Component {
 		});
 	}
 
+	fillContent(task, id) {
+		let newTask = Object.assign({}, task);
+		newTask.type[0] = '生活电器';
+		newTask.type[1] = '生活电器';
+		for (let i = 0; i < 10; i++) {
+			placeFrom.push(randomNum(1, 3) + ' 仓 ' + randomNum(1, 10) + ' 架 ' + randomNum(1, 3) + ' 层 ');
+		}
+		return newTask;
+	}
+
 	setSecondType(value) {
 		let task = this.state.task;
 		let error = this.state.error;
@@ -95,11 +109,7 @@ export default class TaskForm extends React.Component {
 		task.id = v;
 		error.id = '';
 		if (v.length === 13) {
-			task.type[0] = '生活电器';
-			task.type[1] = '生活电器';
-			for (let i = 0; i < 10; i++) {
-				placeFrom.push(randomNum(1, 3) + ' 仓 ' + randomNum(1, 10) + ' 架 ' + randomNum(1, 3) + ' 层 ');
-			}
+			task = this.fillContent(task, id);
 		}
 		this.setState({
 			task
@@ -121,7 +131,7 @@ export default class TaskForm extends React.Component {
 	}
 
 	cancel() {
-		sessionStorage.removeItem('movetask');
+		sessionStorage.removeItem(sessionName);
 		let task = this.state.task;
 		for (let i in task) {
 			task[i] = null;
