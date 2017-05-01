@@ -5,6 +5,7 @@ import {
 	Stepper,
 	StepLabel,
 } from 'material-ui/Stepper';
+import Selecter from './Selecter.jsx'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {

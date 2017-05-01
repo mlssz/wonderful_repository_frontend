@@ -17,6 +17,8 @@ import {
 	changeHash
 } from '../../libs/common.js'
 
+let sessionName = 'movetask';
+
 export default class ReactClassName extends React.Component {
 	constructor(props) {
 		super(props);
@@ -31,7 +33,7 @@ export default class ReactClassName extends React.Component {
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('movetask'));
+		let task = JSON.parse(sessionStorage.getItem(sessionName));
 		if (task.repository_id === undefined) {
 			task.repository_id = randomNum(1, 3);
 			task.location_id = randomNum(1, 10);
@@ -71,7 +73,7 @@ export default class ReactClassName extends React.Component {
 	}
 
 	putaway() {
-		sessionStorage.removeItem('task');
+		sessionStorage.removeItem(sessionName);
 		this.setState({
 			mes: '移动成功，3秒后返回移动页面',
 			open: true,

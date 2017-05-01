@@ -30,6 +30,8 @@ import {
 } from '../../libs/common.js'
 
 import * as sortTask from '../../libs/sortTask.js'
+import Selecter from '../in/Selecter.jsx'
+
 
 export default class Manage extends React.Component {
 	constructor(props) {
@@ -132,6 +134,7 @@ export default class Manage extends React.Component {
 	render() {
 		return (
 			<div>
+				<Selecter/>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
