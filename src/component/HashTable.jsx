@@ -17,6 +17,7 @@ import OutEnsure from './out/EnsureAction.jsx'
 import OutManage from './out/Manage.jsx'
 
 import Stat from './stat/Stat.jsx'
+import MaterialPage from "./SpecialPages/MaterialPage.jsx"
 
 export default class HashTable extends React.Component {
 	constructor(props) {
@@ -31,7 +32,7 @@ export default class HashTable extends React.Component {
 					<Route path="/putawayManage" component={Manage}/>
 					<Route path="/putaway" component={PutAway}/>
 					<Route path="/putawayEnsure" component={EnsureAction}/>
-          			<Route path="/check" component={CheckPage} />
+          <Route path="/check" component={CheckPage} />
 					<Route path='/move' component={Move}/>
 					<Route path='/moveEnsure' component={MoveEnsure}/>
 					<Route path='/moveManage' component={MoveManage}/>
@@ -39,6 +40,7 @@ export default class HashTable extends React.Component {
 					<Route path='/outEnsure' component={OutEnsure}/>
 					<Route path='/outManage' component={OutManage}/>
 					<Route path='/stat' component={Stat}/>
+          <Route path='/material/:id' component={MaterialPage} />
 				</div>
 			</HashRouter>
 		)
