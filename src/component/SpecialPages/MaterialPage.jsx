@@ -19,8 +19,7 @@ import {Tabs, Tab} from "material-ui/Tabs"
 import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
 
-import TaskPage from './TaskPage.jsx'
-
+import {changeHash} from "../../libs/common.js"
 import {
   humanise_material_var,
   humanise_date,
@@ -30,14 +29,6 @@ import {
   key_value_table,
 } from "../showData.jsx"
 
-let headStyle = {
-  fontSize: 20,
-  fontWeight: 500,
-  padding: 16,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-}
 let inheadStyle = {
   fontSize: 20
 }
@@ -220,7 +211,7 @@ class MaterialMigrations extends Component {
                       </span>
                     </span>
                     <span>
-                      <FlatButton label="查看任务" onTouchTap={console.log} />
+                      <FlatButton label="查看任务" onTouchTap={() => changeHash(`/task/${m._id}`)} />
                     </span>
                   </div>
                 </StepContent>
@@ -240,5 +231,35 @@ MaterialMigrations.propTypes = {
   style: React.PropTypes.object
 }
 MaterialMigrations.defaultProps = {
+  style: {}
+}
+
+class MaterialMore extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    const buttons = [
+      {
+        label: "删除任务",
+        type: 2,
+        disabled: this.props.task.status < 1 ? 0 : 1,
+        onTouchTap: console.log
+      }
+    ]
+
+    return (
+      <CardText style={{height: 86, padding:"50px 0"}}>
+        <CenterButtons buttons={buttons} />
+      </CardText>
+    )
+  }
+}
+MaterialMore.propTypes = {
+  style: React.PropTypes.object
+}
+MaterialMore.defaultProps = {
   style: {}
 }

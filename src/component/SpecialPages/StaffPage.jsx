@@ -10,9 +10,10 @@ import {
   CardText
 } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
+import {Tabs, Tab} from "material-ui/Tabs"
 import Divider from 'material-ui/Divider'
 
-import TaskPage from './TaskPage.jsx'
+import BetweenButtons from "../buttons/BetweenButtons.jsx"
 
 import {
   humanise_staff_var,
@@ -22,14 +23,6 @@ import {
   key_value_table,
 } from "../showData.jsx"
 
-let headStyle = {
-  fontSize: 20,
-  fontWeight: 500,
-  padding: 16,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-}
 let inheadStyle = {
   fontSize: 20
 }
@@ -45,8 +38,57 @@ export default class StaffPage extends Component {
   }
 
   render() {
-    let staff = this.props.params
-    console.log(staff)
+    let staff = {
+      "_id": "dsafdsadsaf32413141kl2",
+      "name": "因幡帝",
+      "account": "inaba_tewi",
+      "passwd": "123456",
+      "sex": 0,
+      "age": 222,
+      "permission": 1,
+      "signup_time": 1491451593158,
+      "last_login_time": 1491451593158
+	  }
+
+    let tabs = [
+      {
+        label: "基础信息",
+        component: StaffBase
+      },
+    ]
+
+    tabs.push({
+      label: "更多",
+      component: StaffMore
+    })
+
+    return (
+      <Tabs>
+        {tabs.map((t, i) => (
+           <Tab label={t.label} value={i.toString()} key={i}>
+            <t.component style={this.tabStyle} staff={staff}/>
+           </Tab>
+         ))}
+      </Tabs>
+    )
+  }
+}
+StaffPage.propTypes = {
+  style: React.PropTypes.object
+}
+StaffPage.defaultProps = {
+  style: {}
+}
+
+class StaffBase extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    let staff = this.props.staff
+
     let base_kvmap =  {
       "职位" : humanise_staff_var(staff.permission),
       "性别": staff.sex ? "男" : "女",
@@ -56,17 +98,15 @@ export default class StaffPage extends Component {
     let account_kvmap = {
       "账号": staff.account,
       "密码": staff.passwd,
-      "注册时间" : staff.signup_time,
-      "上次登入时间" : staff.last_login_time,
+      "注册时间" : humanise_date(staff.signup_time),
+      "上次登入时间" : humanise_date(staff.last_login_time),
     }
 
-
     return (
-      <div>
-        <CardHeader
-            title={<p style={{fontSize:26}}> <span>姓名</span> : <span>{staff.name}</span></p>}
-            />
         <CardText>
+          <CardHeader
+            title={<p style={inheadStyle}> <span>姓名</span> : <span>{staff.name}</span></p>}
+            />
           <CardHeader title={<p style={inheadStyle}>基本信息</p>}/>
           <CardText>
             {key_value_table(base_kvmap)}
@@ -79,13 +119,46 @@ export default class StaffPage extends Component {
           </CardText>
 
         </CardText>
-      </div>
     )
   }
 }
-StaffPage.propTypes = {
+StaffBase.propTypes = {
   style: React.PropTypes.object
 }
-StaffPage.defaultProps = {
+StaffBase.defaultProps = {
+  style: {}
+}
+
+class StaffMore extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    const buttons = [
+      {
+        label: "删除职员",
+        type: 2,
+        onTouchTap: console.log
+      },
+      {
+        label: "修改职员信息",
+        type: 1,
+        onTouchTap: console.log
+      },
+    ]
+
+    return (
+        <CardText style={{height: 86, padding:"50px 200px 0 200px"}}>
+          <BetweenButtons buttons={buttons} />
+        </CardText>
+    )
+  }
+}
+StaffMore.propTypes = {
+  style: React.PropTypes.object
+}
+StaffMore.defaultProps = {
   style: {}
 }

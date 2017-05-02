@@ -63,16 +63,17 @@ export class CenterButtons extends Component {
   constructor(props) {
     super(props)
 
-    this.mainStyle = {
-      display: "inline",
-      margin: "0 auto"
-    }
   }
 
   render() {
 
+    let length = this.props.buttons.reduce((a, v) => a + 32 + v.label.length * 13.5, 0)
+    let mainStyle = {
+      margin: "0 auto",
+      width: length
+    }
     let inlineButtons = this.props.buttons.map(suitButton)
-    let style = Object.assign({}, this.mainStyle, this.props.style)
+    let style = Object.assign({}, mainStyle, this.props.style)
 
     return (
       <div style={style} >

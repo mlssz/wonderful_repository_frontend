@@ -106,7 +106,7 @@ export default class Manage extends React.Component {
 	        	<TableRowColumn style={{overflow:"visible"}}>{import_time}</TableRowColumn>
 	        	<TableRowColumn>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn>{toPlace}</TableRowColumn>
-	        	<TableRowColumn><RaisedButton label="详情" /></TableRowColumn>
+	        	<TableRowColumn><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -208,6 +208,7 @@ export default class Manage extends React.Component {
 		)
 	}
 }
+
 
 function pickTask(task, v, sort) {
 	let material = task.material;

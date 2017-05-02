@@ -11,9 +11,11 @@ import {
 } from 'material-ui/Card'
 import Divider from 'material-ui/Divider'
 import FlatButton from 'material-ui/FlatButton'
+import {Tabs, Tab} from "material-ui/Tabs"
 
-import MaterialPage from "./MaterialPage.jsx"
-import StaffPage from "./StaffPage.jsx"
+import {CenterButtons} from "../buttons/BetweenButtons.jsx"
+
+import {changeHash} from "../../libs/common.js"
 import {
   humanise_date,
   humanise_task_var,
@@ -54,10 +56,10 @@ export default class TaskPage extends Component {
 
   render() {
     // This should request to backend
-    let task = typeof this.props.params !== "string" ? this.props.params : {
+    let task =  {
       "_id": "dsafdsadsaf32413141kl2",
       "action": 500,
-      "status": 1,
+      "status": 0,
       "publish_time": "2017-04-06T04:57:36.801Z",
       "start_time": "2017-04-06T04:57:36.801Z",
       "end_time": "2017-04-06T04:57:36.801Z",
@@ -95,20 +97,100 @@ export default class TaskPage extends Component {
       }
     }
 
+    let tabs = [
+      {
+        label: "基础信息",
+        component: TaskBase
+      },
+    ]
+
+    if (task.material !== undefined) {
+      tabs.push({
+        label: "物品信息",
+        component: TaskMaterial
+      })
+    }
+    if (task.staff !== undefined) {
+      tabs.push({
+        label: "人员信息",
+        component: TaskStaff
+      })
+    }
+
+    tabs.push({
+      label: "更多",
+      component: TaskMore
+    })
+
+    return (
+      <Tabs>
+        {tabs.map((t, i) => (
+           <Tab label={t.label} value={i.toString()} key={i}>
+            <t.component style={this.tabStyle} task={task}/>
+           </Tab>
+         ))}
+      </Tabs>
+    )
+  }
+}
+TaskPage.propTypes = {
+  style: React.PropTypes.object
+}
+TaskPage.defaultProps = {
+  style: {}
+}
+
+class TaskBase extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+
+    let task = this.props.task
     let task_kvmap = {
           "发布时间" : humanise_date(task.publish_time),
           "开始执行时间" : humanise_date(task.start_time),
           "结束时间" : humanise_date(task.end_time),
     }
-    let staff = task.staff
-    let staff_kvmap = staff === undefined ? undefined : {
-      "姓名": staff.name,
-      "账户": staff.account,
-      "职位": humanise_staff_var(staff.permission),
-      "性别": staff.sex ? "男" : "女",
-      "年龄": staff.age
-    }
-    let material = task.material
+
+    return (
+
+        <CardText>
+          <CardHeader
+              title={<p style={inheadStyle}> <span>Action</span> : <span>{task.action}</span> (<span>{humanise_task_var(task.action)})</span></p>}
+              subtitle={<p style={inheadStyle}> <span>Status</span> : <span>{task.status}</span> (<span>{humanise_task_var(task.status)})</span></p>} />
+          <CardHeader title={<p style={inheadStyle}>时间</p>}/>
+          <CardText>
+            {key_value_table(task_kvmap)}
+          </CardText>
+          <Divider />
+
+          <CardHeader title={<p  style={inheadStyle}>附加信息</p>}/>
+          <CardText>
+            {task.remark.length <= 0 ? "空" : task.remark.split("\n").map((l, i) => <p key={i} style={normalText}>{l}</p>)}
+          </CardText>
+        </CardText>
+    )
+  }
+}
+TaskBase.propTypes = {
+  style: React.PropTypes.object
+}
+TaskBase.defaultProps = {
+  style: {}
+}
+
+class TaskMaterial extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+
+    let material = this.props.task.material
     let material_kvmap = material === undefined ? undefined : {
       "物资id" : material.id ,
       "物资类型" : material.type ,
@@ -121,53 +203,88 @@ export default class TaskPage extends Component {
       "物资描述" : material.description,
     }
 
-
     return (
-      <div>
-        <CardHeader
-            title={<p style={{fontSize:26}}> <span>Action</span> : <span>{task.action}</span> (<span>{humanise_task_var(task.action)})</span></p>}
-            subtitle={<p style={{fontSize:26}}> <span>Status</span> : <span>{task.status}</span> (<span>{humanise_task_var(task.status)})</span></p>} />
-
-        <CardText>
-          <CardHeader title={<p style={inheadStyle}>时间</p>}/>
           <CardText>
-            {key_value_table(task_kvmap)}
-          </CardText>
-          <Divider />
-
-          <CardHeader title={<p  style={inheadStyle}>附加信息</p>}/>
-          <CardText>
-            {task.remark.length <= 0 ? "空" : task.remark.split("\n").map((l, i) => <p key={i} style={normalText}>{l}</p>)}
-          </CardText>
-          <Divider />
-
           <p  style={headStyle}>
             <span>物资</span>
-            <FlatButton label="查看详情" onTouchTap={
-              () => this.props.changePage(MaterialPage, "Material", material)}/>
+            <FlatButton label="查看详情" onTouchTap={() => changeHash(`/material/${material._id}`)}/>
           </p>
           <CardText>
             {key_value_table(material_kvmap)}
           </CardText>
+          </CardText>
+    )
+  }
+}
+TaskMaterial.propTypes = {
+  style: React.PropTypes.object
+}
+TaskMaterial.defaultProps = {
+  style: {}
+}
 
-          <Divider />
+class TaskStaff extends Component {
 
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    let staff = this.props.task.staff
+    let staff_kvmap = {
+      "姓名": staff.name,
+      "账户": staff.account,
+      "职位": humanise_staff_var(staff.permission),
+      "性别": staff.sex ? "男" : "女",
+      "年龄": staff.age
+    }
+
+    return (
+        <CardText>
           <p  style={headStyle}>
             <span>人员</span>
-            <FlatButton label="查看详情" onTouchTap={
-              () => this.props.changePage(StaffPage, "Staff", staff)} />
+            <FlatButton label="查看详情" onTouchTap={() => changeHash(`/staff/${staff._id}`)} />
           </p>
           <CardText>
             {key_value_table(staff_kvmap)}
           </CardText>
         </CardText>
-      </div>
     )
   }
 }
-TaskPage.propTypes = {
+TaskStaff.propTypes = {
   style: React.PropTypes.object
 }
-TaskPage.defaultProps = {
+TaskStaff.defaultProps = {
+  style: {}
+}
+
+class TaskMore extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    const buttons = [
+      {
+        label: "删除任务",
+        type: 2,
+        disabled: this.props.task.status < 1 ? 0 : 1,
+        onTouchTap: console.log
+      }
+    ]
+
+    return (
+        <CardText style={{height: 86, padding:"50px 24px 0 24px"}}>
+          <CenterButtons buttons={buttons} />
+        </CardText>
+    )
+  }
+}
+TaskMore.propTypes = {
+  style: React.PropTypes.object
+}
+TaskMore.defaultProps = {
   style: {}
 }
