@@ -19,6 +19,7 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
 
 import {
 	testMove,
@@ -37,7 +38,8 @@ export default class Manage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			task: {},
+			task: [],
+			oriTask: [],
 			sort: 1,
 		}
 		this.handleChange = this.handleChange.bind(this);
@@ -48,8 +50,12 @@ export default class Manage extends React.Component {
 		let task = testMove;
 		for (let i in task)
 			task[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
+		let oriTask = [];
+		for (let i in task)
+			oriTask.push(task[i])
 		this.setState({
-			task
+			task,
+			oriTask
 		});
 	}
 
@@ -131,6 +137,19 @@ export default class Manage extends React.Component {
 		}
 	}
 
+	pick(e, v) {
+		let task = this.state.task;
+		let oriTask = this.state.oriTask;
+		if (!v)
+			task = oriTask;
+		else {
+			task = oriTask.filter((e) => pickTask(e, v, this.state.sort));
+		}
+		this.setState({
+			task
+		})
+	}
+
 	render() {
 		return (
 			<div>
@@ -138,17 +157,20 @@ export default class Manage extends React.Component {
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
-							<MenuItem value={1} primaryText="默认排序" />
+							<MenuItem value={1} primaryText="物资编号" />
 							<MenuItem value={2} primaryText="物资类型" />
 							<MenuItem value={3} primaryText="物资数量" />
 							<MenuItem value={4} primaryText="下单时间" />
 							<MenuItem value={5} primaryText="原始位置" />
 							<MenuItem value={6} primaryText="目的地址" />
 						</DropDownMenu>
+			          	<TextField
+					    	hintText="在结果中筛选"
+					    	hintStyle={{color:'gray'}}
+					    	onChange={this.pick.bind(this)}
+					  	/>
 			        </ToolbarGroup>
 			        <ToolbarGroup>
-			          <ToolbarTitle text="Options" />
-			          <FontIcon className="muidocs-icon-custom-sort" />
 			          <ToolbarSeparator />
 			          <RaisedButton label="新建移动单" primary={true} onTouchTap={this.addPutaway}/>
 			          <IconMenu
@@ -185,4 +207,23 @@ export default class Manage extends React.Component {
 			</div>
 		)
 	}
+}
+
+function pickTask(task, v, sort) {
+	let material = task.material;
+	let id = material.id;
+	let type = material.type;
+	let number = task.number;
+	let import_time = parsetime(material.location_update_time);
+	let [fromPlace, toPlace] = parseTaskPlace(material);
+	let selecter = [id, type, number, import_time, fromPlace, toPlace];
+	// for (let i of selecter) {
+	// 	if (i.toString().replace(/\s/g, "").indexOf(v) >= 0) {
+	// 		return true;
+	// 	}
+	// }
+	if (selecter[sort - 1].toString().replace(/\s/g, "").indexOf(v) >= 0) {
+		return true;
+	}
+	return false;
 }
