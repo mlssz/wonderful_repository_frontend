@@ -151,7 +151,7 @@ export default class Manage extends React.Component {
 
 	render() {
     if (true) {
-      return (<div><Loading /></div>)
+      return (<div><Loading style={{marginTop: 150}}/></div>)
     }
 
 		return (

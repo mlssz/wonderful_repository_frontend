@@ -36,7 +36,7 @@ export default class InfoDialog extends Component {
 
   render() {
     let actions = [
-      <FlatButton label="Cancel" primary={true} keyboardFocused={true} onTouchTap={this.handleDialogClose} />
+      <FlatButton label={this.props.defaultLabel} primary={true} keyboardFocused={true} onTouchTap={this.handleDialogClose} />
     ]
 
     if(this.props.anotherButton){
@@ -57,7 +57,9 @@ export default class InfoDialog extends Component {
   }
 }
 InfoDialog.propTypes = {
-  anotherButton: React.PropTypes.element
+  anotherButton: React.PropTypes.element,
+  defaultLabel: React.PropTypes.string
 }
 InfoDialog.defaultProps = {
+  defaultLabel: "Cancel"
 }

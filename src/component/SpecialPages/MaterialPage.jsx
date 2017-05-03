@@ -18,8 +18,9 @@ import {
 import {Tabs, Tab} from "material-ui/Tabs"
 import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
+import Paper from 'material-ui/Paper'
 
-import {changeHash} from "../../libs/common.js"
+import {changeHash, paperStyle} from "../../libs/common.js"
 import {
   humanise_material_var,
   humanise_date,
@@ -53,6 +54,7 @@ export default class MaterialPage extends Component {
     ]
 
     return (
+      <Paper style={paperStyle}>
       <Tabs>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
@@ -60,6 +62,7 @@ export default class MaterialPage extends Component {
            </Tab>
          ))}
       </Tabs>
+      </Paper>
     )
   }
 }
