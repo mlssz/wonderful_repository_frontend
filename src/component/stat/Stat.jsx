@@ -157,30 +157,32 @@ export default class Stat extends React.Component {
 		timeLength.setOption(timeLengthOption);
 	}
 
-	renderRow() {
+	renderRow(aver) {
 		let person = [{
 			name: '李世明',
-			number: randomNum(1000, 3000),
+			number: randomNum(1000, 5000),
 		}, {
 			name: '陶行知',
-			number: randomNum(1000, 3000),
+			number: randomNum(1000, 5000),
 		}, {
 			name: '唐玄宗',
-			number: randomNum(1000, 3000),
+			number: randomNum(1000, 5000),
 		}, {
 			name: '黄贯中',
-			number: randomNum(1000, 3000),
+			number: randomNum(1000, 5000),
 		}, {
 			name: '汉高祖',
-			number: randomNum(1000, 3000),
+			number: randomNum(1000, 5000),
 		}].sort((a, b) => a.number < b.number);
-
-		return person.map((data, i) => (
-			<TableRow key={i}>
-				<TableRowColumn>{i+1}</TableRowColumn>
-		        <TableRowColumn>{data.name}</TableRowColumn>
-		        <TableRowColumn>{data.number}</TableRowColumn>
-			</TableRow>))
+		return person.map((data, i) => {
+			let diff = data.number - aver;
+			return (
+				<TableRow key={i}>
+						<TableRowColumn>{i+1}</TableRowColumn>
+				        <TableRowColumn>{data.name}</TableRowColumn>
+				        <TableRowColumn style={{color:diff>0?'red':'green'}}>{diff>0?'+'+diff.toString():diff.toString()}</TableRowColumn>
+					</TableRow>)
+		})
 	}
 
 	render() {
@@ -213,15 +215,18 @@ export default class Stat extends React.Component {
 				<div style={{marginBottom:50,padding:30}}>
 					<div style={{width:"50%",height:300,display:"inline-block"}} id="timeLength"></div>
 					<div style={{width:"50%",height:300,display:"inline-block"}} id="persionMission">
-						<b style={{fontSize:18}}>完成任务量排名</b>
+						<div style={{display:'flex',justifyContent:'space-between'}}>
+							<b style={{fontSize:18}}>任务量反馈</b>
+							<span style={{fontSize:16}}>平均值:3480</span>
+						</div>
 						<Table>
 							<TableBody displayRowCheckbox={false}>
 								<TableRow>
-									<TableRowColumn>名次</TableRowColumn>
+									<TableRowColumn>#</TableRowColumn>
 							        <TableRowColumn>姓名</TableRowColumn>
 							        <TableRowColumn>完成任务量</TableRowColumn>
 								</TableRow>
-								{this.renderRow()}
+								{this.renderRow(3480)}
 							</TableBody>
 						</Table>
 					</div>

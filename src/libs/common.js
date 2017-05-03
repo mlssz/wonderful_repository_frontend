@@ -50,7 +50,11 @@ export const formName = {
 }
 
 export const changeHash = function(hash) {
-	window.location.hash = hash;
+	console.log(window.location.hash, hash)
+	if (window.location.hash == '#' + hash) {
+		window.location.reload();
+	} else
+		window.location.hash = hash;
 }
 
 export const parseParams = function() {

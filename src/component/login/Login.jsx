@@ -10,6 +10,10 @@ import Psw from 'material-ui/svg-icons/action/accessibility'
 import {
 	changeHash
 } from '../../libs/common.js';
+import {
+	getRepo,
+	login
+} from '../../libs/callToBack.js';
 
 export default class Login extends React.Component {
 	constructor(props) {
@@ -22,16 +26,18 @@ export default class Login extends React.Component {
 		this.login = this.login.bind(this);
 	}
 
-	login() {
+	login(repo) {
 		let loginState = {
 			userName: this.state.userName,
 			psw: this.state.psw
 		}
-		if (this.state.isRemember)
-			localStorage.setItem('loginState', JSON.stringify(loginState));
-		else
-			sessionStorage.setItem('loginState', JSON.stringify(loginState));
-		changeHash('/');
+		let repoId = repo[0]._id;
+		let params = {
+			loginState: loginState,
+			repoId: repoId,
+			isRem: this.state.isRemember,
+		}
+		login(() => changeHash('/'), params);
 	}
 
 	render() {
@@ -73,7 +79,7 @@ export default class Login extends React.Component {
 				        <FloatingActionButton 
 				        	style={{position:"absolute",top:"50%",left:"100%",marginTop:-28,marginLeft:-28}}
 				        	secondary={true}
-				        	onTouchTap={this.login}>
+				        	onTouchTap={()=>getRepo(this.login)}>
 					    	<Right />
 					    </FloatingActionButton>
 					</Paper>
