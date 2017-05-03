@@ -44,9 +44,9 @@ export default class HashTable extends React.Component {
 					<Route path='/outEnsure' component={OutEnsure}/>
 					<Route path='/outManage' component={OutManage}/>
 					<Route path='/stat' component={Stat}/>
-          <Route path='/material/:id' component={MaterialPage} />
-          <Route path='/task/:id' component={TaskPage} />
-          <Route path='/staff/:id' component={StaffPage} />
+					<Route path='/material/:id' component={MaterialPage} />
+					<Route path='/task/:id' component={TaskPage} />
+					<Route path='/staff/:id' component={StaffPage} />
 					<Route path='/goodsManage' component={GoodsManage}/>
 				</div>
 			</HashRouter>

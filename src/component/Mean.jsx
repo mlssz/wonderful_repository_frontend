@@ -38,7 +38,7 @@ export default class ReactClassName extends React.Component {
 								/>,
 								<ListItem
 									  key={2}
-									  primaryText="入库"
+									  primaryText="入库登记"
 									  onClick={()=>this.handleClick("putaway")}
 								/>
 							]}
@@ -55,7 +55,7 @@ export default class ReactClassName extends React.Component {
 								/>,
 								<ListItem
 									  key={2}
-									  primaryText="移动"
+									  primaryText="移动登记"
 									  onClick={()=>this.handleClick("move")}
 								/>
 							]}
@@ -72,7 +72,7 @@ export default class ReactClassName extends React.Component {
 								/>,
 								<ListItem
 									  key={2}
-									  primaryText="出库"
+									  primaryText="出库登记"
 									  onClick={()=>this.handleClick("out")}
 								/>
 							]}

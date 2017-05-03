@@ -17,6 +17,12 @@ import {
 	changeHash
 } from '../../libs/common.js'
 
+import {
+	getLoc
+} from '../../libs/callToBack.js'
+
+let taskType = 'intask';
+
 export default class ReactClassName extends React.Component {
 	constructor(props) {
 		super(props);
@@ -31,20 +37,19 @@ export default class ReactClassName extends React.Component {
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('intask'));
+		let task = JSON.parse(sessionStorage.getItem(taskType));
 		if (task.repository_id === undefined) {
-			task.repository_id = randomNum(1, 3);
+			task.repository_id = 1;
 			task.location_id = randomNum(1, 10);
 			task.layer = randomNum(1, 3);
 		}
-		console.log(task)
 		task.id = makeId();
 		let to = parsePlace(task);
 		task.to = to;
 		task.type = task.type.join('-');
 		this.setState({
 			task
-		})
+		});
 	}
 
 	renderRow() {
@@ -69,7 +74,7 @@ export default class ReactClassName extends React.Component {
 	}
 
 	putaway() {
-		sessionStorage.removeItem('intask');
+		sessionStorage.removeItem(taskType);
 		this.setState({
 			mes: '入库成功，3秒后返回入库页面',
 			open: true,

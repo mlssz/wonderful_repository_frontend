@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem'
 import TextField from 'material-ui/TextField'
 import DatePicker from 'material-ui/DatePicker'
 import RaisedButton from 'material-ui/RaisedButton'
+import Checkbox from 'material-ui/Checkbox'
 
 import {
 	styles,
@@ -13,6 +14,10 @@ import {
 	objIsEmpty,
 	changeHash
 } from '../../libs/common.js'
+import {
+	getLoc
+} from '../../libs/callToBack.js'
+let taskType = 'intask';
 
 export default class TaskForm extends React.Component {
 	constructor(props) {
@@ -22,6 +27,7 @@ export default class TaskForm extends React.Component {
 			task: {},
 			error: {},
 			locationVisible: false,
+			auto: true,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
@@ -30,7 +36,7 @@ export default class TaskForm extends React.Component {
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem('intask'));
+		let task = JSON.parse(sessionStorage.getItem(taskType));
 		if (!task)
 			task = {
 				type: [],
@@ -91,7 +97,7 @@ export default class TaskForm extends React.Component {
 	}
 
 	cancel() {
-		sessionStorage.removeItem('intask');
+		sessionStorage.removeItem(taskType);
 		let task = this.state.task;
 		for (let i in task) {
 			task[i] = null;
@@ -117,7 +123,7 @@ export default class TaskForm extends React.Component {
 			return false;
 		}
 		//delete when add backend
-		sessionStorage.setItem('task', JSON.stringify(task));
+		sessionStorage.setItem(taskType, JSON.stringify(task));
 		changeHash('putawayEnsure');
 	}
 
@@ -125,91 +131,109 @@ export default class TaskForm extends React.Component {
 		return (
 			<MuiThemeProvider>
 				<div style={styles.container}>
-				<SelectField
-	          	floatingLabelText="类型"
-				floatingLabelStyle={{color:'gray'}}
-				value={this.state.task.type[0]}
-				errorText={this.state.error.type}
-				style={styles.formItem}
-				onChange={(e,i,v)=>this.setType(v)}
-	        >
-	        	{this.renderMenuItem(types,2)}
-	        </SelectField>
-	       	<br/>
-	       	<SelectField
-	          	floatingLabelText="详细"
-				floatingLabelStyle={{color:'gray'}}
-				value={this.state.task.type[1]}
-				errorText={this.state.error.type}
-				style={styles.formItem}
-				onChange={(e,i,v)=>this.setSecondType(v)}
-	        >
-	        	{this.renderMenuItem(types[this.state.task.type[0]]||[])}
-	        </SelectField>
-	        <br/>
-	        <TextField
-				floatingLabelText="数量"
-				floatingLabelStyle={{color:'gray'}}
-				value={this.state.task.num}
-				errorText={this.state.error.num}
-				style={styles.formItem}
-				onChange={(e,v)=>this.handleChange(v,'num')}
-			    />
-			    <br/>
-			    <div>
-				    <SelectField
-						floatingLabelText="仓"
-						floatingLabelStyle={{color:'gray'}}
-						value={this.state.task.repository_id}
-						errorText={this.state.error.repository_id}
-						style={{width:100}}
-						onChange={(e,i,v)=>this.handleChange(v,'repository_id')}
-		        >
-		        	{this.renderMenuItem([1,2,3])}
-		        </SelectField>
-		        <SelectField
-					floatingLabelText="架"
-					floatingLabelStyle={{color:'gray'}}
-					value={this.state.task.location_id}
-					errorText={this.state.error.location_id}
-					style={{width:100}}
-					onChange={(e,i,v)=>this.handleChange(v,'location_id')}
-		        >
-		        	{this.renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
-		        </SelectField>
-		        <SelectField
-					floatingLabelText="层"
-					floatingLabelStyle={{color:'gray'}}
-					value={this.state.task.layer}
-					errorText={this.state.error.layer}
-					style={{width:100}}
-					onChange={(e,i,v)=>this.handleChange(v,'layer')}
-		        >
-		        	{this.renderMenuItem([1,2,3])}
-		        </SelectField>
-			    	<p style={{width:300,color:'gray',margin:0,fontSize:12}}>
-						入库地址(空则为系统分配)
-			    	</p>
-			    </div>
-	        <br/>
-			    <DatePicker 
-			    	floatingLabelText="估计出库时间"
-			    	floatingLabelStyle={{color:'gray'}}
-			    	value={this.state.task.estimated_export_time===null?this.state.task.estimated_export_time:new Date(this.state.task.estimated_export_time)}
-			    	errorText={this.state.error.estimated_export_time}
-			    	style={styles.formItem}
-					onChange={(e,v)=>this.handleChange(+v,'estimated_export_time')}/>
-			    <br/>
+					<div>
+						<Checkbox
+					      label="自动分配地址"
+					      checked={this.state.auto}
+					      onCheck={(e,auto)=>this.setState({auto})}
+					      style={{display:'inline'}}
+					    />
+					    <Checkbox
+					      label="手动填写地址"
+					      checked={!this.state.auto}
+					      onCheck={(e,auto)=>this.setState({auto:!auto})}
+					      style={{display:'inline'}}
+					    />
+					</div>
+					<div style={{display:'flex'}}>
+						<SelectField
+				          	floatingLabelText="类型"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.type[0]}
+							errorText={this.state.error.type}
+							style={styles.formItem}
+							onChange={(e,i,v)=>this.setType(v)}
+			        	>
+			        	{this.renderMenuItem(types,2)}
+			        	</SelectField>
+
+		       			<SelectField
+				          	floatingLabelText="详细"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.type[1]}
+							errorText={this.state.error.type}
+							style={styles.formItem}
+							onChange={(e,i,v)=>this.setSecondType(v)}
+		        		>
+		        			{this.renderMenuItem(types[this.state.task.type[0]]||[])}
+				        </SelectField>
+
+				        <TextField
+							floatingLabelText="数量"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.num}
+							errorText={this.state.error.num}
+							style={styles.formItem}
+							onChange={(e,v)=>this.handleChange(v,'num')}
+						/>
+
+					</div>
+
+					<div>
+					    <SelectField
+							floatingLabelText="仓"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.repository_id}
+							errorText={this.state.error.repository_id}
+							style={{width:100}}
+							onChange={(e,i,v)=>this.handleChange(v,'repository_id')}
+			        	>
+		        			{this.renderMenuItem([1,2,3])}
+		        		</SelectField>
+				        <SelectField
+							floatingLabelText="架"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.location_id}
+							errorText={this.state.error.location_id}
+							style={{width:100}}
+							onChange={(e,i,v)=>this.handleChange(v,'location_id')}
+				        >
+				        	{this.renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
+				        </SelectField>
+				        <SelectField
+							floatingLabelText="层"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.layer}
+							errorText={this.state.error.layer}
+							style={{width:100}}
+							onChange={(e,i,v)=>this.handleChange(v,'layer')}
+				        >
+		        			{this.renderMenuItem([1,2,3])}
+		        		</SelectField>
+				    	<p style={{width:300,color:'gray',margin:0,fontSize:12}}>
+							入库地址(空则为系统分配)
+				    	</p>
+			    	</div>
+
+			    	<DatePicker 
+				    	floatingLabelText="估计出库时间"
+				    	floatingLabelStyle={{color:'gray'}}
+				    	value={this.state.task.estimated_export_time===null?this.state.task.estimated_export_time:new Date(this.state.task.estimated_export_time)}
+				    	errorText={this.state.error.estimated_export_time}
+				    	style={styles.formItem}
+						onChange={(e,v)=>this.handleChange(+v,'estimated_export_time')}/>
 					<TextField
-			      floatingLabelText="物资描述"
-			      floatingLabelStyle={{color:'gray'}}
-			      value={this.state.task.description}
-			      errorText={this.state.error.description}
-			      multiLine={true}
-			      style={styles.formItem}
-			      onChange={(e,v)=>this.handleChange(v,'description')}
-			    />
-			    <br/>
+						floatingLabelText="物资描述"
+						floatingLabelStyle={{color:'gray'}}
+						value={this.state.task.description}
+						errorText={this.state.error.description}
+						multiLine={true}
+						style={styles.formItem}
+						onChange={(e,v)=>this.handleChange(v,'description')}
+			    	/>
+					
+					<br/>
+
 					<div style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'80%',margin:'20 auto'}}>
 						<RaisedButton label="重新填写" primary={true} onTouchTap={this.cancel}/>
 						<RaisedButton label="确认" primary={true} onTouchTap={this.putaway}/>
