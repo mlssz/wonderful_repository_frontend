@@ -29,6 +29,7 @@ import {
 	downloadBarCode
 } from '../../libs/common.js'
 
+import {Loading} from "../tools/Loading.jsx"
 import * as sortGood from '../../libs/sortGood.js'
 import Selecter from '../in/Selecter.jsx'
 
@@ -107,7 +108,7 @@ export default class Manage extends React.Component {
 		       	<TableRowColumn>{estimated_export_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible"}}>{location_update_time}</TableRowColumn>
 		       	<TableRowColumn>{place}</TableRowColumn>
-		       	<TableRowColumn><RaisedButton label="详情" /></TableRowColumn>
+		       	<TableRowColumn><RaisedButton label="详情" onTouchTap={() => changeHash(`/material/${good.id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -149,6 +150,10 @@ export default class Manage extends React.Component {
 	}
 
 	render() {
+    if (true) {
+      return (<div><Loading /></div>)
+    }
+
 		return (
 			<div>
 				<Selecter/>
