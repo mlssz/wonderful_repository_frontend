@@ -7,6 +7,8 @@ import Right from 'material-ui/svg-icons/navigation/chevron-right'
 import UserName from 'material-ui/svg-icons/social/person'
 import Psw from 'material-ui/svg-icons/action/accessibility'
 
+import request from 'superagent'
+
 import {
 	changeHash
 } from '../../libs/common.js';
