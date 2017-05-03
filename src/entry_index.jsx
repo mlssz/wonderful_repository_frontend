@@ -8,7 +8,6 @@ import {
 import injectTapEventPlugin from "react-tap-event-plugin"
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider"
 import AppBar from 'material-ui/AppBar';
-import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
 
 import Mean from "./component/Mean.jsx"
@@ -54,11 +53,6 @@ class Body extends React.Component {
     }
 
     render() {
-        let paperStyle = {
-            width: "80%",
-            minWidth: 840,
-            margin: "20 auto",
-        };
         let loginState = localStorage.getItem('loginState') || sessionStorage.getItem('loginState');
         return (
             <MuiThemeProvider>
@@ -69,9 +63,7 @@ class Body extends React.Component {
                             title={this.state.title}
                             onLeftIconButtonTouchTap={()=>this.contralMean(true)}
                             iconElementRight={<FlatButton label="退出登录" onTouchTap={this.logout}/>}/>
-                        <Paper style={paperStyle} zDepth={1}>
-                            <HashTable/>
-                        </Paper>
+                        <HashTable/>
                         <Mean visible={this.state.meanVisible} closeMean={()=>this.contralMean(false)}/>
                     </div>
                     : <Login/>

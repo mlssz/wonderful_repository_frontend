@@ -5,7 +5,11 @@ import {
 	Stepper,
 	StepLabel,
 } from 'material-ui/Stepper';
+import Paper from 'material-ui/Paper'
 import Selecter from './Selecter.jsx'
+import {
+	paperStyle
+} from '../../libs/common.js'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {
@@ -23,17 +27,11 @@ export default class ReactClassName extends React.Component {
 
 	render() {
 		return (
+			<Paper style={paperStyle} zDepth={1}>
 			<div>
-				<Stepper activeStep={this.state.stepIndex} style={{width:'60%',margin:'0 auto'}}>
-			        <Step>
-			          <StepLabel>填写入库单</StepLabel>
-			        </Step>
-			        <Step>
-			          <StepLabel>完成入库</StepLabel>
-			        </Step>
-		      	</Stepper>
 		      	<TaskForm/>
 	    	</div>
+	    	</Paper>
 		)
 	}
 }

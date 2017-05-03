@@ -12,11 +12,11 @@ export const styles = {
 	container: {
 		display: 'flex',
 		flexDirection: 'column',
-		alignItems: 'center',
-		padding: 20,
+		padding: "0 20 20 20",
 	},
 	formItem: {
-		width: 300,
+		width: 150,
+		marginRight: 30,
 	}
 }
 
@@ -24,14 +24,14 @@ export const titleMap = {
 	"": "统计",
 	"#": "统计",
 	"#stat": "统计",
-	"#chenk": "盘点",
-	"#putaway": "入库管理",
+	"#check": "盘点",
+	"#putaway": "入库登记",
 	"#putawayEnsure": "入库管理",
 	"#putawayManage": "入库管理",
-	"#move": "移动管理",
+	"#move": "移动登记",
 	"#moveEnsure": "移动管理",
 	"#moveManage": "移动管理",
-	"#out": "出库管理",
+	"#out": "出库登记",
 	"#outEnsure": "出库管理",
 	"#outManage": "出库管理",
 	"#goodsManage": "物品管理"
@@ -48,6 +48,12 @@ export const formName = {
 	"to": "目的位置",
 	"from": "原始位置",
 }
+
+export const paperStyle = {
+	width: "80%",
+	minWidth: 840,
+	margin: "20 auto",
+};
 
 export const changeHash = function(hash) {
 	console.log(window.location.hash, hash)

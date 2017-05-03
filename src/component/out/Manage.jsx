@@ -12,10 +12,6 @@ import {
 	TableRowColumn
 } from 'material-ui/Table'
 import MenuItem from 'material-ui/MenuItem'
-import IconMenu from 'material-ui/IconMenu'
-import IconButton from 'material-ui/IconButton'
-import FontIcon from 'material-ui/FontIcon'
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -42,7 +38,6 @@ export default class Manage extends React.Component {
 			sort: 1,
 		}
 		this.handleChange = this.handleChange.bind(this);
-		this.meunClick = this.meunClick.bind(this);
 	}
 
 	componentWillMount() {
@@ -97,17 +92,17 @@ export default class Manage extends React.Component {
 		let material = task.material;
 		let import_time = parsetime(material.location_update_time);
 		let [fromPlace, toPlace] = parseTaskPlace(material);
+		let status = ['未开始', '进行中', '已完成', '已取消'][task.status];
 		return (
 			<TableRow key={material.id}>
-	        	<TableRowColumn>{material.id}</TableRowColumn>
-	        	<TableRowColumn>{material.type}</TableRowColumn>
-	        	<TableRowColumn>{task.number}</TableRowColumn>
-	        	<TableRowColumn style={{overflow:"visible"}}>{import_time}</TableRowColumn>
-	        	<TableRowColumn>{fromPlace}</TableRowColumn>
-	        	<TableRowColumn>{toPlace}</TableRowColumn>
-	        	<TableRowColumn>
-              <RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)} />
-            </TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)} /></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -116,19 +111,13 @@ export default class Manage extends React.Component {
 		changeHash('move');
 	}
 
-	meunClick(event, child) {
-		// let table = document.getElementsByClassName('tablePrint')[1];
-		// var newWin = window.open("");
-		// newWin.document.write(tableToPrint.outerHTML);
-		// newWin.document.close();
-		// newWin.focus();
-		// newWin.print();
-		// newWin.close();
-		if (child.key === 'printTable') {
-			let table2excel = new Table2Excel();
-			let name = '出库单' + parsetime(new Date(), 2);
-			table2excel.export(document.getElementsByClassName('tablePrint')[1], name);
-		}
+	printTable() {
+		let table2excel = new Table2Excel();
+		let name = '入库单' + parsetime(new Date(), 2);
+		table2excel.export(document.getElementsByClassName('tablePrint')[1], name);
+	}
+
+	printBar() {
 		if (child.key === 'printBar') {
 			let task = this.state.task;
 			let codes = [];
@@ -173,18 +162,8 @@ export default class Manage extends React.Component {
 			        </ToolbarGroup>
 			        <ToolbarGroup>
 			          <ToolbarSeparator />
-			          <RaisedButton label="新建出库单" primary={true} onTouchTap={this.addPutaway}/>
-			          <IconMenu
-			            iconButtonElement={
-			              <IconButton touch={true}>
-			                <NavigationExpandMoreIcon />
-			              </IconButton>
-			            }
-			            onItemTouchTap={this.meunClick}
-			          >
-						<MenuItem primaryText="打印出库单" key='printTable'/>
-			            <MenuItem primaryText="打印条形码" key='printBar'/>
-			          </IconMenu>
+			          <RaisedButton label="打印入库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
+			          <RaisedButton label="打印条形码" primary={true} onTouchTap={this.printBar.bind(this)}/>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
@@ -194,13 +173,14 @@ export default class Manage extends React.Component {
 				    	displayRowCheckbox={false}
 				    	deselectOnClickaway={false}>
 						<TableRow>
-				        	<TableRowColumn>物资编号</TableRowColumn>
-				        	<TableRowColumn>物资类型</TableRowColumn>
-				        	<TableRowColumn>物资数量</TableRowColumn>
-				        	<TableRowColumn>下单时间</TableRowColumn>
-				        	<TableRowColumn>原始位置</TableRowColumn>
-				        	<TableRowColumn>目的地址</TableRowColumn>
-				        	<TableRowColumn>详情</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>下单时间</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>原始位置</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>目的地址</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
 			    		</TableRow>
 				    	{this.renderRow.call(this)}
 				    </TableBody>
