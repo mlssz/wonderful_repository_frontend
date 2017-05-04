@@ -1,4 +1,4 @@
-/* This component defined many contrler components input text field
+/* This component defined many controler components input text field
  *
  * Usage: 
  *	   import XXXCtlTextField from "./component/InputContrlTextField.jsx"
@@ -226,13 +226,19 @@ export class BaseCtlTextField extends Component {
     super(props)
     this.state = {
       "isError": 0,
-      "value": "",
+      "value": this.props.value || "",
       "errValue": ""
     }
 
     this.ctlJudge_and_changeText = this.ctlJudge_and_changeText.bind(this)
     this.handleOnChange = this.handleOnChange.bind(this)
     this.handleOnBlur = this.handleOnBlur.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.value && nextProps.value !== this.state.value) {
+      this.handleOnChange(null, nextProps.value)
+    }
   }
 
   //TODO: this.state.value is not needed to put in state , for while it change ,nothing should be change 
@@ -258,9 +264,9 @@ export class BaseCtlTextField extends Component {
     }
   }
 
-  handleOnChange(event) {
+  handleOnChange(_, value) {
     this.setState({
-      value: event.target.value
+      value: value
     })
 
     if (this.state.isError === 1) {

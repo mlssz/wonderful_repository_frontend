@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
 
+import {Card} from 'material-ui/Card'
 import Divider from 'material-ui/Divider'
 import Chip from "material-ui/Chip"
 import Avatar from "material-ui/Avatar"
@@ -12,6 +13,7 @@ import TimePicker from 'material-ui/TimePicker'
 import Paper from 'material-ui/Paper'
 import {blue300, indigo900, red300, pink900} from "material-ui/styles/colors"
 
+import Searcher from "./Searcher.jsx"
 import {RegCtlTextField} from "./textfields/InputContrlTextField.jsx"
 import InfoDialog from "./tools/InfoDialog.jsx"
 import BetweenButtons from "./buttons/BetweenButtons.jsx"
@@ -126,6 +128,9 @@ export default class CheckPage extends Component {
 
     return (
       <Paper style={paperStyle}>
+        <Card style={{padding: 24}}>
+          <Searcher searchKeys={[{key: "date", label: "入库时间", type: Date}, {key: "id", label: "物资id", type: Number}]}/>
+        </Card>
       <Tabs value={this.state.tab} onChange={this.handleChange}>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
