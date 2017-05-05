@@ -236,8 +236,9 @@ export class BaseCtlTextField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.value && nextProps.value !== this.state.value) {
-      this.handleOnChange(null, nextProps.value)
+    let value = !nextProps.value ? "" : nextProps.value
+    if(value !== this.state.value) {
+      this.handleOnChange(null, value)
     }
   }
 
@@ -294,12 +295,13 @@ export class BaseCtlTextField extends Component {
   render() {
 
     return (
-      <TextField {...this.props} errorText={this.state.errValue} 
+      <TextField {...this.props.textprops} value={this.state.value} errorText={this.state.errValue}
         onChange={this.handleOnChange} onBlur={this.handleOnBlur} />
     )
   }
 }
 BaseCtlTextField.propTypes = {
+  textprops: React.PropTypes.object,
   judgeFunc: React.PropTypes.func.isRequired,
   errString: React.PropTypes.string,
   errCallback: React.PropTypes.func,

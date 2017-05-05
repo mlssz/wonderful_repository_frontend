@@ -32,7 +32,7 @@ class _BaseCtlDateTimePickField extends Component {
     super(props)
     this.state = {
       "isError": 0,
-      "value": this.props.value && new Date(this.props.value),
+      "value": this.props.value ? new Date(this.props.value) : undefined,
       "errValue": ""
     }
 

@@ -167,11 +167,6 @@ class SearchLine extends Component {
 
   constructor(props){
     super(props)
-    this.state = {
-      key: this.props.key_index || 0,
-      method: this.props.method_index || 0,
-      value: this.props.value || null
-    }
 
     this.searchMethods = [
       {key: "value", label: "值匹配"},
@@ -185,23 +180,31 @@ class SearchLine extends Component {
   }
 
   handleKeyChange(_, index, value) {
-    this.setState({key: value})
+    this.props.onChange({
+      key_index: value,
+      key: this.props.searchKeys[value].key,
+      value: null,
+      isError: false
+    })
   }
 
   handleMethodChange(_, index, value) {
-    this.setState({method: value})
+    this.props.onChange({
+      method_index: value,
+      method: this.searchMethods[value].key,
+      value: null,
+      isError: false
+    })
   }
 
   handleValueChange( value) {
-    this.setState({
-      value: value
-    })
-
+    let key = this.props.key_index
+    let method = this.props.method_index
     this.props.onChange({
-      key_index: this.state.key,
-      method_index: this.state.method,
-      key: this.props.searchKeys[this.state.key].key,
-      method: this.searchMethods[this.state.method].key,
+      key_index: key,
+      method_index: method,
+      key: this.props.searchKeys[key].key,
+      method: this.searchMethods[method].key,
       value: value,
       isError: false
     })
@@ -223,31 +226,26 @@ class SearchLine extends Component {
     ))
 
     let inputColumn
-    if (searchKeys[this.state.key].type === Date) {
-      inputColumn = (
-        <BaseCtlDateTimePickField
-            judgeFunc={(v) => v}
-            timeprops={{floatingLabelText: "时间"}}
-            dateprops={{floatingLabelText: "日期"}}
-            errString="日期时间不能为空！"
-            callback={this.handleValueChange}
-            errCallback={this.handleValueError}
+    if (this.props.method_index === 0){
+      inputColumn =(
+        <SingleInputs
             value={this.props.value}
+            errCallback={this.handleValueError}
+            callback={this.handleValueChange}
+            type={searchKeys[this.props.key_index].type}
         />
       )
     }else{
-      inputColumn = (
-        <LenCtlTextField
-            minl={1}
-            maxl={256}
-            floatingLabelText="多个可能值用空格分隔"
-            errString="请填写有效查询值！"
-            callback={this.handleValueChange}
-            errCallback={this.handleValueError}
+      inputColumn =(
+        <RegionInputs
             value={this.props.value}
+            errCallback={this.handleValueError}
+            callback={this.handleValueChange}
+            type={searchKeys[this.props.key_index].type}
         />
       )
     }
+
 
     return (
       <div style={{
@@ -259,14 +257,14 @@ class SearchLine extends Component {
       <div style={{margin: "0 30px"}}>
         <SelectField floatingLabelText="属性"
           style={{width: 150}}
-          value={this.state.key}
+          value={this.props.key_index}
           onChange={this.handleKeyChange}
         >
           {selectKeyItems}
         </SelectField>
         <SelectField floatingLabelText="查询方式"
           style={{width: 120}}
-          value={this.state.method}
+          value={this.props.method_index}
           onChange={this.handleMethodChange}
         >
           {selectMethodItems}
@@ -289,10 +287,145 @@ class SearchLine extends Component {
 SearchLine.propTypes = {
   style: React.PropTypes.object,
   content: React.PropTypes.object,
+  key_index: React.PropTypes.number,
+  method_index: React.PropTypes.number,
   onChange: React.PropTypes.func,
   searchKeys: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
 }
 SearchLine.defaultProps = {
   style: {},
-  onChange: console.log
+  onChange: console.log,
+  key_index: 0,
+  method_index: 0
+}
+
+class SingleInputs extends Component {
+
+  constructor(props){
+    super(props)
+  }
+
+  render() {
+    let inputColumn
+    if (this.props.type === Date) {
+      inputColumn = (
+        <BaseCtlDateTimePickField
+            judgeFunc={(v) => v}
+            timeprops={{floatingLabelText: "时间"}}
+            dateprops={{floatingLabelText: "日期"}}
+            errString="日期时间不能为空！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+    }else{
+      inputColumn = (
+        <LenCtlTextField
+            textprops={{
+              minl:1,
+              maxl:256,
+              floatingLabelText:"多个可能值用空格分隔"
+            }}
+            errString="请填写有效查询值！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+    }
+
+    return inputColumn
+  }
+}
+SingleInputs.propTypes = {
+  style: React.PropTypes.object
+}
+SingleInputs.defaultProps = {
+  style: {}
+}
+
+class RegionInputs extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      value: []
+    }
+  }
+
+  render() {
+    let inputColumn = []
+    if (this.props.type === Date) {
+      inputColumn.push(
+        <BaseCtlDateTimePickField
+            judgeFunc={(v) => v}
+            timeprops={{floatingLabelText: "时间"}}
+            dateprops={{floatingLabelText: "日期"}}
+            errString="日期时间不能为空！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+      inputColumn.push(
+        <BaseCtlDateTimePickField
+            judgeFunc={(v) => v}
+            timeprops={{floatingLabelText: "时间"}}
+            dateprops={{floatingLabelText: "日期"}}
+            errString="日期时间不能为空！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+    }else{
+      inputColumn.push(
+        <LenCtlTextField
+            textprops={{
+              minl:1,
+              maxl:256,
+              floatingLabelText:"多个可能值用空格分隔"
+            }}
+            errString="请填写有效查询值！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+      inputColumn.push(
+        <LenCtlTextField
+            textprops={{
+              minl:1,
+              maxl:256,
+              floatingLabelText:"多个可能值用空格分隔"
+            }}
+            errString="请填写有效查询值！"
+            callback={this.props.callback}
+            errCallback={this.props.errCallback}
+            value={this.props.value}
+        />
+      )
+    }
+
+    return (
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "bottom",
+      }}>
+        {inputColumn}
+      </div>
+    )
+  }
+}
+RegionInputs.propTypes = {
+  style: React.PropTypes.object,
+  // value,
+  // type,
+  // callback,
+  // errCallback
+}
+RegionInputs.defaultProps = {
+  style: {}
 }
