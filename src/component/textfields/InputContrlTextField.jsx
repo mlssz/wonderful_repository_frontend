@@ -224,10 +224,18 @@ export class BaseCtlTextField extends Component {
 
   constructor(props) {
     super(props)
+    let value = ""
+    let errString = ""
+    let JudgeFunc = this.props.judgeFunc
+    if (this.props.value) {
+      value = this.props.value
+      errString = JudgeFunc(value) ? "" : this.props.errString
+    }
+
     this.state = {
       "isError": 0,
-      "value": this.props.value || "",
-      "errValue": ""
+      "value": value,
+      "errValue": errString
     }
 
     this.ctlJudge_and_changeText = this.ctlJudge_and_changeText.bind(this)
