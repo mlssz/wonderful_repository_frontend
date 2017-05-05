@@ -31,10 +31,9 @@ export default class Login extends React.Component {
 			userName: this.state.userName,
 			psw: this.state.psw
 		}
-		let repoId = repo[0]._id;
 		let params = {
 			loginState: loginState,
-			repoId: repoId,
+			repo: repo,
 			isRem: this.state.isRemember,
 		}
 		login(() => changeHash('/'), params);

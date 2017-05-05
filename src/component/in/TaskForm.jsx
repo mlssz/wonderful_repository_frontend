@@ -6,16 +6,25 @@ import TextField from 'material-ui/TextField'
 import DatePicker from 'material-ui/DatePicker'
 import RaisedButton from 'material-ui/RaisedButton'
 import Checkbox from 'material-ui/Checkbox'
+import {
+	Table,
+	TableBody,
+	TableRow,
+	TableRowColumn
+} from 'material-ui/Table'
 
 import {
 	styles,
 	types,
 	parsetime,
 	objIsEmpty,
-	changeHash
+	changeHash,
+	parsePlace,
+	testTask,
+	status
 } from '../../libs/common.js'
 import {
-	getLoc
+	putaway
 } from '../../libs/callToBack.js'
 let taskType = 'intask';
 
@@ -27,12 +36,14 @@ export default class TaskForm extends React.Component {
 			task: {},
 			error: {},
 			locationVisible: false,
-			auto: true,
+			auto: false,
+			alreadyTask: [],
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
 		this.putaway = this.putaway.bind(this);
 		this.setType = this.setType.bind(this);
+		this.addAlreadyTask = this.addAlreadyTask.bind(this);
 	}
 
 	componentWillMount() {
@@ -42,9 +53,9 @@ export default class TaskForm extends React.Component {
 				type: [],
 				num: '',
 				description: '',
-				// repository_id: '',
-				// location_id: '',
-				// layer: '',
+				repository_id: '',
+				location_id: '',
+				layer: '',
 				estimated_export_time: null,
 			}
 		this.setState({
@@ -111,6 +122,14 @@ export default class TaskForm extends React.Component {
 		})
 	}
 
+	addAlreadyTask(_alreadyTask) {
+		let alreadyTask = this.state.alreadyTask;
+		Array.prototype.push.apply(alreadyTask, _alreadyTask);
+		this.setState({
+			alreadyTask
+		})
+	}
+
 	putaway() {
 		let task = this.state.task;
 		let [isEmpty, emptyKeys] = objIsEmpty(task);
@@ -122,30 +141,117 @@ export default class TaskForm extends React.Component {
 			});
 			return false;
 		}
-		//delete when add backend
-		sessionStorage.setItem(taskType, JSON.stringify(task));
-		changeHash('putawayEnsure');
+		putaway(this.addAlreadyTask, {
+			task: task
+		})
+	}
+
+	renderRow() {
+		let tasks = this.state.alreadyTask;
+		return (
+			tasks.map(this.renderRowColumn)
+		)
+	}
+
+	renderRowColumn(task) {
+		let import_time = parsetime(task.import_time);
+		let estimated_export_time = parsetime(task.estimated_export_time);
+		let toPlace = parsePlace(task);
+		task.number = task.number || Math.floor(Math.random() * (9999 - 1) + 1);
+		// <TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
+		return (
+			<TableRow key={task.id}>
+	        	<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.type}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{status[task.status]}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
+			</TableRow>
+		)
 	}
 
 	render() {
 		return (
 			<MuiThemeProvider>
 				<div style={styles.container}>
-					<div>
+					<div style={{display:'flex',flexDirection:'row',height:72}}>
 						<Checkbox
 					      label="自动分配地址"
 					      checked={this.state.auto}
-					      onCheck={(e,auto)=>this.setState({auto})}
-					      style={{display:'inline'}}
+					      onCheck={(e,auto)=>{
+					      	let task = this.state.task;
+					      	delete task.repository_id;
+					      	delete task.location_id;
+					      	delete task.layer;
+					      	if(!auto){
+								task.repository_id='';
+								task.location_id='';
+								task.layer='';
+							}
+					      	this.setState({auto,task});
+					      }}
+					      style={{width:200,marginTop:30}}
 					    />
 					    <Checkbox
 					      label="手动填写地址"
 					      checked={!this.state.auto}
-					      onCheck={(e,auto)=>this.setState({auto:!auto})}
-					      style={{display:'inline'}}
+					      onCheck={(e,auto)=>{
+							let task = this.state.task;
+							if(!task.repository_id){
+								task.repository_id='';
+								task.location_id='';
+								task.layer='';
+							}
+							if(!auto){
+								delete task.repository_id;
+					      		delete task.location_id;
+					      		delete task.layer;
+							}
+					      	this.setState({auto:!auto,task});
+					      }}
+					      style={{width:200,marginTop:30}}
 					    />
+						{
+							!this.state.auto?
+							<div>
+							    <SelectField
+									floatingLabelText="仓"
+									floatingLabelStyle={{color:'gray'}}
+									value={this.state.task.repository_id}
+									errorText={this.state.error.repository_id}
+									style={{width:100}}
+									onChange={(e,i,v)=>this.handleChange(v,'repository_id')}
+					        	>
+				        			{this.renderMenuItem([1])}
+				        		</SelectField>
+						        <SelectField
+									floatingLabelText="架"
+									floatingLabelStyle={{color:'gray'}}
+									value={this.state.task.location_id}
+									errorText={this.state.error.location_id}
+									style={{width:100}}
+									onChange={(e,i,v)=>this.handleChange(v,'location_id')}
+						        >
+						        	{this.renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
+						        </SelectField>
+						        <SelectField
+									floatingLabelText="层"
+									floatingLabelStyle={{color:'gray'}}
+									value={this.state.task.layer}
+									errorText={this.state.error.layer}
+									style={{width:100}}
+									onChange={(e,i,v)=>this.handleChange(v,'layer')}
+						        >
+				        			{this.renderMenuItem([1,2,3])}
+				        		</SelectField>
+				    		</div>:false
+						}
+
 					</div>
 					<div style={{display:'flex'}}>
+
 						<SelectField
 				          	floatingLabelText="类型"
 							floatingLabelStyle={{color:'gray'}}
@@ -173,71 +279,59 @@ export default class TaskForm extends React.Component {
 							floatingLabelStyle={{color:'gray'}}
 							value={this.state.task.num}
 							errorText={this.state.error.num}
-							style={styles.formItem}
+							style={Object.assign(styles.formItem,{width:50})}
+							inputStyle={{width:50}}
 							onChange={(e,v)=>this.handleChange(v,'num')}
 						/>
 
+				    	<DatePicker 
+					    	floatingLabelText="估计出库时间"
+					    	floatingLabelStyle={{color:'gray'}}
+					    	value={this.state.task.estimated_export_time===null?this.state.task.estimated_export_time:new Date(this.state.task.estimated_export_time)}
+					    	errorText={this.state.error.estimated_export_time}
+					    	style={styles.formItem}
+					    	autoOk={true}
+					    	textFieldStyle={{width:150}}
+							onChange={(e,v)=>this.handleChange(+v,'estimated_export_time')}
+						/>
+
+						<TextField
+							floatingLabelText="物资描述"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.task.description}
+							errorText={this.state.error.description}
+							multiLine={true}
+							style={Object.assign(styles.formItem,{width:200})}
+							onChange={(e,v)=>this.handleChange(v,'description')}
+				    	/>
+
 					</div>
 
-					<div>
-					    <SelectField
-							floatingLabelText="仓"
-							floatingLabelStyle={{color:'gray'}}
-							value={this.state.task.repository_id}
-							errorText={this.state.error.repository_id}
-							style={{width:100}}
-							onChange={(e,i,v)=>this.handleChange(v,'repository_id')}
-			        	>
-		        			{this.renderMenuItem([1,2,3])}
-		        		</SelectField>
-				        <SelectField
-							floatingLabelText="架"
-							floatingLabelStyle={{color:'gray'}}
-							value={this.state.task.location_id}
-							errorText={this.state.error.location_id}
-							style={{width:100}}
-							onChange={(e,i,v)=>this.handleChange(v,'location_id')}
-				        >
-				        	{this.renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
-				        </SelectField>
-				        <SelectField
-							floatingLabelText="层"
-							floatingLabelStyle={{color:'gray'}}
-							value={this.state.task.layer}
-							errorText={this.state.error.layer}
-							style={{width:100}}
-							onChange={(e,i,v)=>this.handleChange(v,'layer')}
-				        >
-		        			{this.renderMenuItem([1,2,3])}
-		        		</SelectField>
-				    	<p style={{width:300,color:'gray',margin:0,fontSize:12}}>
-							入库地址(空则为系统分配)
-				    	</p>
-			    	</div>
-
-			    	<DatePicker 
-				    	floatingLabelText="估计出库时间"
-				    	floatingLabelStyle={{color:'gray'}}
-				    	value={this.state.task.estimated_export_time===null?this.state.task.estimated_export_time:new Date(this.state.task.estimated_export_time)}
-				    	errorText={this.state.error.estimated_export_time}
-				    	style={styles.formItem}
-						onChange={(e,v)=>this.handleChange(+v,'estimated_export_time')}/>
-					<TextField
-						floatingLabelText="物资描述"
-						floatingLabelStyle={{color:'gray'}}
-						value={this.state.task.description}
-						errorText={this.state.error.description}
-						multiLine={true}
-						style={styles.formItem}
-						onChange={(e,v)=>this.handleChange(v,'description')}
-			    	/>
-					
-					<br/>
-
-					<div style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'80%',margin:'20 auto'}}>
+					<div style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'80%',margin:'5 auto'}}>
 						<RaisedButton label="重新填写" primary={true} onTouchTap={this.cancel}/>
-						<RaisedButton label="确认" primary={true} onTouchTap={this.putaway}/>
+						<RaisedButton label="确认入库" primary={true} onTouchTap={this.putaway}/>
 					</div>
+
+					<Table
+						selectable={false}
+						className="tablePrint">
+					    <TableBody
+					    	displayRowCheckbox={false}
+					    	deselectOnClickaway={false}>
+							<TableRow>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,overflow:'visible'}}>估计出库时间</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
+				    		</TableRow>
+					    	{this.renderRow.call(this)}
+					    </TableBody>
+					</Table>
+
+
 				</div>
 			</MuiThemeProvider>
 		)

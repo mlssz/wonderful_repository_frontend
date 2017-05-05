@@ -8,11 +8,11 @@ import PutAway from './in/PutAway.jsx'
 import EnsureAction from './in/EnsureAction.jsx'
 import Manage from './in/Manage.jsx'
 
-import Move from './move/Move.jsx'
+import Move from './move/Action.jsx'
 import MoveEnsure from './move/EnsureAction.jsx'
 import MoveManage from './move/Manage.jsx'
 
-import Out from './out/out.jsx'
+import Out from './out/Action.jsx'
 import OutEnsure from './out/EnsureAction.jsx'
 import OutManage from './out/Manage.jsx'
 

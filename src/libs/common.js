@@ -20,6 +20,19 @@ export const styles = {
 	}
 }
 
+export const status = {
+	"100": "仓库中",
+	"101": "已出库",
+	"200": "正在入库",
+	"201": "正在移动",
+	"202": "正在出库",
+	"300": "未入库",
+	"301": "未移动",
+	"302": "未出库",
+	"303": "位置错误",
+	"304": "物品失踪",
+}
+
 export const titleMap = {
 	"": "统计",
 	"#": "统计",
@@ -56,7 +69,6 @@ export const paperStyle = {
 };
 
 export const changeHash = function(hash) {
-	console.log(window.location.hash, hash)
 	if (window.location.hash == '#' + hash) {
 		window.location.reload();
 	} else
@@ -64,7 +76,6 @@ export const changeHash = function(hash) {
 }
 
 export const parseParams = function() {
-	console.log(window.location.hash.slice(1))
 	return window.location.hash.slice(1);
 }
 
@@ -83,7 +94,7 @@ export const parsetime = function(time, type = 1) {
 export const parsePlace = function(task) {
 	if (task.repository_id === -1 || task.repository === 0)
 		return "----";
-	return task.repository_id + ' 仓 ' + task.location_id + ' 架 ' + task.layer + ' 层 ';
+	return task.repository_id + ' 仓 ' + (task.location_id + 1) + ' 架 ' + (task.layer + 1) + ' 层 ';
 }
 
 export const parseTaskPlace = function(task) {
@@ -97,7 +108,6 @@ export const parseTaskPlace = function(task) {
 }
 
 export const objIsEmpty = function(obj) {
-	console.log(obj)
 	let emptyKey = [];
 	for (let i in obj) {
 		if (obj[i] === 0 || obj[i] === '0')
