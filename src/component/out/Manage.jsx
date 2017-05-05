@@ -16,6 +16,7 @@ import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
+import Paper from 'material-ui/Paper'
 
 import {
 	testOut,
@@ -23,6 +24,7 @@ import {
 	parsetime,
 	parseTaskPlace,
 	changeHash,
+	paperStyle,
 	downloadBarCode
 } from '../../libs/common.js'
 
@@ -36,6 +38,8 @@ export default class Manage extends React.Component {
 			task: [],
 			oriTask: [],
 			sort: 1,
+			choose: false,
+			selectes: [],
 		}
 		this.handleChange = this.handleChange.bind(this);
 	}
@@ -118,12 +122,17 @@ export default class Manage extends React.Component {
 	}
 
 	printBar() {
-		if (child.key === 'printBar') {
+		if (this.state.choose) {
 			let task = this.state.task;
-			let codes = [];
-			for (let i in task) {
-				downloadBarCode(task[i].material.id);
-			}
+			let selectes = this.state.selectes;
+			selectes.map(i => downloadBarCode(task[i - 1].material.id))
+			this.setState({
+				choose: false
+			});
+		} else {
+			this.setState({
+				choose: true
+			})
 		}
 	}
 
@@ -142,6 +151,7 @@ export default class Manage extends React.Component {
 
 	render() {
 		return (
+			<Paper style={paperStyle} zDepth={1}>
 			<div>
 				<Selecter/>
 				<Toolbar>
@@ -163,16 +173,18 @@ export default class Manage extends React.Component {
 			        <ToolbarGroup>
 			          <ToolbarSeparator />
 			          <RaisedButton label="打印入库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
-			          <RaisedButton label="打印条形码" primary={true} onTouchTap={this.printBar.bind(this)}/>
+			          <RaisedButton label={this.state.choose?"打印条形码":"选择打印条形码"} primary={true} onTouchTap={this.printBar.bind(this)}/>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
-					selectable={false}
-					className='tablePrint'>
+					multiSelectable={this.state.choose}
+					selectable={this.state.choose}
+					onRowSelection={(selectes)=>this.setState({selectes})}
+					className="tablePrint">
 				    <TableBody
-				    	displayRowCheckbox={false}
+				    	displayRowCheckbox={this.state.choose}
 				    	deselectOnClickaway={false}>
-						<TableRow>
+						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
@@ -186,6 +198,7 @@ export default class Manage extends React.Component {
 				    </TableBody>
 				</Table>
 			</div>
+			</Paper>
 		)
 	}
 }

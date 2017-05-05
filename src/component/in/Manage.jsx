@@ -25,8 +25,12 @@ import {
 	parseTaskPlace,
 	changeHash,
 	downloadBarCode,
-	paperStyle
+	paperStyle,
 } from '../../libs/common.js'
+import {
+	getTaskNumber,
+	getTask
+} from '../../libs/callToBack.js'
 
 import * as sortTask from '../../libs/sortTask.js'
 import Selecter from './Selecter.jsx'
@@ -38,11 +42,14 @@ export default class Manage extends React.Component {
 			task: [],
 			oriTask: [],
 			sort: 1,
+			choose: false,
+			selectes: [],
 		}
 		this.handleChange = this.handleChange.bind(this);
 	}
 
 	componentWillMount() {
+		getTaskNumber(() => false);
 		let task = testTask;
 		for (let i in task)
 			task[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
@@ -57,29 +64,8 @@ export default class Manage extends React.Component {
 
 	handleChange(event, index, value) {
 		let task = this.state.task;
-		// switch (value) {
-		// 	case 1:
-		// 		task = task.sort(sortTask.sortById);
-		// 		break;
-		// 	case 2:
-		// 		task = task.sort(sortTask.sortByType);
-		// 		break;
-		// 	case 3:
-		// 		task = task.sort(sortTask.sortByNum);
-		// 		break;
-		// 	case 4:
-		// 		task = task.sort(sortTask.sortByImportTime);
-		// 		break;
-		// 	case 5:
-		// 		task = task.sort(sortTask.sortByFromPlace);
-		// 		break;
-		// 	case 6:
-		// 		task = task.sort(sortTask.sortByToPlace);
-		// 		break;
-		// }
 		this.setState({
 			sort: value,
-			task,
 		})
 	}
 
@@ -120,12 +106,17 @@ export default class Manage extends React.Component {
 	}
 
 	printBar() {
-		if (child.key === 'printBar') {
+		if (this.state.choose) {
 			let task = this.state.task;
-			let codes = [];
-			for (let i in task) {
-				downloadBarCode(task[i].material.id);
-			}
+			let selectes = this.state.selectes;
+			selectes.map(i => downloadBarCode(task[i - 1].material.id))
+			this.setState({
+				choose: false
+			});
+		} else {
+			this.setState({
+				choose: true
+			})
 		}
 	}
 
@@ -166,16 +157,18 @@ export default class Manage extends React.Component {
 			        <ToolbarGroup>
 			          <ToolbarSeparator />
 			          <RaisedButton label="打印入库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
-			          <RaisedButton label="打印条形码" primary={true} onTouchTap={this.printBar.bind(this)}/>
+			          <RaisedButton label={this.state.choose?"打印条形码":"选择打印条形码"} primary={true} onTouchTap={this.printBar.bind(this)}/>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
-					selectable={false}
+					multiSelectable={this.state.choose}
+					selectable={this.state.choose}
+					onRowSelection={(selectes)=>this.setState({selectes})}
 					className="tablePrint">
 				    <TableBody
-				    	displayRowCheckbox={false}
+				    	displayRowCheckbox={this.state.choose}
 				    	deselectOnClickaway={false}>
-						<TableRow>
+						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
