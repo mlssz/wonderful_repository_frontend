@@ -12,6 +12,7 @@ import {
 import FlatButton from 'material-ui/FlatButton'
 import {Tabs, Tab} from "material-ui/Tabs"
 import Divider from 'material-ui/Divider'
+import Paper from 'material-ui/Paper'
 
 import BetweenButtons from "../buttons/BetweenButtons.jsx"
 
@@ -19,6 +20,7 @@ import {
   humanise_staff_var,
   humanise_date,
 } from "../../libs/humanise_map.js"
+import {paperStyle} from "../../libs/common.js"
 import {
   key_value_table,
 } from "../showData.jsx"
@@ -63,13 +65,15 @@ export default class StaffPage extends Component {
     })
 
     return (
-      <Tabs>
-        {tabs.map((t, i) => (
-           <Tab label={t.label} value={i.toString()} key={i}>
-            <t.component style={this.tabStyle} staff={staff}/>
-           </Tab>
-         ))}
-      </Tabs>
+      <Paper style={paperStyle}>
+        <Tabs>
+          {tabs.map((t, i) => (
+            <Tab label={t.label} value={i.toString()} key={i}>
+              <t.component style={this.tabStyle} staff={staff}/>
+            </Tab>
+          ))}
+        </Tabs>
+      </Paper>
     )
   }
 }

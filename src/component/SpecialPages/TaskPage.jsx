@@ -12,10 +12,11 @@ import {
 import Divider from 'material-ui/Divider'
 import FlatButton from 'material-ui/FlatButton'
 import {Tabs, Tab} from "material-ui/Tabs"
+import Paper from 'material-ui/Paper'
 
 import {CenterButtons} from "../buttons/BetweenButtons.jsx"
 
-import {changeHash} from "../../libs/common.js"
+import {changeHash, paperStyle} from "../../libs/common.js"
 import {
   humanise_date,
   humanise_task_var,
@@ -123,6 +124,7 @@ export default class TaskPage extends Component {
     })
 
     return (
+      <Paper style={paperStyle}>
       <Tabs>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
@@ -130,6 +132,7 @@ export default class TaskPage extends Component {
            </Tab>
          ))}
       </Tabs>
+      </Paper>
     )
   }
 }
