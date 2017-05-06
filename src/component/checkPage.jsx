@@ -129,7 +129,7 @@ export default class CheckPage extends Component {
     return (
       <Paper style={paperStyle}>
         <Card style={{padding: 24}}>
-          <Searcher searchKeys={[{key: "date", label: "入库时间", type: Date}, {key: "id", label: "物资id", type: Number}]}/>
+          <Searcher searchKeys={[{key: "description", label:"物资描述", type:String}, {key: "date", label: "入库时间", type: Date}, {key: "id", label: "物资id", type: Number}]}/>
         </Card>
       <Tabs value={this.state.tab} onChange={this.handleChange}>
         {tabs.map((t, i) => (

@@ -30,10 +30,19 @@ class _BaseCtlDateTimePickField extends Component {
 
   constructor(props) {
     super(props)
+    let value = undefined
+    let errString = ""
+    let JudgeFunc = this.props.judgeFunc
+
+    if (this.props.value) {
+      value = new Date(this.props.value)
+      errString = JudgeFunc(value) ? "" : this.props.errString
+    }
+
     this.state = {
       "isError": 0,
-      "value": this.props.value && new Date(this.props.value),
-      "errValue": ""
+      "value": value,
+      "errValue": errString
     }
 
     this.errorColor = this.props.muiTheme.textField.errorColor
