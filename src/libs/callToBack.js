@@ -55,9 +55,13 @@ export const mergeGoods = function(goods) {
         if (!_goods[key]) {
             _goods[key] = [];
             goods[i].number = 1;
+            goods[i]._id = [goods[i]._id];
+            goods[i].id = [goods[i].id];
             _goods[key] = goods[i];
         } else {
             _goods[key].number += 1;
+            _goods[key]._id.push(goods[i]._id);
+            _goods[key].id.push(goods[i].id);
         }
     }
     return (Object.values(_goods))
@@ -123,7 +127,7 @@ export const putaway = function(cb, params = {}) {
 export const getGoodNumber = function(cb, params = {}) {
     let others = params.others ? JSON.stringify(params.others) : '[]';
     others = '?others=' + others;
-    let url = '/api/materials'
+    let url = '/api/materials' + others;
     request
         .head(url)
         .set('Accept', 'application/json')
@@ -247,4 +251,20 @@ export const move = function(cb, params = {}) {
         let loc = [place];
         dealMove(loc);
     }
+}
+
+export const deleteGood = function(cb, params = {}) {
+    let ids = params.id;
+    for (let id of ids) {
+        let url = '/api/material/' + id;
+        request
+            .delete(url)
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+                console.log(status, res)
+                let status = res.status;
+                let body = JSON.parse(res.text);
+            })
+    }
+
 }

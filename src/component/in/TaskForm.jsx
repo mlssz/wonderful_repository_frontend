@@ -9,6 +9,8 @@ import Checkbox from 'material-ui/Checkbox'
 import {
 	Table,
 	TableBody,
+	TableHeader,
+	TableHeaderColumn,
 	TableRow,
 	TableRowColumn
 } from 'material-ui/Table'
@@ -27,8 +29,10 @@ import {
 	putaway,
 	getGoodNumber,
 	getGood,
-	mergeGoods
+	mergeGoods,
+	deleteGood
 } from '../../libs/callToBack.js'
+import SelectPage from './SelectPage.jsx';
 let taskType = 'intask';
 
 export default class TaskForm extends React.Component {
@@ -42,9 +46,10 @@ export default class TaskForm extends React.Component {
 			auto: false,
 			alreadyTask: [],
 			page: 1,
-			limit: 50,
-			numberOfPage: 10,
+			limit: 10,
+			numberOfPage: 1,
 			numberOfGood: 0,
+			isAction: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
@@ -52,6 +57,25 @@ export default class TaskForm extends React.Component {
 		this.setType = this.setType.bind(this);
 		this.addAlreadyTask = this.addAlreadyTask.bind(this);
 		this.setNumberOfGood = this.setNumberOfGood.bind(this);
+		this.renderRowColumn = this.renderRowColumn.bind(this);
+		this.deleteGood = this.deleteGood.bind(this);
+	}
+
+	changePage(page) {
+		let params = {
+			page: page,
+			limit: this.state.limit,
+			others: [{
+				"key": "status",
+				"value": 300,
+			}],
+		}
+		getGood((alreadyTask) => this.setState({
+			alreadyTask: mergeGoods(alreadyTask)
+		}), params);
+		this.setState({
+			page
+		});
 	}
 
 	componentWillMount() {
@@ -64,14 +88,20 @@ export default class TaskForm extends React.Component {
 			layer: '',
 			estimated_export_time: null,
 		}
-		getGoodNumber(this.setNumberOfGood);
+		let params = {
+			others: [{
+				"key": "status",
+				"value": 300,
+			}],
+		}
+		getGoodNumber(this.setNumberOfGood, params);
 		this.setState({
 			task
 		})
 	}
 
 	setNumberOfGood(numberOfGood) {
-		let pageNumber = Math.ceil(numberOfGood / this.state.goodNumofPage);
+		let numberOfPage = Math.ceil(numberOfGood / this.state.limit) || 1;
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -83,7 +113,7 @@ export default class TaskForm extends React.Component {
 		getGood(this.addAlreadyTask, params);
 		this.setState({
 			numberOfGood,
-			pageNumber
+			numberOfPage
 		})
 	}
 
@@ -154,6 +184,14 @@ export default class TaskForm extends React.Component {
 		})
 	}
 
+	deleteGood(id) {
+		console.log(id)
+		let params = {
+			id: id
+		};
+		deleteGood(() => false, params);
+	}
+
 	putaway() {
 		let task = this.state.task;
 		let [isEmpty, emptyKeys] = objIsEmpty(task);
@@ -192,7 +230,7 @@ export default class TaskForm extends React.Component {
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{status[task.status]}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="删除" onTouchTap={()=>this.deleteGood(task._id)} secondary={true} /></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -338,26 +376,29 @@ export default class TaskForm extends React.Component {
 					</div>
 
 					<Table
-						selectable={false}
+						selectable={this.state.true}
 						className="tablePrint">
-					    <TableBody
-					    	displayRowCheckbox={false}
-					    	deselectOnClickaway={false}>
+						<TableHeader
+							adjustForCheckbox={this.state.isAction}
+							displaySelectAll={this.state.isAction}>>
 							<TableRow>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,overflow:'visible'}}>估计出库时间</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
-					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17,overflow:'visible'}}>估计出库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableHeaderColumn>
+					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>操作</TableHeaderColumn>
 				    		</TableRow>
+						</TableHeader>
+					    <TableBody
+					    	displayRowCheckbox={this.state.isAction}
+					    	deselectOnClickaway={false}>
 					    	{this.renderRow.call(this)}
 					    </TableBody>
 					</Table>
-
-
+					<SelectPage changePage={this.changePage.bind(this)} page={this.state.page} numberOfPage={this.state.numberOfPage}/>
 				</div>
 			</MuiThemeProvider>
 		)

@@ -18,6 +18,7 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 
+import SelectPage from './SelectPage.jsx';
 import {
 	testTask,
 	parseParams,
@@ -46,12 +47,29 @@ export default class Manage extends React.Component {
 			selectes: [],
 			page: 1,
 			limit: 10,
-			numberOfPage: 10,
+			numberOfPage: 1,
 			numberOfGood: 0,
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.initTask = this.initTask.bind(this);
 		this.setNumberOfGood = this.setNumberOfGood.bind(this);
+	}
+
+	changePage(page) {
+		let params = {
+			page: page,
+			limit: this.state.limit,
+			others: [{
+				"key": "action",
+				"value": 500,
+			}],
+		}
+		getTask((task) => this.setState({
+			task
+		}), params);
+		this.setState({
+			page
+		});
 	}
 
 	componentWillMount() {
@@ -76,7 +94,7 @@ export default class Manage extends React.Component {
 	}
 
 	setNumberOfGood(numberOfGood) {
-		let numberOfPage = Math.ceil(numberOfGood / this.state.limit);
+		let numberOfPage = Math.ceil(numberOfGood / this.state.limit) || 1;
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -210,6 +228,9 @@ export default class Manage extends React.Component {
 				    	{this.renderRow.call(this)}
 				    </TableBody>
 				</Table>
+				<div style={{textAlign:'center'}}>
+					<SelectPage changePage={this.changePage.bind(this)} page={this.state.page} numberOfPage={this.state.numberOfPage}/>
+				</div>
 			</div>
 			</Paper>
 		)

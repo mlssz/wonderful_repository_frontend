@@ -101,6 +101,21 @@ export default class ReactClassName extends React.Component {
 								/>,
 								<ListItem
 									  key={2}
+									  primaryText="货物类型统计"
+									  onClick={()=>this.handleClick("stat_good_type")}
+								/>,
+								<ListItem
+									  key={3}
+									  primaryText="任务数量统计"
+									  onClick={()=>this.handleClick("stat_task_number")}
+								/>,
+								<ListItem
+									  key={4}
+									  primaryText="入库时长统计"
+									  onClick={()=>this.handleClick("stat_good_time")}
+								/>,
+								<ListItem
+									  key={5}
 									  primaryText="物品管理"
 									  onClick={()=>this.handleClick("goodsManage")}
 								/>
