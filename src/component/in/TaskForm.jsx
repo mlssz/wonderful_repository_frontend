@@ -24,7 +24,10 @@ import {
 	status
 } from '../../libs/common.js'
 import {
-	putaway
+	putaway,
+	getGoodNumber,
+	getGood,
+	mergeGoods
 } from '../../libs/callToBack.js'
 let taskType = 'intask';
 
@@ -38,28 +41,49 @@ export default class TaskForm extends React.Component {
 			locationVisible: false,
 			auto: false,
 			alreadyTask: [],
+			page: 1,
+			limit: 50,
+			numberOfPage: 10,
+			numberOfGood: 0,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
 		this.putaway = this.putaway.bind(this);
 		this.setType = this.setType.bind(this);
 		this.addAlreadyTask = this.addAlreadyTask.bind(this);
+		this.setNumberOfGood = this.setNumberOfGood.bind(this);
 	}
 
 	componentWillMount() {
-		let task = JSON.parse(sessionStorage.getItem(taskType));
-		if (!task)
-			task = {
-				type: [],
-				num: '',
-				description: '',
-				repository_id: '',
-				location_id: '',
-				layer: '',
-				estimated_export_time: null,
-			}
+		let task = {
+			type: [],
+			num: '',
+			description: '',
+			repository_id: '',
+			location_id: '',
+			layer: '',
+			estimated_export_time: null,
+		}
+		getGoodNumber(this.setNumberOfGood);
 		this.setState({
 			task
+		})
+	}
+
+	setNumberOfGood(numberOfGood) {
+		let pageNumber = Math.ceil(numberOfGood / this.state.goodNumofPage);
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: [{
+				"key": "status",
+				"value": 300,
+			}],
+		}
+		getGood(this.addAlreadyTask, params);
+		this.setState({
+			numberOfGood,
+			pageNumber
 		})
 	}
 
@@ -124,7 +148,7 @@ export default class TaskForm extends React.Component {
 
 	addAlreadyTask(_alreadyTask) {
 		let alreadyTask = this.state.alreadyTask;
-		Array.prototype.push.apply(alreadyTask, _alreadyTask);
+		Array.prototype.push.apply(alreadyTask, mergeGoods(_alreadyTask));
 		this.setState({
 			alreadyTask
 		})
@@ -157,11 +181,12 @@ export default class TaskForm extends React.Component {
 		let import_time = parsetime(task.import_time);
 		let estimated_export_time = parsetime(task.estimated_export_time);
 		let toPlace = parsePlace(task);
-		task.number = task.number || Math.floor(Math.random() * (9999 - 1) + 1);
+		task.number = task.number;
 		// <TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 		return (
 			<TableRow key={task.id}>
 	        	<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.type}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.description}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
@@ -320,6 +345,7 @@ export default class TaskForm extends React.Component {
 					    	deselectOnClickaway={false}>
 							<TableRow>
 					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
+					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableRowColumn>
 					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
 					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableRowColumn>
 					        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableRowColumn>

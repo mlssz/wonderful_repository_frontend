@@ -14,7 +14,7 @@ export const getRepo = function(cb) {
         });
 }
 
-export const login = function(cb, params) {
+export const login = function(cb, params = {}) {
     let isRem = params.isRem;
     let loginState = params.loginState;
     let repo = params.repo;
@@ -29,10 +29,9 @@ export const login = function(cb, params) {
     cb();
 }
 
-export const getLoc = function(cb, task) {
+export const getLoc = function(cb, params = {}) {
     let repoId = getParam('repoid');
-    let url = '/api/repository/' + repoId + '/empty-location?num=' + (task.num || 1);
-    console.log(url);
+    let url = '/api/repository/' + repoId + '/empty-location?num=' + (params.num || 1);
     request
         .get(url)
         .set('Accept', 'application/json')
@@ -49,10 +48,10 @@ export const getLoc = function(cb, task) {
         })
 }
 
-function mergeGoods(goods) {
+export const mergeGoods = function(goods) {
     let _goods = {};
     for (let i in goods) {
-        let key = goods[i].type + goods[i].repository_id + goods[i].location_id + goods[i].layer;
+        let key = '' + goods[i].repository_id + goods[i].location_id + goods[i].layer + goods[i].import_time;
         if (!_goods[key]) {
             _goods[key] = [];
             goods[i].number = 1;
@@ -62,10 +61,9 @@ function mergeGoods(goods) {
         }
     }
     return (Object.values(_goods))
-
 }
 
-export const putaway = function(cb, params) {
+export const putaway = function(cb, params = {}) {
     let task = params.task;
     let dealPutaway = function(loc) {
         let putawayTimes = loc.length;
@@ -100,7 +98,7 @@ export const putaway = function(cb, params) {
                     let statusCode = res.statusCode;
                     let body = JSON.parse(res.text);
                     if (res.statusCode === 201) {
-                        let goods = mergeGoods(body);
+                        let goods = mergeGoods(body, loc[i].num);
                         cb(goods);
                     } else {
                         console.log(statusCode, body);
@@ -123,13 +121,11 @@ export const putaway = function(cb, params) {
 }
 
 export const getGoodNumber = function(cb, params = {}) {
-    let others = params.others;
+    let others = params.others ? JSON.stringify(params.others) : '[]';
+    others = '?others=' + others;
     let url = '/api/materials'
     request
         .head(url)
-        .send({
-            others: others
-        })
         .set('Accept', 'application/json')
         .end(function(err, res) {
             let status = res.status;
@@ -161,25 +157,94 @@ export const getGood = function(cb, params = {}) {
 }
 
 export const getTask = function(cb, params = {}) {
-    let page = params.page - 1 || -1;
-    let limit = params.limit || 10;
-    let others = params.others || [];
+    let page = params.page === undefined ? -1 : params.page - 1;
+    page = 'page=' + page;
+    let limit = '&limit=' + (params.limit || 10);
+    let others = params.others ? JSON.stringify(params.others) : '[]';
+    others = '&others=' + others;
+    let url = '/api/tasks?' + page + limit + others;
+    request
+        .get(url)
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+            let status = res.status;
+            let body = JSON.parse(res.text);
+            if (status === 200) {
+                cb(body);
+            } else {
+                console.log(status, body);
+                alert('失败:' + body.error);
+            }
+        })
 }
 
 export const getTaskNumber = function(cb, params = {}) {
-    let others = params.others;
-    let url = '/api/tasks'
+    let others = params.others ? JSON.stringify(params.others) : '[]';
+    others = '?others=' + others;
+    let url = '/api/tasks' + others;
     request
         .head(url)
-        .send({
-            others: others
-        })
         .set('Accept', 'application/json')
         .end(function(err, res) {
-            console.log(res);
+            let status = res.status;
+            if (status === 200) {
+                let number = res.header.num;
+                cb(number);
+            } else {
+                console.log(status, res);
+            }
         })
 }
 
 export const move = function(cb, params = {}) {
-
+    let place = params.place || false;
+    let goods = params.goods;
+    let destination = params.destination || '';
+    let num = goods.length;
+    let dealMove = function(loc) {
+        let length = loc.length;
+        for (let i = 0; i < length; i++) {
+            let numberOfPlace = loc[i].num;
+            let layer = loc[i].layer;
+            let location = loc[i].location;
+            let repository = loc[i].repository !== undefined ? loc[i].repository : 1;
+            let sender = {
+                repository: repository,
+                location: location,
+                layer: layer,
+                destination: destination,
+            }
+            console.log(sender)
+            while (numberOfPlace--) {
+                let good = goods.shift();
+                let url = '/api/material/' + good._id + '/migrations';
+                request
+                    .post(url)
+                    .send(sender)
+                    .set('Accept', 'application/json')
+                    .end(function(err, res) {
+                        console.log('move:', res)
+                        let statusCode = res.statusCode;
+                        let body = res.text;
+                        if (res.statusCode === 200) {
+                            body = JSON.parse(body);
+                            console.log(body);
+                            // let goods = mergeGoods(body);
+                            cb(goods);
+                        } else {
+                            console.log(statusCode, body);
+                            alert('失败 : ' + body.error || body);
+                        }
+                    })
+            }
+        }
+    }
+    if (!place) {
+        getLoc(dealMove, {
+            num: num
+        })
+    } else {
+        let loc = [place];
+        dealMove(loc);
+    }
 }

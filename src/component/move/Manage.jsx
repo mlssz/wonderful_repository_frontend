@@ -19,7 +19,6 @@ import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 
 import {
-	testMove,
 	parseParams,
 	parsetime,
 	parseTaskPlace,
@@ -27,6 +26,10 @@ import {
 	changeHash,
 	downloadBarCode
 } from '../../libs/common.js'
+import {
+	getTaskNumber,
+	getTask
+} from '../../libs/callToBack.js'
 
 import * as sortTask from '../../libs/sortTask.js'
 import Selecter from '../in/Selecter.jsx'
@@ -41,14 +44,29 @@ export default class Manage extends React.Component {
 			sort: 1,
 			choose: false,
 			selectes: [],
+			page: 1,
+			limit: 10,
+			numberOfPage: 10,
+			numberOfGood: 0,
 		}
 		this.handleChange = this.handleChange.bind(this);
+		this.setNumberOfGood = this.setNumberOfGood.bind(this);
+		this.initTask = this.initTask.bind(this);
 	}
 
 	componentWillMount() {
+		let params = {
+			others: [{
+				"key": "action",
+				"value": 501,
+			}]
+		}
+		getTaskNumber(this.setNumberOfGood, params);
+
+	}
+
+	initTask(testMove) {
 		let task = testMove;
-		for (let i in task)
-			task[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
 		let oriTask = [];
 		for (let i in task)
 			oriTask.push(task[i])
@@ -58,31 +76,26 @@ export default class Manage extends React.Component {
 		});
 	}
 
-	handleChange(event, index, value) {
-		let task = this.state.task;
-		switch (value) {
-			case 1:
-				task = task.sort(sortTask.sortById);
-				break;
-			case 2:
-				task = task.sort(sortTask.sortByType);
-				break;
-			case 3:
-				task = task.sort(sortTask.sortByNum);
-				break;
-			case 4:
-				task = task.sort(sortTask.sortByImportTime);
-				break;
-			case 5:
-				task = task.sort(sortTask.sortByFromPlace);
-				break;
-			case 6:
-				task = task.sort(sortTask.sortByToPlace);
-				break;
+	setNumberOfGood(numberOfGood) {
+		let numberOfPage = Math.ceil(numberOfGood / this.state.limit);
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: [{
+				"key": "action",
+				"value": 501,
+			}],
 		}
+		getTask(this.initTask, params);
+		this.setState({
+			numberOfGood,
+			numberOfPage
+		})
+	}
+
+	handleChange(event, index, value) {
 		this.setState({
 			sort: value,
-			task,
 		})
 	}
 
@@ -96,13 +109,13 @@ export default class Manage extends React.Component {
 	renderRowColumn(task) {
 		let material = task.material;
 		let import_time = parsetime(material.location_update_time);
-		let [fromPlace, toPlace] = parseTaskPlace(material);
+		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
 		let status = ['未开始', '进行中', '已完成', '已取消'][task.status];
 		return (
 			<TableRow key={material.id}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
@@ -188,7 +201,7 @@ export default class Manage extends React.Component {
 						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>下单时间</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>原始位置</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>目的地址</TableRowColumn>

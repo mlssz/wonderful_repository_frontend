@@ -7,6 +7,8 @@ import {
 } from 'material-ui/Toolbar'
 import {
 	Table,
+	TableHeader,
+	TableHeaderColumn,
 	TableBody,
 	TableRow,
 	TableRowColumn
@@ -21,6 +23,8 @@ import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import Paper from 'material-ui/Paper'
+import Dialog from 'material-ui/Dialog'
+import SelectField from 'material-ui/SelectField'
 
 import {
 	parseParams,
@@ -32,7 +36,8 @@ import {
 } from '../../libs/common.js'
 import {
 	getGoodNumber,
-	getGood
+	getGood,
+	move
 } from '../../libs/callToBack.js'
 
 import * as sortGood from '../../libs/sortGood.js'
@@ -43,16 +48,20 @@ export default class Manage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isMove: false,
 			good: [],
 			oriGood: [],
 			sort: 1,
 			action: false,
-			selected: 0,
+			selected: [],
 			numberOfGood: 0,
 			pageNumber: 0,
 			goodNumofPage: 10,
 			page: 1,
 			limit: 10,
+			popOpen: false,
+			position: {},
+			error: {},
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.meunClick = this.meunClick.bind(this);
@@ -106,11 +115,11 @@ export default class Manage extends React.Component {
 	renderRow() {
 		let goods = this.state.good;
 		return (
-			goods.map(this.renderRowColumn)
+			goods.map((good, i) => this.renderRowColumn(good, i))
 		)
 	}
 
-	renderRowColumn(good) {
+	renderRowColumn(good, i) {
 		let import_time = parsetime(good.import_time);
 		let estimated_export_time = parsetime(good.estimated_export_time, 0);
 		let location_update_time = parsetime(good.location_update_time);
@@ -118,19 +127,31 @@ export default class Manage extends React.Component {
 		return (
 			<TableRow key={good.id}>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.id}</TableRowColumn>
-		       	<TableRowColumn style={{textAlign:'center'}}>{good.type}</TableRowColumn>
-		       	<TableRowColumn style={{textAlign:'center'}}>{good.number}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.type}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.description}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
-		       	<TableRowColumn style={{textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
-		       	<TableRowColumn style={{textAlign:'center'}}>{place}</TableRowColumn>
-		       	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="移动" primary={true} onTouchTap={()=>this.doAction(good)}/></TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{place}</TableRowColumn>
 			</TableRow>
 		)
 	}
 
-	doAction(good) {
-		console.log(good)
+	doAction() {
+		let selected = this.state.selected;
+		let oriGood = this.state.good;
+		let goods = [];
+		if (typeof selected === 'object' && selected.length === 0)
+			return false;
+		if (selected === "all")
+			goods = oriGood;
+		else {
+			for (let i of selected)
+				goods.push(oriGood[i]);
+		}
+		move(() => false, {
+			goods: goods
+		});
 	}
 
 	meunClick(event, child) {
@@ -162,6 +183,19 @@ export default class Manage extends React.Component {
 	}
 
 	render() {
+		const actions = [
+			<FlatButton
+        label="取消移动"
+        primary={true}
+        onTouchTap={()=>this.setState({popOpen:false})}
+      />,
+			<FlatButton
+        label="确认移动"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.doAction}
+      />,
+		];
 		return (
 			<Paper style={paperStyle} zDepth={1}>
 			<div>
@@ -171,7 +205,7 @@ export default class Manage extends React.Component {
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
 							<MenuItem value={1} primaryText="物资编号" />
 							<MenuItem value={2} primaryText="物资类型" />
-							<MenuItem value={3} primaryText="物资数量" />
+							<MenuItem value={3} primaryText="物资名称" />
 							<MenuItem value={4} primaryText="入库时间" />
 							<MenuItem value={5} primaryText="估计出库时间" />
 							<MenuItem value={6} primaryText="最近搬运时间" />
@@ -183,27 +217,107 @@ export default class Manage extends React.Component {
 					    	onChange={this.pick.bind(this)}
 					  	/>
 			        </ToolbarGroup>
+			        <ToolbarGroup>
+			        	<RaisedButton 
+			        		label="系统移动"
+			        		primary={true}
+			        		onTouchTap={this.doAction}
+			        		style={{display:this.state.isMove?'inline-block':'none'}}
+			        	/>
+			        	<RaisedButton 
+			        		label="自主移动"
+			        		primary={true}
+			        		onTouchTap={()=>this.setState({popOpen:true})}
+			        		style={{display:this.state.isMove?'inline-block':'none'}}
+			        	/>
+			        	<RaisedButton 
+			        		label={this.state.isMove?"取消移动":"选择移动"}
+			        		primary={!this.state.isMove}
+			        		secondary={this.state.isMove}
+			        		onTouchTap={()=>{
+								let isMove = !this.state.isMove;
+								this.setState({isMove})
+			        		}}
+			        	/>
+			        </ToolbarGroup>
 				</Toolbar>
 				<Table
 					selectable={true}
 					className="tablePrint"
-					onRowSelection={(e)=>this.setState({selected:e[0]})}>
+					multiSelectable={true}
+					onRowSelection={(selected)=>this.setState({selected})}>
+						<TableHeader
+							adjustForCheckbox={this.state.isMove}
+							displaySelectAll={this.state.isMove}>
+							<TableRow>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资编号</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资类型</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资名称</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>入库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black',overflow:'visible'}}>估计出库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>最近搬运时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>所处地址</TableHeaderColumn>
+							</TableRow>
+			    		</TableHeader>
 				    <TableBody
-				    	displayRowCheckbox={false}
-				    	deselectOnClickaway={false}>
-						<TableRow selectable={false}>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,overflow:'visible'}}>估计出库时间</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>最近搬运时间</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>所处地址</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>移动</TableRowColumn>
-			    		</TableRow>
+				    	deselectOnClickaway={false}
+				    	displayRowCheckbox={this.state.isMove}>
 						{this.renderRow.call(this)}
 				    </TableBody>
 				</Table>
+				<Dialog
+		          title="请选择摆放地址"
+		          actions={actions}
+		          modal={false}
+		          open={this.state.popOpen}
+		          onRequestClose={()=>this.setState({popOpen:false})}
+		        >
+					<div style={{width:"80%",margin:"0 auto",display:'flex',justifyContent:'flex-around'}}>
+						<SelectField
+							floatingLabelText="仓"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.repository_id}
+							errorText={this.state.error.repository_id}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.repository_id =v;
+								this.setState(position)
+							}}
+			        	>
+		        			{renderMenuItem([1])}
+		        		</SelectField>
+						<SelectField
+							floatingLabelText="架"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.location_id}
+							errorText={this.state.error.location_id}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.location_id =v;
+								this.setState(position)
+							}}
+			        	>
+		        			{renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
+		        		</SelectField>
+				        <SelectField
+							floatingLabelText="层"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.layer}
+							errorText={this.state.error.layer}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.layer =v;
+								this.setState(position)
+							}}
+				        >
+		        			{renderMenuItem([1,2,3])}
+		        		</SelectField>
+		        		<br/><br/><br/>
+					</div>
+		        </Dialog>
 			</div>
 			</Paper>
 		)
@@ -223,4 +337,18 @@ function pickGood(good, v, sort) {
 		return true;
 	}
 	return false;
+}
+
+function renderMenuItem(items, type = 1) {
+	let MenuItems = [];
+	if (type === 1) {
+		return items.map((i, index) => <MenuItem value={i} key={index} primaryText={i} />)
+	}
+	if (type === 2) {
+		for (let i in items) {
+			let item = <MenuItem value={i} key={i} primaryText={i} />;
+			MenuItems.push(item);
+		}
+		return MenuItems;
+	}
 }

@@ -11,13 +11,13 @@ let defaultStaticDir = "static";
 let entry_dir = join(__dirname, "./src")
 
 let _static_dir = process.env.STATICDIR ?
-  process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
+    process.env.STATICDIR.trim().replace(/^[\.\/]+|\/+$/g, '').trim() : defaultStaticDir;
 
 let static_dir = join(__dirname, _static_dir);
 let node_env = process.env.NODE_ENV;
 
 let webpackDefineConfig = {
-  "__ENV__": JSON.stringify(node_env)
+    "__ENV__": JSON.stringify(node_env)
 }
 
 let dist = node_env === "production" ? "prodist" : "dist";
@@ -25,9 +25,9 @@ let index = node_env === "production" ? "index.html" : "index_test.html";
 
 // https://github.com/ampedandwired/html-webpack-plugin
 let htmlWebpackPluginConfig = {
-  filename: join(static_dir, `./${index}`),
-  template: "template.html",
-  inject: true,
+    filename: join(static_dir, `./${index}`),
+    template: "template.html",
+    inject: true,
 };
 let plugins = []
 
@@ -35,13 +35,13 @@ let isDebug = true;
 if (node_env === "production") {
     isDebug = false;
     Object.assign(htmlWebpackPluginConfig, {
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      }
+        minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeAttributeQuotes: true
+                // more options:
+                // https://github.com/kangax/html-minifier#options-quick-reference
+        }
     })
     plugins = plugins.concat([
         // split vendor js into its own file
@@ -69,14 +69,14 @@ if (node_env === "production") {
 let uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 plugins = plugins.concat([
-        new uglifyJsPlugin({
-            //UglifyJs Plugin will minify output(bundle.js) JS codes.http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
-            compress: {
-                warnings: false
-            }
-        }),
-        new webpack.DefinePlugin(webpackDefineConfig),
-        new HtmlWebpackPlugin(htmlWebpackPluginConfig)
+    new uglifyJsPlugin({
+        //UglifyJs Plugin will minify output(bundle.js) JS codes.http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
+        compress: {
+            warnings: false
+        }
+    }),
+    new webpack.DefinePlugin(webpackDefineConfig),
+    new HtmlWebpackPlugin(htmlWebpackPluginConfig)
 ])
 
 let webpackconfig = {
@@ -99,7 +99,7 @@ let webpackconfig = {
             query: {
                 presets: ["es2015", "react"]
             }
-        }, { 
+        }, {
             test: /\.json$/,
             loader: "json",
         }, { //Only do this use to local css!
@@ -119,7 +119,7 @@ let webpackconfig = {
             loader: "file-loader"
         }]
     },
-    plugins: plugins, 
+    plugins: plugins,
     // a server for front end development
     devServer: {
         hot: true,

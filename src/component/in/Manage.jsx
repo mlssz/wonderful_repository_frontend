@@ -44,15 +44,28 @@ export default class Manage extends React.Component {
 			sort: 1,
 			choose: false,
 			selectes: [],
+			page: 1,
+			limit: 10,
+			numberOfPage: 10,
+			numberOfGood: 0,
 		}
 		this.handleChange = this.handleChange.bind(this);
+		this.initTask = this.initTask.bind(this);
+		this.setNumberOfGood = this.setNumberOfGood.bind(this);
 	}
 
 	componentWillMount() {
-		getTaskNumber(() => false);
-		let task = testTask;
-		for (let i in task)
-			task[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
+		let params = {
+			others: [{
+				"key": "action",
+				"value": 500,
+			}]
+		}
+		getTaskNumber(this.setNumberOfGood, params);
+	}
+
+	initTask(testMove) {
+		let task = testMove;
 		let oriTask = [];
 		for (let i in task)
 			oriTask.push(task[i])
@@ -62,8 +75,24 @@ export default class Manage extends React.Component {
 		});
 	}
 
+	setNumberOfGood(numberOfGood) {
+		let numberOfPage = Math.ceil(numberOfGood / this.state.limit);
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: [{
+				"key": "action",
+				"value": 500,
+			}],
+		}
+		getTask(this.initTask, params);
+		this.setState({
+			numberOfGood,
+			numberOfPage
+		})
+	}
+
 	handleChange(event, index, value) {
-		let task = this.state.task;
 		this.setState({
 			sort: value,
 		})
@@ -79,13 +108,13 @@ export default class Manage extends React.Component {
 	renderRowColumn(task) {
 		let material = task.material;
 		let import_time = parsetime(material.location_update_time);
-		let [fromPlace, toPlace] = parseTaskPlace(material);
+		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
 		let status = ['未开始', '进行中', '已完成', '已取消'][task.status];
 		return (
 			<TableRow key={material.id}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{material.type}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
@@ -143,7 +172,7 @@ export default class Manage extends React.Component {
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
 							<MenuItem value={1} primaryText="物资编号" />
 							<MenuItem value={2} primaryText="物资类型" />
-							<MenuItem value={3} primaryText="物资数量" />
+							<MenuItem value={3} primaryText="物资名称" />
 							<MenuItem value={4} primaryText="入库时间" />
 							<MenuItem value={5} primaryText="原始位置" />
 							<MenuItem value={6} primaryText="入库地址" />
