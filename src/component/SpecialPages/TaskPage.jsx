@@ -15,8 +15,10 @@ import {Tabs, Tab} from "material-ui/Tabs"
 import Paper from 'material-ui/Paper'
 
 import {CenterButtons} from "../buttons/BetweenButtons.jsx"
+import {Loading} from "../tools/Loading.jsx"
 
 import {changeHash, paperStyle} from "../../libs/common.js"
+import {getTaskById, getTaskByMigrationId} from "../../libs/callToBack.js"
 import {
   humanise_date,
   humanise_task_var,
@@ -50,53 +52,34 @@ export default class TaskPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      "state": 1
+      "loading": true,
+      "task": null
     }
 
   }
 
+  componentWillMount(){
+    let id_tuple = this.props.match.params.id.split("_")
+    if (id_tuple.length !== 2) changeHash("/")
+
+    let id = id_tuple[1]
+    let method = id_tuple[0] === "task" ? getTaskById : getTaskByMigrationId
+
+    method(id)
+      .then(task => this.setState({
+        "loading": false,
+        "task": task
+      }))
+      .catch(console.log)
+  }
+
   render() {
-    // This should request to backend
-    let task =  {
-      "_id": "dsafdsadsaf32413141kl2",
-      "action": 500,
-      "status": 0,
-      "publish_time": "2017-04-06T04:57:36.801Z",
-      "start_time": "2017-04-06T04:57:36.801Z",
-      "end_time": "2017-04-06T04:57:36.801Z",
-      "remark": "this just a test\n dont be serious.",
-      "staff": {
-          "_id": "dsafdsadsaf32413141kl2",
-          "name": "因幡帝",
-          "account": "inaba_tewi",
-          "passwd": "123456",
-          "sex": 0,
-          "age": 222,
-          "permission": 1,
-          "signup_time": 1491451593158,
-          "last_login_time": 1491451593158
-      },
-      "material": {
-          "_id": "dsafdsadsaf32413141kl2",
-          "id": this.props.params,
-          "type": "tester",
-          "description": "wonderful repository",
-          "import_time": "2017-04-06T04:57:36.801Z",
-          "estimated_export_time": "2017-04-06T04:57:36.801Z",
-          "height": 1,
-          "width": 1,
-          "length": 2,
-          "status": 300,
-          "from_repository": 0,
-          "from_location": 0,
-          "from_layer": 0,
-          "to_repository": 12,
-          "to_location": 1,
-          "to_layer": 0,
-          "last_migrations": "1234",
-          "location_update_time": "2017-04-06T04:57:36.801Z"
-      }
+    if (this.state.loading) {
+      return (<div><Loading style={{margin: 150}}/></div>)
     }
+
+    // This should request to backend
+    let task =  this.state.task
 
     let tabs = [
       {
@@ -105,13 +88,13 @@ export default class TaskPage extends Component {
       },
     ]
 
-    if (task.material !== undefined) {
+    if (task.material) {
       tabs.push({
         label: "物品信息",
         component: TaskMaterial
       })
     }
-    if (task.staff !== undefined) {
+    if (task.staff) {
       tabs.push({
         label: "人员信息",
         component: TaskStaff
@@ -172,7 +155,7 @@ class TaskBase extends Component {
 
           <CardHeader title={<p  style={inheadStyle}>附加信息</p>}/>
           <CardText>
-            {task.remark.length <= 0 ? "空" : task.remark.split("\n").map((l, i) => <p key={i} style={normalText}>{l}</p>)}
+            {task.remark && task.remark.length >= 0 ? task.remark.split("\n").map((l, i) => <p key={i} style={normalText}>{l}</p>) : "空"}
           </CardText>
         </CardText>
     )
@@ -194,16 +177,19 @@ class TaskMaterial extends Component {
   render() {
 
     let material = this.props.task.material
-    let material_kvmap = material === undefined ? undefined : {
+    let migration = this.props.task.migration
+    let material_kvmap =  {
       "物资id" : material.id ,
       "物资类型" : material.type ,
       "物资状态" : humanise_material_var(material.status),
-      "原位置":  humanise_material_position(material.from_repository, material.from_location, material.from_layer),
-      "新位置":  humanise_material_position(material.to_repository, material.to_location, material.to_layer),
       "宽" : material.width ,
       "长" : material.length ,
       "高" : material.height ,
       "物资描述" : material.description,
+    }
+    if (migration) {
+      material_kvmap["原位置"] = humanise_material_position(migration.from_repository, migration.from_location, migration.from_layer),
+      material_kvmap["新位置"] = humanise_material_position(migration.to_repository, migration.to_location, migration.to_layer)
     }
 
     return (

@@ -119,7 +119,7 @@ export default class Manage extends React.Component {
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}

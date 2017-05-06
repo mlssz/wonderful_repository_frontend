@@ -4,6 +4,34 @@ function getParam(name) {
     return sessionStorage.getItem(name) || localStorage.getItem(name);
 }
 
+export const getTaskByMigrationId = id => {
+  return request
+    .get(`/api/migration/${id}/task`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
+export const getMigrationsById = id => {
+  return request
+    .get(`/api/material/${id}/migrations`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
+export const getGoodById= id => {
+  return request
+    .get(`/api/material/${id}`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
+export const getTaskById= id => {
+  return request
+    .get(`/api/task/${id}`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
 export const getRepo = function(cb) {
     request
         .get('/api/repositories')
