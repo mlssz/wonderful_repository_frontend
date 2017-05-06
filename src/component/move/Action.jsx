@@ -42,6 +42,7 @@ import {
 
 import * as sortGood from '../../libs/sortGood.js'
 import Selecter from '../in/Selecter.jsx'
+import SelectPage from '../in/SelectPage.jsx'
 
 export default class Manage extends React.Component {
 
@@ -55,8 +56,7 @@ export default class Manage extends React.Component {
 			action: false,
 			selected: [],
 			numberOfGood: 0,
-			pageNumber: 0,
-			goodNumofPage: 10,
+			pageNumber: 1,
 			page: 1,
 			limit: 10,
 			popOpen: false,
@@ -71,14 +71,33 @@ export default class Manage extends React.Component {
 		this.renderRowColumn = this.renderRowColumn.bind(this);
 	}
 
+	changePage(page) {
+		let params = {
+			page: page,
+			limit: this.state.limit,
+			others: [{
+				"key": "status",
+				"value": 100,
+			}],
+		}
+		getGood(this.initGood, params);
+		this.setState({
+			page
+		});
+	}
+
 	componentWillMount() {
-		getGoodNumber(this.setNumberOfGood);
+		let params = {
+			others: [{
+				"key": "status",
+				"value": 100,
+			}],
+		}
+		getGoodNumber(this.setNumberOfGood, params);
 	}
 
 	initGood(testGoods) {
 		let good = testGoods;
-		for (let i in good)
-			good[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
 		let oriGood = [];
 		for (let i in good)
 			oriGood.push(good[i])
@@ -89,7 +108,8 @@ export default class Manage extends React.Component {
 	}
 
 	setNumberOfGood(numberOfGood) {
-		let pageNumber = Math.ceil(numberOfGood / this.state.goodNumofPage);
+		let pageNumber = Math.ceil(numberOfGood / this.state.limit) || 1;
+		console.log(numberOfGood, pageNumber)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -265,6 +285,9 @@ export default class Manage extends React.Component {
 						{this.renderRow.call(this)}
 				    </TableBody>
 				</Table>
+				<div style={{textAlign:'center'}}>
+					<SelectPage changePage={this.changePage.bind(this)} page={this.state.page} numberOfPage={this.state.pageNumber}/>
+				</div>
 				<Dialog
 		          title="请选择摆放地址"
 		          actions={actions}

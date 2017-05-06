@@ -47,7 +47,10 @@ export const titleMap = {
 	"#out": "出库登记",
 	"#outEnsure": "出库管理",
 	"#outManage": "出库管理",
-	"#goodsManage": "物品管理"
+	"#goodsManage": "物品管理",
+	"#stat_good_type": "货物类型统计",
+	"#stat_task_number": "任务数量统计",
+	"#stat_good_time": "入库时长统计"
 }
 
 export const formName = {
