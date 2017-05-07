@@ -20,7 +20,10 @@ import FlatButton from 'material-ui/FlatButton'
 import Divider from 'material-ui/Divider'
 import Paper from 'material-ui/Paper'
 
+import {Loading} from "../tools/Loading.jsx"
+
 import {changeHash, paperStyle} from "../../libs/common.js"
+import {getGoodById, getMigrationsById} from "../../libs/callToBack.js"
 import {
   humanise_material_var,
   humanise_date,
@@ -58,7 +61,7 @@ export default class MaterialPage extends Component {
       <Tabs>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
-            <t.component style={this.tabStyle} />
+            <t.component style={this.tabStyle} mid={this.props.match.params.id}/>
            </Tab>
          ))}
       </Tabs>
@@ -77,27 +80,27 @@ class MaterialBase extends Component {
 
   constructor(props){
     super(props)
-    this.state = {"state":1}
+    this.state = {
+      "loading": true,
+      "material": null
+    }
+  }
+
+  componentWillMount(){
+    getGoodById(this.props.mid)
+      .then(material => this.setState({
+        "loading": false,
+        "material": material
+      }))
+      .catch(console.log)
   }
 
   render() {
-    let material = {
-      "_id": "dsafdsadsaf32413141kl2",
-      "id": 1491451593158,
-      "type": "生活电器-生活电器",
-      "description": "wonderful repository",
-      "import_time": "2017-04-06T04:57:36.801Z",
-      "estimated_export_time": "2017-04-06T04:57:36.801Z",
-      "height": 1,
-      "width": 1,
-      "length": 2,
-      "status": 300,
-      "repository_id": -1,
-      "location_id": 0,
-      "layer": 0,
-      "last_migrations": "1234",
-      "location_update_time": "2017-04-06T04:57:36.801Z"
+    if (this.state.loading) {
+      return (<div><Loading style={{margin: 150}}/></div>)
     }
+
+    let material = this.state.material
     let material_kvmap =  {
       "物资状态" : humanise_material_var(material.status),
       "当前位置": material.repository_id === undefined ? undefined : humanise_material_position(material.repository_id, material.location_id, material.layer),
@@ -145,50 +148,28 @@ class MaterialMigrations extends Component {
 
   constructor(props){
     super(props)
+    this.state = {
+      "loading": true,
+      "migrations": null
+    }
+  }
+
+  componentWillMount(){
+    getMigrationsById(this.props.mid)
+      .then(migrations => this.setState({
+        "loading": false,
+        "migrations": migrations
+      }))
+      .catch(console.log)
   }
 
   render() {
-    const migrations = [{
-      "_id": "dsafdsaf32141314",
-      "material": "dsafdsaf32141314",
-      "date": "2017-04-06T04:57:36.801Z",
-      "from_repository": 1,
-      "from_location": 12,
-      "from_layer": 0,
-      "to_repository": 1,
-      "to_location": 3,
-      "to_layer": 0,
-    }, {
-      "_id": "dsafdsaf32141314",
-      "material": "dsafdsaf32141314",
-      "date": "2017-04-06T04:57:36.801Z",
-      "from_repository": 1,
-      "from_location": 4,
-      "from_layer": 0,
-      "to_repository": 1,
-      "to_location": 12,
-      "to_layer": 0,
-    }, {
-      "_id": "dsafdsaf32141314",
-      "material": "dsafdsaf32141314",
-      "date": "2017-04-06T04:57:36.801Z",
-      "from_repository": 1,
-      "from_location": 23,
-      "from_layer": 0,
-      "to_repository": 1,
-      "to_location": 4,
-      "to_layer": 0,
-    }, {
-      "_id": "dsafdsaf32141314",
-      "material": "dsafdsaf32141314",
-      "date": "2017-04-06T04:57:36.801Z",
-      "from_repository": 0,
-      "from_location": 0,
-      "from_layer": 0,
-      "to_repository": 1,
-      "to_location": 23,
-      "to_layer": 0,
-    }]
+    if (this.state.loading) {
+      return (<div><Loading style={{margin: 150}}/></div>)
+    }
+
+    const migrations = this.state.migrations
+    console.log(migrations)
 
     let steps = migrations.map((m, i) => (
               <Step active={true} key={i}>
@@ -214,7 +195,7 @@ class MaterialMigrations extends Component {
                       </span>
                     </span>
                     <span>
-                      <FlatButton label="查看任务" onTouchTap={() => changeHash(`/task/${m._id}`)} />
+                      <FlatButton label="查看任务" onTouchTap={() => changeHash(`/task/migration_${m._id}`)} />
                     </span>
                   </div>
                 </StepContent>

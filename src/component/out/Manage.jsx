@@ -79,6 +79,13 @@ export default class Manage extends React.Component {
 		getTaskNumber(this.setNumberOfGood, params);
 	}
 
+	updateTask(others) {
+		let params = {
+			others: others
+		}
+		getTask(this.initTask, params);
+	}
+
 	initTask(testMove) {
 		let task = testMove;
 		let oriTask = [];
@@ -134,7 +141,7 @@ export default class Manage extends React.Component {
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)} /></TableRowColumn>
+	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)} /></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -181,7 +188,7 @@ export default class Manage extends React.Component {
 		return (
 			<Paper style={paperStyle} zDepth={1}>
 			<div>
-				<Selecter/>
+				<Selecter onChange={this.updateTask.bind(this)}/>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>

@@ -169,7 +169,7 @@ export default class Manage extends React.Component {
 			for (let i of selected)
 				goods.push(oriGood[i]);
 		}
-		move(() => window.location.reload, {
+		move(() => window.location.reload(), {
 			goods: goods
 		});
 	}

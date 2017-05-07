@@ -142,10 +142,11 @@ export const humanise_material_position = (repository, location, layer) => {
     return "出库"
   }
 
-  return `${repository}仓${location}号位置${layer}`
+  return `${repository}仓${location+1}号位置${layer+1}`
 }
 
 export const humanise_date = end_time => {
+  if(!end_time) return undefined
 
 	let et = new Date(end_time)
 	return et.getFullYear() + "-" + (et.getMonth() + 1) + "-" + et.getDate() + " " + et.getHours() + ":" + et.getMinutes() + ":" + et.getSeconds()

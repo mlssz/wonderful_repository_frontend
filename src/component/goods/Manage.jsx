@@ -29,7 +29,6 @@ import {
 	downloadBarCode
 } from '../../libs/common.js'
 
-import {Loading} from "../tools/Loading.jsx"
 import * as sortGood from '../../libs/sortGood.js'
 import Selecter from '../in/Selecter.jsx'
 
@@ -150,9 +149,6 @@ export default class Manage extends React.Component {
 	}
 
 	render() {
-    if (true) {
-      return (<div><Loading style={{marginTop: 150}}/></div>)
-    }
 
 		return (
 			<div>
