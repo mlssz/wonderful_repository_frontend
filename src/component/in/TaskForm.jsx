@@ -189,7 +189,7 @@ export default class TaskForm extends React.Component {
 		let params = {
 			id: id
 		};
-		deleteGood(() => false, params);
+		deleteGood(() => window.location.reload(), params);
 	}
 
 	putaway() {
@@ -203,7 +203,7 @@ export default class TaskForm extends React.Component {
 			});
 			return false;
 		}
-		putaway(this.addAlreadyTask, {
+		putaway(() => window.location.reload(), {
 			task: task
 		})
 	}
@@ -359,7 +359,7 @@ export default class TaskForm extends React.Component {
 						/>
 
 						<TextField
-							floatingLabelText="物资描述"
+							floatingLabelText="物资名称"
 							floatingLabelStyle={{color:'gray'}}
 							value={this.state.task.description}
 							errorText={this.state.error.description}

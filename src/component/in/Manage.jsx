@@ -131,13 +131,13 @@ export default class Manage extends React.Component {
 		return (
 			<TableRow key={material.id}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{material.type}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.description}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{fromPlace}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{toPlace}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}

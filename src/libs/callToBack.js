@@ -264,6 +264,7 @@ export const deleteGood = function(cb, params = {}) {
                 console.log(status, res)
                 let status = res.status;
                 let body = JSON.parse(res.text);
+                cb();
             })
     }
 

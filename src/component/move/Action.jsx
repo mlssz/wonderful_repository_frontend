@@ -169,7 +169,7 @@ export default class Manage extends React.Component {
 			for (let i of selected)
 				goods.push(oriGood[i]);
 		}
-		move(() => false, {
+		move(() => window.location.reload, {
 			goods: goods
 		});
 	}
@@ -247,7 +247,7 @@ export default class Manage extends React.Component {
 			        	<RaisedButton 
 			        		label="自主移动"
 			        		primary={true}
-			        		onTouchTap={()=>this.setState({popOpen:true})}
+			        		onTouchTap={()=>{this.setState({popOpen:true})}}
 			        		style={{display:this.state.isMove?'inline-block':'none'}}
 			        	/>
 			        	<RaisedButton 

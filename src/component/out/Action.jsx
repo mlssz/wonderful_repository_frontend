@@ -170,7 +170,7 @@ export default class Manage extends React.Component {
 			layer: 0,
 			num: goods.length
 		}
-		move(() => false, {
+		move(() => window.location.reload, {
 			goods: goods,
 			place: place
 		});

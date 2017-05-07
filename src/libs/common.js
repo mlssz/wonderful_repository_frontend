@@ -84,7 +84,9 @@ export const parseParams = function() {
 
 export const parsetime = function(time, type = 1) {
 	if (time === 0)
-		return '';
+		return '- - - -';
+	if (time === null)
+		return '- - - -';
 	let t = new Date(time);
 	if (type === 1)
 		return t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() + ' ' + t.getHours() + ':' + t.getMinutes() + ':' + t.getSeconds();
