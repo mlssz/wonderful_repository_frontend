@@ -22,7 +22,7 @@ export const regJudger = (reg) => {
 export const lenJudger = (minl, maxl) => {
   return (value) => {
     let valueLen = value.length
-    return valueLen > minl && valueLen < maxl
+    return valueLen >= minl && valueLen < maxl
   }
 }
 
