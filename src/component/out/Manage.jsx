@@ -80,7 +80,14 @@ export default class Manage extends React.Component {
 	}
 
 	updateTask(others) {
+		others.push({
+			"key": "action",
+			"value": 502,
+		});
+		console.log('others:', others)
 		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
 			others: others
 		}
 		getTask(this.initTask, params);
@@ -207,7 +214,7 @@ export default class Manage extends React.Component {
 			        </ToolbarGroup>
 			        <ToolbarGroup>
 			          <ToolbarSeparator />
-			          <RaisedButton label="打印入库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
+			          <RaisedButton label="打印出库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
 			          <RaisedButton label={this.state.choose?"打印条形码":"选择打印条形码"} primary={true} onTouchTap={this.printBar.bind(this)}/>
 			        </ToolbarGroup>
 				</Toolbar>

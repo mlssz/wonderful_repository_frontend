@@ -82,6 +82,20 @@ export default class Manage extends React.Component {
 		getTaskNumber(this.setNumberOfGood, params);
 	}
 
+	updateTask(others) {
+		others.push({
+			"key": "action",
+			"value": 500,
+		});
+		console.log('others:', others)
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: others
+		}
+		getTask(this.initTask, params);
+	}
+
 	initTask(testMove) {
 		let task = testMove;
 		let oriTask = [];
@@ -184,7 +198,7 @@ export default class Manage extends React.Component {
 		return (
 			<Paper style={paperStyle} zDepth={1}>
 			<div>
-				<Selecter/>
+				<Selecter onChange={this.updateTask.bind(this)}/>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>

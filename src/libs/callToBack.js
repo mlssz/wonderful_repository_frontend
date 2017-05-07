@@ -5,31 +5,31 @@ function getParam(name) {
 }
 
 export const getTaskByMigrationId = id => {
-  return request
-    .get(`/api/migration/${id}/task`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+    return request
+        .get(`/api/migration/${id}/task`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
 export const getMigrationsById = id => {
-  return request
-    .get(`/api/material/${id}/migrations`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+    return request
+        .get(`/api/material/${id}/migrations`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
-export const getGoodById= id => {
-  return request
-    .get(`/api/material/${id}`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+export const getGoodById = id => {
+    return request
+        .get(`/api/material/${id}`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
-export const getTaskById= id => {
-  return request
-    .get(`/api/task/${id}`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+export const getTaskById = id => {
+    return request
+        .get(`/api/task/${id}`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
 export const getRepo = function(cb) {
@@ -195,10 +195,12 @@ export const getTask = function(cb, params = {}) {
     let others = params.others ? JSON.stringify(params.others) : '[]';
     others = '&others=' + others;
     let url = '/api/tasks?' + page + limit + others;
+    console.log(url)
     request
         .get(url)
         .set('Accept', 'application/json')
         .end(function(err, res) {
+            console.log(res)
             let status = res.status;
             let body = JSON.parse(res.text);
             if (status === 200) {

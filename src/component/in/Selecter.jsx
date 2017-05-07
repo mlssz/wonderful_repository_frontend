@@ -7,7 +7,11 @@ export default class ReactClassName extends React.Component {
 	}
 
 	onSearchTouchTap(v) {
-		this.props.updateTask(v)
+		this.props.onChange(v)
+	}
+
+	onShowAllTouchTap() {
+		this.props.onChange([])
 	}
 
 	render() {
@@ -28,8 +32,8 @@ export default class ReactClassName extends React.Component {
 			<div>
 				<Searcher
 					searchKeys={searchKeys}
-					onSearchTouchTap={this.onSearchTouchTap}
-					onShowAllTouchTap={this.onShowAllTouchTap}/>
+					onSearchTouchTap={this.onSearchTouchTap.bind(this)}
+					onShowAllTouchTap={this.onShowAllTouchTap.bind(this)}/>
 			</div>
 		)
 	}

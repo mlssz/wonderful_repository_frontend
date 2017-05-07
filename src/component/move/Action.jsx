@@ -96,6 +96,20 @@ export default class Manage extends React.Component {
 		getGoodNumber(this.setNumberOfGood, params);
 	}
 
+	updateGood(others) {
+		others.push({
+			"key": "status",
+			"value": 100,
+		});
+		console.log('others:', others)
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: others
+		}
+		getGood(this.initGood, params);
+	}
+
 	initGood(testGoods) {
 		let good = testGoods;
 		let oriGood = [];
@@ -219,7 +233,7 @@ export default class Manage extends React.Component {
 		return (
 			<Paper style={paperStyle} zDepth={1}>
 			<div>
-				<Selecter/>
+				<Selecter onChange={this.updateGood.bind(this)}/>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
