@@ -302,7 +302,7 @@ class SearchLine extends Component {
           {selectKeyItems}
         </SelectField>
         <SelectField floatingLabelText="查询方式"
-          style={{width: 120, margin: "0 64px"}}
+          style={{width: 120, margin: "0 30px"}}
           value={this.props.method_index}
           onChange={this.handleMethodChange}
         >
