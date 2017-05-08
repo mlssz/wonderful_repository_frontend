@@ -151,7 +151,7 @@ export default class Manage extends React.Component {
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status}</TableRowColumn>
-	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/${task._id}`)}/></TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}

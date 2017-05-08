@@ -11,14 +11,16 @@ import FlatButton from "material-ui/FlatButton"
 import MenuItem from 'material-ui/MenuItem'
 import TimePicker from 'material-ui/TimePicker'
 import Paper from 'material-ui/Paper'
-import {blue300, indigo900, red300, pink900} from "material-ui/styles/colors"
+import {blue300, cyan500,indigo50, red500, pink50, red300} from "material-ui/styles/colors"
 
 import Searcher from "./Searcher.jsx"
 import {RegCtlTextField} from "./textfields/InputContrlTextField.jsx"
 import InfoDialog from "./tools/InfoDialog.jsx"
 import BetweenButtons from "./buttons/BetweenButtons.jsx"
 import {printable_table} from "./showData.jsx"
+import {Loading} from "./tools/Loading.jsx"
 
+import {getRepoDetail, getErrors} from "../libs/callToBack.js"
 import {paperStyle} from "../libs/common.js"
 import {
   humanise_schedule,
@@ -27,78 +29,39 @@ import {
   humanise_material_position
 } from "../libs/humanise_map.js"
 
-const repo = {
-        "id": 1,
-        "available_space": 40,
-        "stored_count": 23,
-        "locations": (new Array(44)).fill(0).map((v, i) => {
-          return {
-            "id": i+1,
-            "place": i % 4 + 1,
-            "label": (44-i).toString(),
-            "available_space": 34,
-            "materials": [1, 2, 3]
-          }
-        })
-}
-const errors = [
-  {
-    "fixed": false,
-    "error_code": 1,
-    "repository": 1,
-    "create_date": Date.now() + 12000,
-    "location": 28,
-    "layer": 0,
-    "material": 32143214,
-    "image": "/errors/a.png"
-  },
-  {
-    "fixed": false,
-    "error_code": 1,
-    "repository": 1,
-    "create_date": Date.now() + 12000,
-    "location": 28,
-    "layer": 0,
-    "material": 32143214,
-    "image": "/errors/a.png"
-  },
-  {
-    "fixed": false,
-    "error_code": 2,
-    "create_date": Date.now() + 12000,
-    "repository": 1,
-    "location": 23,
-    "layer": 0,
-    "material": 32143214,
-    "image": "/errors/a.png"
-  },
-  {
-    "fixed": false,
-    "error_code": 1,
-    "repository": 1,
-    "create_date": Date.now() + 12000,
-    "location": 39,
-    "layer": 0,
-    "material": 32143214,
-    "image": "/errors/a.png"
-  },
-]
-
 export default class CheckPage extends Component {
 
   constructor(props){
     super(props)
-    this.state = {"state":1}
     this.tabStyle = {
       textAlign: "center",
       padding: 24,
     }
     this.state = {
-      tab: "0"
+      tab: "0",
+      loading: true,
+      repo: null,
+      errors: null
     }
 
     this.changeTab = this.changeTab.bind(this)
     this.handleChange = this.handleChange.bind(this)
+  }
+
+  componentWillMount(){
+    getRepoDetail(1)
+      .then(r => {
+        this.setState({
+        "repo": r,
+        })
+
+        return getErrors()
+      })
+      .then(e => this.setState({
+        loading: false,
+        errors: e
+      }))
+      .catch(console.log)
   }
 
   changeTab(tab) {
@@ -110,6 +73,11 @@ export default class CheckPage extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return (<div><Loading style={{margin: 150}}/></div>)
+    }
+
+    let repo = this.state.repo
 
     let tabs = [
       {
@@ -128,19 +96,10 @@ export default class CheckPage extends Component {
 
     return (
       <Paper style={paperStyle}>
-        <Card style={{padding: 24}}>
-          <Searcher searchKeys={[
-            {key: "description", label:"物资描述", type:String},
-            {key: "date", label: "入库时间", type: Date},
-            {key: "id", label: "物资id", type: Number},
-            {key: "status", label: "物资状态", type: Number, selectable: true, items: [
-              {value: 200, label: "搬运入库中"}, {value: 300, label: "位置正确"}]},
-          ]} />
-        </Card>
       <Tabs value={this.state.tab} onChange={this.handleChange}>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
-            <t.component style={this.tabStyle} changeTab={this.changeTab} />
+            <t.component style={this.tabStyle} changeTab={this.changeTab} repo={repo} errors={this.state.errors}/>
            </Tab>
          ))}
       </Tabs>
@@ -181,6 +140,9 @@ class RepositoryOverview extends Component {
   }
 
   render() {
+
+    let repo = this.props.repo
+    let errors = this.props.errors
 
     let humanise_errors = errors.map(e => ({
       "error_code": humanise_error_code(e.error_code),
@@ -233,7 +195,7 @@ class RepositoryOverview extends Component {
                children={info_line} />
 
         <div style={{margin: "50px 0"}}>
-          {printable_table("错误列表", "error_table", errors_headers, humanise_errors)}
+          {errors.length > 0 ? printable_table("错误列表", "error_table", errors_headers, humanise_errors): undefined}
         </div>
         <BetweenButtons buttons={buttons} />
       </div>
@@ -254,6 +216,8 @@ class LocationOverview extends Component {
   }
 
   render() {
+    let repo = this.props.repo
+    let errors = this.props.errors
 
     const locationStyle = {
       margin: "20px auto",
@@ -270,11 +234,12 @@ class LocationOverview extends Component {
 
     let createItem = l => {
       let err_num = errors.filter(e => e.location === l.id).length
-      let color = err_num > 0 ? red300 : blue300
-      let backgroundColor = err_num > 0 ? pink900 : indigo900
-      let info = `物资数量：${l.materials.reduce((a, b) => a+b)}`
+      let color = err_num > 0 ? pink50 : indigo50
+      let backgroundColor = err_num > 0 ? red500 : cyan500
+      let info = `物资数量：${l.materials_num.reduce((a, b) => a+b)}`
       info = err_num > 0 ? info + `, 错误数量：${err_num}` : info
 
+      console.log(l.id)
       return (
         <div style={locationItemStyle} key={l.id}>
           <Chip backgroundColor={color} >

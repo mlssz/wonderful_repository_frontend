@@ -15,6 +15,8 @@ import Divider from 'material-ui/Divider'
 import Paper from 'material-ui/Paper'
 
 import BetweenButtons from "../buttons/BetweenButtons.jsx"
+import {Loading} from "../tools/Loading.jsx"
+import {getStaffById} from "../../libs/callToBack.js"
 
 import {
   humanise_staff_var,
@@ -34,23 +36,27 @@ export default class StaffPage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      "state": 1
+      "loading": true,
+      "staff": null
     }
 
   }
 
+  componentWillMount(){
+    getStaffById(this.props.mid)
+      .then(staff => this.setState({
+        "loading": false,
+        "staff": staff
+      }))
+      .catch(console.log)
+  }
+
   render() {
-    let staff = {
-      "_id": "dsafdsadsaf32413141kl2",
-      "name": "因幡帝",
-      "account": "inaba_tewi",
-      "passwd": "123456",
-      "sex": 0,
-      "age": 222,
-      "permission": 1,
-      "signup_time": 1491451593158,
-      "last_login_time": 1491451593158
-	  }
+    if (this.state.loading) {
+      return (<div><Loading style={{margin: 150}}/></div>)
+    }
+
+    let staff = this.state.staff
 
     let tabs = [
       {

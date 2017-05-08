@@ -18,6 +18,20 @@ export const getMigrationsById = id => {
         .then(r => r.body)
 }
 
+export const getErrors = () => {
+  return request
+    .get("/api/errors?page=-1")
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
+export const getStaffById = id => {
+  return request
+    .get(`/api/staff/${id}`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
 export const getGoodById = id => {
     return request
         .get(`/api/material/${id}`)
@@ -30,6 +44,13 @@ export const getTaskById = id => {
         .get(`/api/task/${id}`)
         .set('Accept', 'application/json')
         .then(r => r.body)
+}
+
+export const getRepoDetail = id => {
+  return request
+    .get(`/api/repository/${id}`)
+    .set('Accept', 'application/json')
+    .then(r => r.body)
 }
 
 export const getRepo = function(cb) {
@@ -77,6 +98,7 @@ export const getLoc = function(cb, params = {}) {
 }
 
 export const mergeGoods = function(goods) {
+    Object.values = o => Object.keys(o).map(k => o[k])
     let _goods = {};
     for (let i in goods) {
         let key = '' + goods[i].repository_id + goods[i].location_id + goods[i].layer + goods[i].import_time;
