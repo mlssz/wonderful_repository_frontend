@@ -2,6 +2,7 @@ import React from 'react'
 import Searcher from "../Searcher.jsx"
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
+import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {
@@ -34,26 +35,19 @@ export default class ReactClassName extends React.Component {
 			type: Number
 		}];
 		return (
-			<div>
-				<div style={{height:56}}>
-					<span style={{fontSize:20,lineHeight:"56px",marginLeft:20}}>按照条件筛选</span>
-					<RaisedButton
-						label={this.state.paperDisplay?"隐藏":"显示"}
-						primary={true}
-						onTouchTap={()=>{
-							let paperDisplay =!this.state.paperDisplay;
-							this.setState({paperDisplay})
-						}}
-						style={{float:"right",margin:10}}/>
-					<div style={{clear:'both'}}></div>
-				</div>
-				<Paper style={{display:this.state.paperDisplay?'block':'none'}}>
+			<Card>
+				<CardHeader
+            title="按照条件筛选"
+            actAsExpander={true}
+            showExpandableButton={true}
+        />
+				<CardText expandable={true}>
 					<Searcher
-						searchKeys={searchKeys}
-						onSearchTouchTap={this.onSearchTouchTap.bind(this)}
-						onShowAllTouchTap={this.onShowAllTouchTap.bind(this)}/>
-				</Paper>
-			</div>
+            searchKeys={searchKeys}
+            onSearchTouchTap={this.onSearchTouchTap.bind(this)}
+            onShowAllTouchTap={this.onShowAllTouchTap.bind(this)}/>
+				</CardText>
+			</Card>
 		)
 	}
 }

@@ -7,10 +7,13 @@ import {
 } from 'material-ui/Toolbar'
 import {
 	Table,
+	TableHeader,
+	TableHeaderColumn,
 	TableBody,
 	TableRow,
 	TableRowColumn
 } from 'material-ui/Table'
+import TextField from 'material-ui/TextField'
 import MenuItem from 'material-ui/MenuItem'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
@@ -19,118 +22,170 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
+import Paper from 'material-ui/Paper'
+import Dialog from 'material-ui/Dialog'
+import SelectField from 'material-ui/SelectField'
 
 import {
-	testGoods,
 	parseParams,
 	parsetime,
 	parsePlace,
 	changeHash,
-	downloadBarCode
+	downloadBarCode,
+	paperStyle
 } from '../../libs/common.js'
+import {
+	getGoodNumber,
+	getGood,
+	move
+} from '../../libs/callToBack.js'
 
 import * as sortGood from '../../libs/sortGood.js'
 import Selecter from '../in/Selecter.jsx'
+import SelectPage from '../in/SelectPage.jsx'
 
 export default class Manage extends React.Component {
+
 	constructor(props) {
 		super(props);
 		this.state = {
+			isMove: false,
 			good: [],
+			oriGood: [],
 			sort: 1,
 			action: false,
-			selected: 0,
+			selected: [],
+			numberOfGood: 0,
+			pageNumber: 1,
+			page: 1,
+			limit: 10,
+			popOpen: false,
+			position: {},
+			error: {},
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.meunClick = this.meunClick.bind(this);
 		this.doAction = this.doAction.bind(this);
+		this.setNumberOfGood = this.setNumberOfGood.bind(this);
+		this.initGood = this.initGood.bind(this);
+		this.renderRowColumn = this.renderRowColumn.bind(this);
+	}
+
+	changePage(page) {
+		let params = {
+			page: page,
+			limit: this.state.limit,
+			others: [{
+				"key": "status",
+				"value": 100,
+			}],
+		}
+		getGood(this.initGood, params);
+		this.setState({
+			page
+		});
 	}
 
 	componentWillMount() {
-		let good = testGoods;
-		for (let i in good)
-			good[i].number = Math.floor(Math.random() * (9999 - 1) + 1);
-		this.setState({
-			good
+		let params = {
+			others: [{
+				"key": "status",
+				"value": 100,
+			}],
+		}
+		getGoodNumber(this.setNumberOfGood, params);
+	}
+
+	updateGood(others) {
+		others.push({
+			"key": "status",
+			"value": 100,
 		});
+		console.log('others:', others)
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: others
+		}
+		getGood(this.initGood, params);
+	}
+
+	initGood(testGoods) {
+		let good = testGoods;
+		let oriGood = [];
+		for (let i in good)
+			oriGood.push(good[i])
+		this.setState({
+			good,
+			oriGood
+		});
+	}
+
+	setNumberOfGood(numberOfGood) {
+		let pageNumber = Math.ceil(numberOfGood / this.state.limit) || 1;
+		console.log(numberOfGood, pageNumber)
+		let params = {
+			page: this.state.page,
+			limit: this.state.limit,
+			others: [{
+				"key": "status",
+				"value": 100,
+			}],
+		}
+		getGood(this.initGood, params);
+		this.setState({
+			numberOfGood,
+			pageNumber
+		})
 	}
 
 	handleChange(event, index, value) {
 		let good = this.state.good;
-		switch (value) {
-			case 1:
-				good = good.sort(sortGood.sortById);
-				break;
-			case 2:
-				good = good.sort(sortGood.sortByType);
-				break;
-			case 3:
-				good = good.sort(sortGood.sortByNum);
-				break;
-			case 4:
-				good = good.sort(sortGood.sortByImportTime);
-				break;
-			case 5:
-				good = good.sort(sortGood.sortByOutTime);
-				break;
-			case 6:
-				good = good.sort(sortGood.sortByMoveTime);
-				break;
-			case 7:
-				good = good.sort(sortGood.sortByPlace);
-				break;
-		}
 		this.setState({
 			sort: value,
-			good,
 		})
 	}
 
 	renderRow() {
 		let goods = this.state.good;
 		return (
-			goods.map(this.renderRowColumn)
+			goods.map((good, i) => this.renderRowColumn(good, i))
 		)
 	}
 
-	renderRowColumn(good) {
+	renderRowColumn(good, i) {
 		let import_time = parsetime(good.import_time);
 		let estimated_export_time = parsetime(good.estimated_export_time, 0);
 		let location_update_time = parsetime(good.location_update_time);
 		let place = parsePlace(good);
 		return (
 			<TableRow key={good.id}>
-		       	<TableRowColumn style={{overflow:"visible"}}>{good.id}</TableRowColumn>
-		       	<TableRowColumn>{good.type}</TableRowColumn>
-		       	<TableRowColumn>{good.number}</TableRowColumn>
-		       	<TableRowColumn style={{overflow:"visible"}}>{import_time}</TableRowColumn>
-		       	<TableRowColumn>{estimated_export_time}</TableRowColumn>
-		       	<TableRowColumn style={{overflow:"visible"}}>{location_update_time}</TableRowColumn>
-		       	<TableRowColumn>{place}</TableRowColumn>
-		       	<TableRowColumn><RaisedButton label="详情" onTouchTap={() => changeHash(`/material/${good.id}`)}/></TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.id}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.type}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.description}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{place}</TableRowColumn>
 			</TableRow>
 		)
 	}
 
-	action() {
-		let action = !this.state.action;
-		this.setState({
-			action,
-		});
-	}
-
-	doAction(action) {
-		if (this.state.selected === 0)
+	doAction() {
+		let selected = this.state.selected;
+		let oriGood = this.state.good;
+		let goods = [];
+		if (typeof selected === 'object' && selected.length === 0)
 			return false;
-		let hash = ['move', 'out'][action];
-		let good = this.state.good[this.state.selected - 1];
-		let task = {
-			type: [],
-			num: '',
-			id: good.id.toString(),
+		if (selected === "all")
+			goods = oriGood;
+		else {
+			for (let i of selected)
+				goods.push(oriGood[i]);
 		}
-		sessionStorage.setItem(hash + 'task', JSON.stringify(task));
-		changeHash(hash);
+		move(() => window.location.reload(), {
+			goods: goods
+		});
 	}
 
 	meunClick(event, child) {
@@ -148,71 +203,180 @@ export default class Manage extends React.Component {
 		}
 	}
 
-	render() {
+	pick(e, v) {
+		let good = this.state.good;
+		let oriGood = this.state.oriGood;
+		if (!v)
+			good = oriGood;
+		else {
+			good = oriGood.filter((e) => pickGood(e, v, this.state.sort));
+		}
+		this.setState({
+			good
+		})
+	}
 
+	render() {
+		const actions = [
+			<FlatButton
+        label="取消移动"
+        primary={true}
+        onTouchTap={()=>this.setState({popOpen:false})}
+      />,
+			<FlatButton
+        label="确认移动"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.doAction}
+      />,
+		];
 		return (
+			<Paper style={paperStyle} zDepth={1}>
 			<div>
-				<Selecter/>
+				<Selecter onChange={this.updateGood.bind(this)}/>
 				<Toolbar>
 					<ToolbarGroup firstChild={true}>
 						<DropDownMenu value={this.state.sort} onChange={this.handleChange} iconStyle={{fill:'black'}}>
-							<MenuItem value={1} primaryText="默认排序" />
+							<MenuItem value={1} primaryText="物资编号" />
 							<MenuItem value={2} primaryText="物资类型" />
-							<MenuItem value={3} primaryText="物资数量" />
+							<MenuItem value={3} primaryText="物资名称" />
 							<MenuItem value={4} primaryText="入库时间" />
 							<MenuItem value={5} primaryText="估计出库时间" />
 							<MenuItem value={6} primaryText="最近搬运时间" />
 							<MenuItem value={7} primaryText="所处地址" />
 						</DropDownMenu>
+						<TextField
+					    	hintText="在结果中筛选"
+					    	hintStyle={{color:'gray'}}
+					    	onChange={this.pick.bind(this)}
+					  	/>
 			        </ToolbarGroup>
 			        <ToolbarGroup>
-			          <RaisedButton 
-			          	label={!this.state.action?"操作":"取消"}
-			          	primary={!this.state.action}
-			          	secondary={this.state.action}
-			          	onTouchTap={this.action.bind(this)}/>
-			          <ToolbarSeparator />
-			          <IconMenu
-			            iconButtonElement={
-			              <IconButton touch={true}>
-			                <NavigationExpandMoreIcon />
-			              </IconButton>
-			            }
-			            onItemTouchTap={this.meunClick}
-			          >
-			            <MenuItem primaryText="打印物品单" key='printTable'/>
-			            <MenuItem primaryText="打印条形码" key='printBar'/>
-			          </IconMenu>
+			        	<RaisedButton
+			        		label="系统移动"
+			        		primary={true}
+			        		onTouchTap={this.doAction}
+			        		style={{display:this.state.isMove?'inline-block':'none'}}
+			        	/>
+			        	<RaisedButton
+			        		label="自主移动"
+			        		primary={true}
+			        		onTouchTap={()=>{this.setState({popOpen:true})}}
+			        		style={{display:this.state.isMove?'inline-block':'none'}}
+			        	/>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
 					selectable={true}
 					className="tablePrint"
-					onRowSelection={(e)=>this.setState({selected:e[0]})}>
+					multiSelectable={true}
+					onRowSelection={(selected)=>this.setState({selected})}>
+						<TableHeader
+							adjustForCheckbox={this.state.isMove}
+							displaySelectAll={this.state.isMove}>
+							<TableRow>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资编号</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资类型</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资名称</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>入库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black',overflow:'visible'}}>估计出库时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>最近搬运时间</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>所处地址</TableHeaderColumn>
+							</TableRow>
+			    		</TableHeader>
 				    <TableBody
-				    	displayRowCheckbox={this.state.action}
-				    	deselectOnClickaway={false}>
-						<TableRow selectable={false}>
-				        	<TableRowColumn>物资编号</TableRowColumn>
-				        	<TableRowColumn>物资类型</TableRowColumn>
-				        	<TableRowColumn>物资数量</TableRowColumn>
-				        	<TableRowColumn>入库时间</TableRowColumn>
-				        	<TableRowColumn>估计出库时间</TableRowColumn>
-				        	<TableRowColumn>最近搬运时间</TableRowColumn>
-				        	<TableRowColumn>所处地址</TableRowColumn>
-				        	<TableRowColumn>详情</TableRowColumn>
-			    		</TableRow>
+				    	deselectOnClickaway={false}
+				    	displayRowCheckbox={this.state.isMove}>
 						{this.renderRow.call(this)}
 				    </TableBody>
 				</Table>
-				{
-					this.state.action?
-					<div style={{display:"flex",justifyContent:"space-around",margin:30}}>
-						<RaisedButton label="移动" primary={true} onTouchTap={()=>this.doAction(0)}/>
-						<RaisedButton label="出库" primary={true} onTouchTap={()=>this.doAction(1)}/>
-					</div>:false
-				}
+				<div style={{textAlign:'center'}}>
+					<SelectPage changePage={this.changePage.bind(this)} page={this.state.page} numberOfPage={this.state.pageNumber}/>
+				</div>
+				<Dialog
+		          title="请选择摆放地址"
+		          actions={actions}
+		          modal={false}
+		          open={this.state.popOpen}
+		          onRequestClose={()=>this.setState({popOpen:false})}
+		        >
+					<div style={{width:"80%",margin:"0 auto",display:'flex',justifyContent:'flex-around'}}>
+						<SelectField
+							floatingLabelText="仓"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.repository_id}
+							errorText={this.state.error.repository_id}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.repository_id =v;
+								this.setState(position)
+							}}
+			        	>
+		        			{renderMenuItem([1])}
+		        		</SelectField>
+						<SelectField
+							floatingLabelText="架"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.location_id}
+							errorText={this.state.error.location_id}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.location_id =v;
+								this.setState(position)
+							}}
+			        	>
+		        			{renderMenuItem([1,2,3,4,5,6,7,8,9,10])}
+		        		</SelectField>
+				        <SelectField
+							floatingLabelText="层"
+							floatingLabelStyle={{color:'gray'}}
+							value={this.state.position.layer}
+							errorText={this.state.error.layer}
+							style={{width:200}}
+							onChange={(e,i,v)=>{
+								let position = this.state.position;
+								position.layer =v;
+								this.setState(position)
+							}}
+				        >
+		        			{renderMenuItem([1,2,3])}
+		        		</SelectField>
+		        		<br/><br/><br/>
+					</div>
+		        </Dialog>
 			</div>
+			</Paper>
 		)
+	}
+}
+
+function pickGood(good, v, sort) {
+	let id = good.id;
+	let type = good.type;
+	let number = good.number;
+	let import_time = parsetime(good.import_time);
+	let estimated_export_time = parsetime(good.estimated_export_time);
+	let location_update_time = parsetime(good.location_update_time);
+	let toPlace = parsePlace(good);
+	let selecter = [id, type, number, import_time, estimated_export_time, location_update_time, toPlace];
+	if (selecter[sort - 1].toString().replace(/\s/g, "").indexOf(v) >= 0) {
+		return true;
+	}
+	return false;
+}
+
+function renderMenuItem(items, type = 1) {
+	let MenuItems = [];
+	if (type === 1) {
+		return items.map((i, index) => <MenuItem value={i} key={index} primaryText={i} />)
+	}
+	if (type === 2) {
+		for (let i in items) {
+			let item = <MenuItem value={i} key={i} primaryText={i} />;
+			MenuItems.push(item);
+		}
+		return MenuItems;
 	}
 }
