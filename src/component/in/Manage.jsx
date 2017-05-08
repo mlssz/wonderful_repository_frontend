@@ -170,7 +170,7 @@ export default class Manage extends React.Component {
 		if (this.state.choose) {
 			let task = this.state.task;
 			let selectes = this.state.selectes;
-			selectes.map(i => downloadBarCode(task[i - 1].material.id))
+			selectes.map(i => downloadBarCode(task[i - 1].material._id))
 			this.setState({
 				choose: false
 			});
