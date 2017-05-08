@@ -23,7 +23,8 @@ import {
 	changeHash,
 	parsePlace,
 	testTask,
-	status
+	downloadBarCode,
+	status,
 } from '../../libs/common.js'
 import {
 	putaway,
@@ -49,7 +50,9 @@ export default class TaskForm extends React.Component {
 			limit: 10,
 			numberOfPage: 1,
 			numberOfGood: 0,
+			selectes: [],
 			isAction: false,
+			isPrint: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.cancel = this.cancel.bind(this);
@@ -235,6 +238,38 @@ export default class TaskForm extends React.Component {
 		)
 	}
 
+	print() {
+		if (this.state.isPrint) {
+			let task = this.state.alreadyTask;
+			let selectes = this.state.selectes;
+			let _ids = [];
+			if (selectes === "all") {
+				for (let ids of task) {
+					for (let id of ids._id) {
+						_ids.push(id);
+					}
+				}
+			} else {
+				for (let i of selectes) {
+					let ids = task[i]._id;
+					for (let id of ids) {
+						_ids.push(id);
+					}
+				}
+			}
+			for (let id of _ids) {
+				downloadBarCode(id)
+			}
+			this.setState({
+				isPrint: false
+			});
+		} else {
+			this.setState({
+				isPrint: true
+			})
+		}
+	}
+
 	render() {
 		return (
 			<MuiThemeProvider>
@@ -373,14 +408,17 @@ export default class TaskForm extends React.Component {
 					<div style={{display:'flex',flexDirection:'row',justifyContent:'space-around',width:'80%',margin:'5 auto'}}>
 						<RaisedButton label="重新填写" primary={true} onTouchTap={this.cancel}/>
 						<RaisedButton label="确认入库" primary={true} onTouchTap={this.putaway}/>
+						<RaisedButton label={!this.state.isPrint?"选择打印":"打印"} primary={true} onTouchTap={this.print.bind(this)}/>
 					</div>
 
 					<Table
 						selectable={this.state.true}
+						multiSelectable={true}
+						onRowSelection={(selectes)=>this.setState({selectes})}
 						className="tablePrint">
 						<TableHeader
-							adjustForCheckbox={this.state.isAction}
-							displaySelectAll={this.state.isAction}>>
+							adjustForCheckbox={this.state.isPrint}
+							displaySelectAll={this.state.isPrint}>>
 							<TableRow>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableHeaderColumn>
@@ -393,7 +431,7 @@ export default class TaskForm extends React.Component {
 				    		</TableRow>
 						</TableHeader>
 					    <TableBody
-					    	displayRowCheckbox={this.state.isAction}
+					    	displayRowCheckbox={this.state.isPrint}
 					    	deselectOnClickaway={false}>
 					    	{this.renderRow.call(this)}
 					    </TableBody>
