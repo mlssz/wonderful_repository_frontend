@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
+  TableFooter,
   TableRowColumn
 } from "material-ui/Table"
 import FlatButton from "material-ui/FlatButton"
@@ -79,27 +80,80 @@ export const printable_table = (tableName, className, headers, rows, onclick) =>
   return (
     <div style={{textAlign: "right"}}>
     <FlatButton label="打印" onTouchTap={printTable}/>
-    <Table className={className}>
-      <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-        <TableRow style={{textAlign: "center", fontWeight: "bold", fontSize: 17}}>
-          {headers.map((h, i) => (
-             <TableHeaderColumn style={{fontWeight: "bold", color: "black"}}
-                 key={i}>{h[0]}</TableHeaderColumn>
-            ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody displayRowCheckbox={false} stripedRows={false} selectable={false} >
-        {rows.map((r, i) => (
-           <TableRow key={i} onTouchTap={() => onclick && onclick(r, i, rows)}>
-             {headers.map(h => (
-               <TableRowColumn style={{overflow:"visible"}}>
-                 {r[h[1]]}
-               </TableRowColumn>
+      <PagingTable
+        tableprops={{className: className}}
+        headers={headers.map((h, i) => (
+              <TableHeaderColumn style={{fontWeight: "bold", color: "black"}}
+                  key={i}>{h[0]}</TableHeaderColumn>
               ))}
-           </TableRow>
-         ))}
-      </TableBody>
-    </Table>
+        raws={rows.map((r, i) => (
+            <TableRow key={i} onTouchTap={() => onclick && onclick(r, i, rows)}>
+              {headers.map(h => (
+                <TableRowColumn style={{overflow:"visible"}}>
+                  {r[h[1]]}
+                </TableRowColumn>
+                ))}
+            </TableRow>
+          ))}
+     />
     </div>
   )
+}
+
+class PagingTable extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      page: 1
+    }
+  }
+
+  render() {
+    let page_num = Math.ceil(this.props.raws.length / this.props.limit)
+    let start = (this.state.page - 1) * this.props.limit
+    let end = this.state.page * 10
+
+    return (
+      <Table {...this.props.tableprops}>
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+          <TableRow style={{textAlign: "center", fontWeight: "bold", fontSize: 17}}>
+            {this.props.headers}
+          </TableRow>
+        </TableHeader>
+        <TableBody displayRowCheckbox={false} stripedRows={false} selectable={false} >
+          {this.props.raws.slice(start, end)}
+        </TableBody>
+        <TableFooter adjustForCheckbox={false} >
+          <TableRow>
+            <TableRowColumn style={{textAlign: "center"}}>
+              <FlatButton label="上一页" onTouchTap={() => {
+                  if(this.state.page > 1) this.setState({page: this.state.page-1})
+                }}/>
+            </TableRowColumn>
+            <TableRowColumn style={{textAlign: "center"}}>
+              {this.state.page} / {page_num}
+            </TableRowColumn>
+            <TableRowColumn style={{textAlign: "center"}}>
+              <FlatButton label="下一页" onTouchTap={() => {
+                  if(this.state.page < page_num) this.setState({page: this.state.page+1})
+                }}/>
+            </TableRowColumn>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    )
+  }
+}
+PagingTable.propTypes = {
+  style: React.PropTypes.object,
+  tableprops: React.PropTypes.object,
+  headers: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
+  raws: React.PropTypes.arrayOf(React.PropTypes.element).isRequired,
+  limit: React.PropTypes.number,
+}
+PagingTable.defaultProps = {
+  style: {},
+  tableprops: {},
+  limit: 10
 }

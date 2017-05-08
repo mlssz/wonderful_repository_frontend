@@ -187,6 +187,29 @@ class RepositoryOverview extends Component {
       </div>
     )
 
+    let locations = this.props.repo.locations
+    let headers = [
+      ["位置号", "label"],
+      ["物资数量", "materials_num"],
+      ["剩余空间(立方米)", "available_space"],
+      ["错误数量", "errors_num"]
+    ]
+    let rows = locations.map(l => {
+      let label = ""
+      if(l.place === 1 || l.place ===4) {
+        label="A-"
+      }else if (l.place === 2) {
+        label="C-"
+      }else{
+        label="B-"
+      }
+
+      return Object.assign({}, l, {
+        "label": label+l.label,
+        "materials_num": l.materials_num.reduce((a, b) => a+b),
+        "errors_num": errors.filter(e => e.location === l.id).length
+      })
+    })
 
     return (
       <div  style={this.props.style}>
@@ -196,6 +219,9 @@ class RepositoryOverview extends Component {
 
         <div style={{margin: "50px 0"}}>
           {errors.length > 0 ? printable_table("错误列表", "error_table", errors_headers, humanise_errors): undefined}
+        </div>
+        <div style={{margin: "50px 0"}}>
+        {printable_table("盘点结果", "checkresult", headers, rows)}
         </div>
         <BetweenButtons buttons={buttons} />
       </div>
