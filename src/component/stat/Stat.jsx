@@ -9,17 +9,23 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Popover from 'material-ui/Popover'
 import Down from 'material-ui/svg-icons/navigation/expand-more'
 import DatePicker from 'material-ui/DatePicker'
+import Paper from 'material-ui/Paper'
 import {
 	Table,
 	TableBody,
 	TableRow,
 	TableRowColumn
 } from 'material-ui/Table';
+import inPng from '../../img/入库.png'
+import outPng from '../../img/出库.png'
+import movePng from '../../img/移库.png'
+import errPng from '../../img/异常.png'
 
 import echarts from 'echarts'
 
 import {
-	randomNum
+	changeHash,
+	paperStyle
 } from '../../libs/common.js'
 
 let buttonStyle = {
@@ -40,200 +46,94 @@ let pickerState = {
 export default class Stat extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			open: true,
-			from: new Date(),
-			to: new Date(),
-		}
+		this.state = {}
 	}
 
 	componentDidMount() {
-		let goodsNum = echarts.init(document.getElementById('goodsNum'));
-		let goodsNumOption = {
-			title: {
-				text: '货物类型数量饼状图'
-			},
-			tooltip: {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			series: [{
-				name: '访问来源',
-				type: 'pie',
-				radius: '55%',
-				data: [{
-					value: 100,
-					name: '生活电器'
-				}, {
-					value: 200,
-					name: '电脑办公'
-				}, {
-					value: 300,
-					name: '衣物服饰'
-				}, {
-					value: 400,
-					name: '酒水饮料'
-				}, {
-					value: 300,
-					name: '食品生鲜'
-				}].sort((a, b) => a.value > b.value)
-			}]
-		};
-		goodsNum.setOption(goodsNumOption);
-		let missionsNum = echarts.init(document.getElementById('missionsNum'));
-		let missionsNumOption = {
-			title: {
-				text: '任务数量饼状图'
-			},
-			tooltip: {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			series: [{
-				name: '访问来源',
-				type: 'pie',
-				radius: '55%',
-				data: [{
-					value: 2124,
-					name: '入库'
-				}, {
-					value: 765,
-					name: '移动'
-				}, {
-					value: 4576,
-					name: '出库'
-				}].sort((a, b) => a.value > b.value)
-			}]
-		};
-		missionsNum.setOption(missionsNumOption);
-		let personNum = echarts.init(document.getElementById('personNum'));
-		let personNumOption = {
-			title: {
-				text: '工龄饼状图'
-			},
-			tooltip: {
-				trigger: 'item',
-				formatter: "{a} <br/>{b} : {c} ({d}%)"
-			},
-			series: [{
-				name: '访问来源',
-				type: 'pie',
-				radius: '55%',
-				data: [{
-					value: 388,
-					name: '半年内'
-				}, {
-					value: 712,
-					name: '一年内'
-				}, {
-					value: 180,
-					name: '三年内'
-				}, {
-					value: 260,
-					name: '三年以上'
-				}].sort((a, b) => a.value > b.value)
-			}]
-		};
-		personNum.setOption(personNumOption);
-		let timeLength = echarts.init(document.getElementById('timeLength'));
-		let timeLengthOption = {
-			title: {
-				text: '物品入库时长'
-			},
-			tooltip: {},
-			legend: {
-				data: ['时长']
-			},
-			xAxis: {
-				data: ["1周内", "7-30天", "半年", "一年", "1-3年", "3年以上"]
-			},
-			yAxis: {},
-			series: [{
-				name: '时长',
-				type: 'bar',
-				data: [5, 20, 36, 10, 10, 20]
-			}]
-		};
-		timeLength.setOption(timeLengthOption);
+		renderMap()
 	}
 
-	renderRow(aver) {
-		let person = [{
-			name: '李世明',
-			number: randomNum(1000, 5000),
-		}, {
-			name: '陶行知',
-			number: randomNum(1000, 5000),
-		}, {
-			name: '唐玄宗',
-			number: randomNum(1000, 5000),
-		}, {
-			name: '黄贯中',
-			number: randomNum(1000, 5000),
-		}, {
-			name: '汉高祖',
-			number: randomNum(1000, 5000),
-		}].sort((a, b) => a.number < b.number);
-		return person.map((data, i) => {
-			let diff = data.number - aver;
-			return (
-				<TableRow key={i}>
-						<TableRowColumn>{i+1}</TableRowColumn>
-				        <TableRowColumn>{data.name}</TableRowColumn>
-				        <TableRowColumn style={{color:diff>0?'red':'green'}}>{diff>0?'+'+diff.toString():diff.toString()}</TableRowColumn>
-					</TableRow>)
-		})
+
+	click(action) {
+		let hash = ["putawayManage", "outManage", "moveManage", "check"][action];
+		changeHash(hash);
 	}
 
 	render() {
 		return (
-			<div>
-				<Toolbar>
-					<ToolbarGroup firstChild={true}>
-						<ToolbarTitle text="统计管理" style={{marginLeft:20}}/>
-					</ToolbarGroup>
-					<ToolbarGroup>
-						<RaisedButton label="今日" style={buttonStyle} />
-						<RaisedButton label="最近一周"  style={buttonStyle}/>
-						<RaisedButton label="最近一月" style={buttonStyle}/>
-						<RaisedButton 
-							label="自定义"
-							icon={<Down/>}
-							labelPosition="before"
-							style={buttonStyle}
-							onTouchTap={(event)=>this.setState({open: true,anchorEl: event.currentTarget,})}/>
-					</ToolbarGroup>
-				</Toolbar>
-				<div style={{marginBottom:50,padding:30}}>
-					<div style={{width:"33%",height:300,display:"inline-block"}} id="goodsNum">
-					</div>
-					<div style={{width:"33%",height:300,display:"inline-block"}} id="missionsNum">
-					</div>
-					<div style={{width:"33%",height:300,display:"inline-block"}} id="personNum">
-					</div>
-				</div>
-				<div style={{marginBottom:50,padding:30}}>
-					<div style={{width:"50%",height:300,display:"inline-block"}} id="timeLength"></div>
-					<div style={{width:"50%",height:300,display:"inline-block"}} id="persionMission">
-						<div style={{display:'flex',justifyContent:'space-between'}}>
-							<b style={{fontSize:18}}>任务量反馈</b>
-							<span style={{fontSize:16}}>平均值:3480</span>
+			<Paper style={{display:'flex',justifyContent:'center',padding:20,width:"80%",margin:"30 auto"}}>
+				<Paper style={{padding:20,flex:1,display:'flex',justifyContent:'center',alignItems:'center'}}>
+					<div style={{width:"100%",height:400}} id='map'></div>
+				</Paper>
+
+				<div style={{flex:1}}>
+					<div style={{display:'flex',marginBottom:50}}>
+						<div style={{flex:1,justifyContent:'center',alignItems:'center',cursor:"pointer"}} onClick={()=>this.click(0)}>
+							<Paper style={{flexDirection:'column',width:170,height:170,display:'flex',justifyContent:'center',alignItems:'center',margin:"0 auto"}} circle={true}>
+								<p style={{color:'#845AD6'}}>入库</p>
+								<img src={inPng} style={{width:50,height:50}}/>
+								<p style={{color:'#845AD6'}}>259</p>
+							</Paper>
 						</div>
-						<Table>
-							<TableBody displayRowCheckbox={false}>
-								<TableRow>
-									<TableRowColumn>#</TableRowColumn>
-							        <TableRowColumn>姓名</TableRowColumn>
-							        <TableRowColumn>完成任务量</TableRowColumn>
-								</TableRow>
-								{this.renderRow(3480)}
-							</TableBody>
-						</Table>
+						<div style={{flex:1,justifyContent:'center',alignItems:'center',cursor:"pointer"}} onClick={()=>this.click(1)}>
+							<Paper style={{flexDirection:'column',width:170,height:170,display:'flex',justifyContent:'center',alignItems:'center',margin:"0 auto"}} circle={true}>
+								<p style={{color:'#00AEAA'}}>出库</p>
+								<img src={outPng} style={{width:50,height:50}}/>
+								<p style={{color:'#00AEAA'}}>160</p>
+							</Paper>
+						</div>
 					</div>
+					<div style={{display:'flex'}}>
+						<div style={{flex:1,justifyContent:'center',alignItems:'center',cursor:"pointer"}} onClick={()=>this.click(2)}>
+							<Paper style={{flexDirection:'column',width:170,height:170,display:'flex',justifyContent:'center',alignItems:'center',margin:"0 auto"}} circle={true}>
+								<p style={{color:'#EDAF61'}}>移动</p>
+								<img src={movePng} style={{width:50,height:50}}/>
+								<p style={{color:'#EDAF61'}}>50</p>
+							</Paper>
+						</div>
+						<div style={{flex:1,justifyContent:'center',alignItems:'center',cursor:"pointer"}} onClick={()=>this.click(3)}>
+							<Paper style={{flexDirection:'column',width:170,height:170,display:'flex',justifyContent:'center',alignItems:'center',margin:"0 auto"}} circle={true}>
+								<p style={{color:'#FD555F'}}>异常</p>
+								<img src={errPng} style={{width:50,height:50}}/>
+								<p style={{color:'#FD555F'}}>0</p>
+							</Paper>
+						</div>
+					</div>
+
 				</div>
-			</div>
+			</Paper>
 		)
 	}
+}
+
+function renderMap() {
+	let myChart = echarts.init(document.getElementById('map'));
+	let option = {
+		title: {
+			text: '仓库利用率'
+		},
+		tooltip: {
+			formatter: "{a} <br/>{b} : {c}%"
+		},
+		// toolbox: {
+		// 	feature: {
+		// 		restore: {},
+		// 		saveAsImage: {}
+		// 	}
+		// },
+		series: [{
+			name: '仓库利用率',
+			type: 'gauge',
+			detail: {
+				formatter: '{value}%'
+			},
+			data: [{
+				value: 34.67,
+				name: '利用率'
+			}]
+		}]
+	};
+	myChart.setOption(option);
 }
 
 //货物类型数量，饼状图
