@@ -111,10 +111,10 @@ export default class Searcher extends Component {
 
       let value = v.value
       if (v.method_index === 0) {
-        value = value
-          .split(" ")
-          .map(_v => this.parseValue(searchKey.type, _v.trim()))
-          .filter(_v => _v)
+        value = searchKey.selectable ? value
+               :value.split(" ")
+                .map(_v => this.parseValue(searchKey.type, _v.trim()))
+                .filter(_v => _v)
         value = value.length === 1 ? value[0] : value
       } else {
         value = value
@@ -281,16 +281,27 @@ class SearchLine extends Component {
       <MenuItem value={i} primaryText={k.label} key={i}/>
     ))
 
+    let searchKey = searchKeys[this.props.key_index]
+
     let inputColumn
     if (this.props.method_index === 0) {
-      inputColumn = (
-        <SingleInputs
-            value={this.props.value}
-            errCallback={this.handleValueError}
-            callback={this.handleValueChange}
-            type={searchKeys[this.props.key_index].type}
-        />
-      )
+      inputColumn = searchKey.selectable ? (
+        <SelectField floatingLabelText={searchKey.label}
+                     style={{width: 373}}
+                     value={this.props.value}
+                     onChange={(a, b, value) => this.handleValueChange(value)}
+        >
+        {searchKey.items.map((k, i) => (
+          <MenuItem value={k.value} primaryText={k.label} key={i}/>
+          ))}
+        </SelectField>
+      ) : (<SingleInputs
+              value={this.props.value}
+              errCallback={this.handleValueError}
+              callback={this.handleValueChange}
+              type={searchKeys[this.props.key_index].type}
+          />
+        )
     } else {
       inputColumn = (
         <RegionInputs
@@ -301,7 +312,6 @@ class SearchLine extends Component {
         />
       )
     }
-
 
     return ( < div style = {
         {
@@ -322,6 +332,7 @@ class SearchLine extends Component {
         <SelectField floatingLabelText="查询方式"
           style={{width: 120, margin: "0 30px"}}
           value={this.props.method_index}
+          disabled={searchKey.selectable}
           onChange={this.handleMethodChange}
         >
           {selectMethodItems}
