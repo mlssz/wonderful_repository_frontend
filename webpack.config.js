@@ -132,7 +132,7 @@ let webpackconfig = {
 		},
 		proxy: {
 			"/api/*": {
-				target: "http://localhost:3000",
+				target: "http://192.168.31.7:3000",
 				secure: false,
 			},
 		}
