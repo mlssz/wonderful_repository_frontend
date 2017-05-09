@@ -274,6 +274,7 @@ export const move = function(cb, params = {}) {
     let dealMove = function(loc) {
         let length = loc.length;
         for (let i = 0; i < length; i++) {
+            console.log(loc[i])
             let numberOfPlace = loc[i].num;
             let layer = loc[i].layer;
             let location = loc[i].location;
@@ -309,7 +310,8 @@ export const move = function(cb, params = {}) {
             }
         }
     }
-    if (!place) {
+    console.log(place)
+    if (!place.repository) {
         getLoc(dealMove, {
             num: num
         })

@@ -138,17 +138,16 @@ export default class Manage extends React.Component {
 
 	renderRowColumn(task) {
 		let material = task.material;
-		let import_time = parsetime(material.location_update_time);
+		let publish_time = parsetime(task.publish_time);
 		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
 		let status = ['未分配', '进行中', '已完成', '已取消'][task.status];
 		return (
-			<TableRow key={material.id}>
+			<TableRow key={material.id+new Date(task.publish_time)}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
-	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{publish_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)} /></TableRowColumn>
 			</TableRow>
@@ -260,7 +259,6 @@ export default class Manage extends React.Component {
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>下单时间</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>原始位置</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>目的地址</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
 			    		</TableRow>

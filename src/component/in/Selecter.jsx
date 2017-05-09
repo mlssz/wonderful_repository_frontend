@@ -2,7 +2,12 @@ import React from 'react'
 import Searcher from "../Searcher.jsx"
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card'
+import {
+	Card,
+	CardActions,
+	CardHeader,
+	CardText
+} from 'material-ui/Card'
 
 export default class ReactClassName extends React.Component {
 	constructor(props) {
@@ -31,8 +36,24 @@ export default class ReactClassName extends React.Component {
 			type: Date
 		}, {
 			key: "id",
-			label: "物资id",
+			label: "物资编号",
 			type: Number
+		}, {
+			key: "repository_id",
+			label: "仓库编号",
+			type: Number
+		}, {
+			key: "location_id",
+			label: "货架编号",
+			type: Number
+		}, {
+			key: "repository_id",
+			label: "定位终端号",
+			type: Number
+		}, {
+			key: "type",
+			label: "物资类型",
+			type: String
 		}];
 		return (
 			<Card>

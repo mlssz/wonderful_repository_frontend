@@ -88,6 +88,7 @@ export default class Manage extends React.Component {
 	}
 
 	updateGood(others) {
+		console.log(others)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -137,7 +138,8 @@ export default class Manage extends React.Component {
 	renderRowColumn(good, i) {
 		let import_time = parsetime(good.import_time);
 		let estimated_export_time = parsetime(good.estimated_export_time, 0);
-		let location_update_time = parsetime(good.location_update_time);
+		// let location_update_time = parsetime(good.location_update_time);
+		// <TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
 		let place = parsePlace(good);
 		return (
 			<TableRow key={good.id}>
@@ -147,7 +149,6 @@ export default class Manage extends React.Component {
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status[good.status]}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
-		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{place}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/material/${good._id}`)}/></TableRowColumn>
 			</TableRow>
@@ -225,7 +226,6 @@ export default class Manage extends React.Component {
 							<MenuItem value={3} primaryText="物资名称" />
 							<MenuItem value={4} primaryText="入库时间" />
 							<MenuItem value={5} primaryText="估计出库时间" />
-							<MenuItem value={6} primaryText="最近搬运时间" />
 							<MenuItem value={7} primaryText="所处地址" />
 						</DropDownMenu>
 						<TextField
@@ -264,7 +264,6 @@ export default class Manage extends React.Component {
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资状态</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>入库时间</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black',overflow:'visible'}}>估计出库时间</TableHeaderColumn>
-					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>最近搬运时间</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>所处地址</TableHeaderColumn>
 							</TableRow>
 			    		</TableHeader>
