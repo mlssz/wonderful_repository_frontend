@@ -101,7 +101,6 @@ export default class Manage extends React.Component {
 			"key": "status",
 			"value": 100,
 		});
-		console.log('others:', others)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -123,7 +122,6 @@ export default class Manage extends React.Component {
 
 	setNumberOfGood(numberOfGood) {
 		let pageNumber = Math.ceil(numberOfGood / this.state.limit) || 1;
-		console.log(numberOfGood, pageNumber)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,

@@ -26,9 +26,9 @@ export const status = {
 	"200": "正在入库",
 	"201": "正在移动",
 	"202": "正在出库",
-	"300": "未入库",
-	"301": "未移动",
-	"302": "未出库",
+	"300": "等待入库",
+	"301": "等待移动",
+	"302": "等待出库",
 	"303": "位置错误",
 	"304": "物品失踪",
 }
@@ -47,13 +47,15 @@ export const titleMap = {
 	"#out": "出库登记",
 	"#outEnsure": "出库管理",
 	"#outManage": "出库管理",
-	"#goodsManage": "物品管理",
+	"#goodsManage": "物品查询",
 	"#stat_good_type": "货物类型统计",
 	"#stat_task_number": "任务数量统计",
 	"#stat_good_time": "入库时长统计",
-  "#task": "任务详情",
-  "#material": "物品详情",
-  "#staff": "职员详情",
+	"#task": "任务详情",
+	"#material": "物品详情",
+	"#staff": "职员详情",
+	"#personManage": "人员管理",
+	"#cameraManage": "摄像头查询"
 }
 
 export const formName = {
@@ -87,7 +89,7 @@ export const parseParams = function() {
 export const parsetime = function(time, type = 1) {
 	if (time === 0)
 		return '- - - -';
-	if (time === null)
+	if (!time)
 		return '- - - -';
 	let t = new Date(time);
 	if (type === 1)

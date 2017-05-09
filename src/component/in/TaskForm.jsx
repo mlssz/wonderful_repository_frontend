@@ -74,7 +74,7 @@ export default class TaskForm extends React.Component {
 			}],
 		}
 		getGood((alreadyTask) => this.setState({
-			alreadyTask: mergeGoods(alreadyTask)
+			alreadyTask: alreadyTask
 		}), params);
 		this.setState({
 			page
@@ -181,7 +181,7 @@ export default class TaskForm extends React.Component {
 
 	addAlreadyTask(_alreadyTask) {
 		let alreadyTask = this.state.alreadyTask;
-		Array.prototype.push.apply(alreadyTask, mergeGoods(_alreadyTask));
+		Array.prototype.push.apply(alreadyTask, _alreadyTask);
 		this.setState({
 			alreadyTask
 		})
@@ -222,13 +222,12 @@ export default class TaskForm extends React.Component {
 		let import_time = parsetime(task.import_time);
 		let estimated_export_time = parsetime(task.estimated_export_time);
 		let toPlace = parsePlace(task);
-		task.number = task.number;
 		// <TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 		return (
 			<TableRow key={task.id}>
+				<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.type}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:'visible',textAlign:'center'}}>{task.description}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{task.number}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
@@ -245,18 +244,17 @@ export default class TaskForm extends React.Component {
 			let _ids = [];
 			if (selectes === "all") {
 				for (let ids of task) {
-					for (let id of ids._id) {
+					for (let id of ids.id) {
 						_ids.push(id);
 					}
 				}
 			} else {
 				for (let i of selectes) {
-					let ids = task[i]._id;
-					for (let id of ids) {
-						_ids.push(id);
-					}
+					let ids = task[i].id;
+					_ids.push(ids);
 				}
 			}
+			console.log(_ids)
 			for (let id of _ids) {
 				downloadBarCode(id)
 			}
@@ -420,9 +418,9 @@ export default class TaskForm extends React.Component {
 							adjustForCheckbox={this.state.isPrint}
 							displaySelectAll={this.state.isPrint}>>
 							<TableRow>
+								<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableHeaderColumn>
-					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableHeaderColumn>
 					        	<TableHeaderColumn style={{color:'black',textAlign:'center',fontWeight: 'bold',fontSize:17,overflow:'visible'}}>估计出库时间</TableHeaderColumn>

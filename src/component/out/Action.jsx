@@ -98,7 +98,6 @@ export default class Manage extends React.Component {
 			"key": "status",
 			"value": 100,
 		});
-		console.log('others:', others)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,

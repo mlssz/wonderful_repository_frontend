@@ -19,17 +19,17 @@ export const getMigrationsById = id => {
 }
 
 export const getErrors = () => {
-  return request
-    .get("/api/errors?page=-1")
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+    return request
+        .get("/api/errors?page=-1")
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
 export const getStaffById = id => {
-  return request
-    .get(`/api/staff/${id}`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+    return request
+        .get(`/api/staff/${id}`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
 export const getGoodById = id => {
@@ -47,10 +47,10 @@ export const getTaskById = id => {
 }
 
 export const getRepoDetail = id => {
-  return request
-    .get(`/api/repository/${id}`)
-    .set('Accept', 'application/json')
-    .then(r => r.body)
+    return request
+        .get(`/api/repository/${id}`)
+        .set('Accept', 'application/json')
+        .then(r => r.body)
 }
 
 export const getRepo = function(cb) {
@@ -152,8 +152,8 @@ export const putaway = function(cb, params = {}) {
                     let statusCode = res.statusCode;
                     let body = JSON.parse(res.text);
                     if (res.statusCode === 201) {
-                        let goods = mergeGoods(body, loc[i].num);
-                        cb(goods);
+                        // let goods = mergeGoods(body, loc[i].num);
+                        cb(body);
                     } else {
                         console.log(statusCode, body);
                         alert('失败 : ' + body.error);
@@ -222,7 +222,6 @@ export const getTask = function(cb, params = {}) {
         .get(url)
         .set('Accept', 'application/json')
         .end(function(err, res) {
-            console.log(res)
             let status = res.status;
             let body = JSON.parse(res.text);
             if (status === 200) {
@@ -238,6 +237,7 @@ export const getTaskNumber = function(cb, params = {}) {
     let others = params.others ? JSON.stringify(params.others) : '[]';
     others = '?others=' + others;
     let url = '/api/tasks' + others;
+    console.log(url)
     request
         .head(url)
         .set('Accept', 'application/json')
@@ -270,7 +270,7 @@ export const move = function(cb, params = {}) {
                 layer: layer,
                 destination: destination,
             }
-            console.log(sender)
+            console.log('move_sender:', sender)
             while (numberOfPlace--) {
                 let good = goods.shift();
                 let url = '/api/material/' + good._id + '/migrations';
@@ -320,4 +320,106 @@ export const deleteGood = function(cb, params = {}) {
             })
     }
 
+}
+
+export const deleteTask = function(cb, params = {}) {
+    let deleteObj = params.deleteObj || [];
+    for (let i of deleteObj) {
+        let id = i[0];
+        let mid = i[1];
+        let url = '/api/material/' + id + '/migration/' + mid;
+        console.log(url)
+        request
+            .delete(url)
+            .set('Accept', 'application/json')
+            .end(function(err, res) {
+                let status = res.status;
+                console.log(status, res.text)
+                let body = JSON.parse(res.text);
+            })
+    }
+    console.log('test')
+    cb();
+}
+
+export const getPersonNum = function(cb, params = {}) {
+    let others = params.others ? JSON.stringify(params.others) : '[]';
+    others = '?others=' + others;
+    let url = '/api/staffs' + others;
+    request
+        .head(url)
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+            let status = res.status;
+            console.log(status, res)
+            if (status === 200) {
+                let number = res.header.num;
+                console.log(number)
+                cb(number);
+            } else {
+                console.log(status, res);
+            }
+        })
+}
+
+export const getPerson = function(cb, params = {}) {
+    let page = params.page === undefined ? -1 : params.page - 1;
+    page = 'page=' + page;
+    let limit = '&limit=' + (params.limit || 10);
+    let others = params.others ? JSON.stringify(params.others) : '[]';
+    others = '&others=' + others;
+    let url = '/api/staffs?' + page + limit + others;
+    request
+        .get(url)
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+            let status = res.status;
+            let body = JSON.parse(res.text);
+            if (status === 200) {
+                cb(body);
+            } else {
+                console.log(status, body);
+                alert('失败:' + body.error);
+            }
+        })
+}
+
+export const addPerson = function(cb, params = {}) {
+    let url = '/api/staffs';
+    request
+        .post(url)
+        .send(params)
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+            let statusCode = res.statusCode;
+            let body = res.text;
+            if (res.statusCode === 200) {
+                body = JSON.parse(body);
+                console.log(body);
+                cb();
+            } else {
+                console.log(statusCode, body);
+                alert('失败 : ' + body.error || body);
+            }
+        })
+}
+
+export const updatePerson = function(cb, params = {}) {
+    let id = params.id;
+    let url = '/api/staff/' + id;
+    console.log(url)
+    request
+        .patch(url)
+        .send(params)
+        .set('Accept', 'application/json')
+        .end(function(err, res) {
+            let statusCode = res.statusCode;
+            let body = res.text;
+            if (res.statusCode === 200) {
+                cb();
+            } else {
+                console.log(statusCode, body);
+                alert('失败 : ' + body.error || body);
+            }
+        })
 }

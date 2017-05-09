@@ -32,7 +32,8 @@ import {
 	parsePlace,
 	changeHash,
 	downloadBarCode,
-	paperStyle
+	paperStyle,
+	status
 } from '../../libs/common.js'
 import {
 	getGoodNumber,
@@ -75,10 +76,6 @@ export default class Manage extends React.Component {
 		let params = {
 			page: page,
 			limit: this.state.limit,
-			others: [{
-				"key": "status",
-				"value": 100,
-			}],
 		}
 		getGood(this.initGood, params);
 		this.setState({
@@ -87,21 +84,10 @@ export default class Manage extends React.Component {
 	}
 
 	componentWillMount() {
-		let params = {
-			others: [{
-				"key": "status",
-				"value": 100,
-			}],
-		}
-		getGoodNumber(this.setNumberOfGood, params);
+		getGoodNumber(this.setNumberOfGood);
 	}
 
 	updateGood(others) {
-		others.push({
-			"key": "status",
-			"value": 100,
-		});
-		console.log('others:', others)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -123,14 +109,9 @@ export default class Manage extends React.Component {
 
 	setNumberOfGood(numberOfGood) {
 		let pageNumber = Math.ceil(numberOfGood / this.state.limit) || 1;
-		console.log(numberOfGood, pageNumber)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
-			others: [{
-				"key": "status",
-				"value": 100,
-			}],
 		}
 		getGood(this.initGood, params);
 		this.setState({
@@ -163,6 +144,7 @@ export default class Manage extends React.Component {
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.id}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.type}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{good.description}</TableRowColumn>
+		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status[good.status]}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
@@ -278,6 +260,7 @@ export default class Manage extends React.Component {
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资编号</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资类型</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资名称</TableHeaderColumn>
+					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>物资状态</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>入库时间</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black',overflow:'visible'}}>估计出库时间</TableHeaderColumn>
 					        	<TableHeaderColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17,color:'black'}}>最近搬运时间</TableHeaderColumn>

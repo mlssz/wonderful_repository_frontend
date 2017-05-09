@@ -28,7 +28,8 @@ import {
 } from '../../libs/common.js'
 import {
 	getTaskNumber,
-	getTask
+	getTask,
+	deleteTask
 } from '../../libs/callToBack.js'
 
 import * as sortTask from '../../libs/sortTask.js'
@@ -39,6 +40,7 @@ export default class Manage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			isDelete: false,
 			task: [],
 			oriTask: [],
 			sort: 1,
@@ -137,15 +139,15 @@ export default class Manage extends React.Component {
 
 	renderRowColumn(task) {
 		let material = task.material;
-		let import_time = parsetime(material.location_update_time);
+		let publish_time = parsetime(task.publish_time);
 		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
-		let status = ['未开始', '进行中', '已完成', '已取消'][task.status];
+		let status = ['未分配', '进行中', '已完成', '已取消'][task.status];
 		return (
 			<TableRow key={material.id}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
-	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{publish_time}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
@@ -168,7 +170,7 @@ export default class Manage extends React.Component {
 		if (this.state.choose) {
 			let task = this.state.task;
 			let selectes = this.state.selectes;
-			selectes.map(i => downloadBarCode(task[i - 1].material._id))
+			selectes.map(i => downloadBarCode(task[i - 1].material.id))
 			this.setState({
 				choose: false
 			});
@@ -177,6 +179,20 @@ export default class Manage extends React.Component {
 				choose: true
 			})
 		}
+	}
+
+	doDelete() {
+		let task = this.state.task;
+		let selectes = this.state.selectes;
+		let deleteObj = [];
+		for (let i of selectes) {
+			let id = task[i].material._id;
+			let mid = task[i].migration._id;
+			deleteObj.push([id, mid]);
+		}
+		deleteTask(() => window.location.reload(), {
+			deleteObj: deleteObj
+		});
 	}
 
 	pick(e, v) {
@@ -215,17 +231,29 @@ export default class Manage extends React.Component {
 			        </ToolbarGroup>
 			        <ToolbarGroup>
 			          <ToolbarSeparator />
+			          <RaisedButton 
+			          	label="删除"
+			          	primary={true}
+			          	style={{display:this.state.isDelete?'inline-block':'none'}}
+			          	onTouchTap={this.doDelete.bind(this)}/>
+			          <RaisedButton
+			          	label={this.state.isDelete?"取消删除":"选择删除"}
+			          	primary={true}
+			          	onTouchTap={()=>{
+			          		let isDelete = !this.state.isDelete;
+			          		this.setState({isDelete})
+			          	}}/>
 			          <RaisedButton label="打印入库单" primary={true} onTouchTap={this.printTable.bind(this)}/>
 			          <RaisedButton label={this.state.choose?"打印条形码":"选择打印条形码"} primary={true} onTouchTap={this.printBar.bind(this)}/>
 			        </ToolbarGroup>
 				</Toolbar>
 				<Table
-					multiSelectable={this.state.choose}
-					selectable={this.state.choose}
+					multiSelectable={this.state.choose||this.state.isDelete}
+					selectable={this.state.choose||this.state.isDelete}
 					onRowSelection={(selectes)=>this.setState({selectes})}
 					className="tablePrint">
 				    <TableBody
-				    	displayRowCheckbox={this.state.choose}
+				    	displayRowCheckbox={this.state.choose||this.state.isDelete}
 				    	deselectOnClickaway={false}>
 						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
