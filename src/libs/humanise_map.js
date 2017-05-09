@@ -142,7 +142,7 @@ export const humanise_material_position = (repository, location, layer) => {
     return "出库"
   }
 
-  return `${repository}仓${location+1}号位置${layer+1}`
+  return `${repository}仓${location+1}架${layer+1}层`
 }
 
 export const humanise_date = end_time => {
