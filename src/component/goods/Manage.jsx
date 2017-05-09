@@ -149,6 +149,7 @@ export default class Manage extends React.Component {
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{estimated_export_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{location_update_time}</TableRowColumn>
 		       	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{place}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/material/${good._id}`)}/></TableRowColumn>
 			</TableRow>
 		)
 	}
