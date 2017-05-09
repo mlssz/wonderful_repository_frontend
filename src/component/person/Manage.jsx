@@ -284,19 +284,19 @@ class AddPerson extends React.Component {
 		}
 	}
 
-	shouldComponentUpdate(props) {
-		this.setState({
-			id: props.params._id,
-			name: props.params.name,
-			account: props.params.account,
-			passwd: props.params.passwd,
-			sex: props.params.sex,
-			age: props.params.age,
-			permission: props.params.permission,
-			isUpdate: props.params.isUpdate
-		})
-		return true;
-	}
+	/* shouldComponentUpdate(props) {
+		 this.setState({
+		 id: props.params._id,
+		 name: this.state.name || props.params.name,
+		 account: this.state.account || props.params.account,
+		 passwd: this.state.passwd || props.params.passwd,
+		 sex: this.state.sex || props.params.sex,
+		 age: this.state.age || props.params.age,
+		 permission: this.state.permission || props.params.permission,
+		 isUpdate: props.params.isUpdate
+		 })
+		 return true;
+	   }*/
 
 	add() {
 		let isTrue = true;

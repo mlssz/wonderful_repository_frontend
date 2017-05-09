@@ -244,9 +244,7 @@ export default class TaskForm extends React.Component {
 			let _ids = [];
 			if (selectes === "all") {
 				for (let ids of task) {
-					for (let id of ids.id) {
-						_ids.push(id);
-					}
+						_ids.push(ids.id);
 				}
 			} else {
 				for (let i of selectes) {
