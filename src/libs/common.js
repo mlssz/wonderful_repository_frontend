@@ -26,9 +26,9 @@ export const status = {
 	"200": "正在入库",
 	"201": "正在移动",
 	"202": "正在出库",
-	"300": "未入库",
-	"301": "未移动",
-	"302": "未出库",
+	"300": "等待入库",
+	"301": "等待移动",
+	"302": "等待出库",
 	"303": "位置错误",
 	"304": "物品失踪",
 }
@@ -85,7 +85,7 @@ export const parseParams = function() {
 export const parsetime = function(time, type = 1) {
 	if (time === 0)
 		return '- - - -';
-	if (time === null)
+	if (!time)
 		return '- - - -';
 	let t = new Date(time);
 	if (type === 1)

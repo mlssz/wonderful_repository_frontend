@@ -97,6 +97,7 @@ export default class Manage extends React.Component {
 	}
 
 	initTask(testMove) {
+		console.log(testMove)
 		let task = testMove;
 		let oriTask = [];
 		for (let i in task)
@@ -139,7 +140,7 @@ export default class Manage extends React.Component {
 
 	renderRowColumn(task) {
 		let material = task.material;
-		let import_time = parsetime(material.location_update_time);
+		let import_time = parsetime(material.import_time);
 		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
 		let status = ['未开始', '进行中', '已完成', '已取消'][task.status];
 		return (
@@ -148,7 +149,6 @@ export default class Manage extends React.Component {
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.description}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{import_time}</TableRowColumn>
-	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{fromPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{toPlace}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)}/></TableRowColumn>
@@ -170,7 +170,7 @@ export default class Manage extends React.Component {
 		if (this.state.choose) {
 			let task = this.state.task;
 			let selectes = this.state.selectes;
-			selectes.map(i => downloadBarCode(task[i - 1].material._id))
+			selectes.map(i => downloadBarCode(task[i - 1].material.id))
 			this.setState({
 				choose: false
 			});
@@ -232,9 +232,8 @@ export default class Manage extends React.Component {
 						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库时间</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>原始位置</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>入库地址</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
