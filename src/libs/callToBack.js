@@ -237,6 +237,7 @@ export const getTaskNumber = function(cb, params = {}) {
     let others = params.others ? JSON.stringify(params.others) : '[]';
     others = '?others=' + others;
     let url = '/api/tasks' + others;
+    console.log(url)
     request
         .head(url)
         .set('Accept', 'application/json')

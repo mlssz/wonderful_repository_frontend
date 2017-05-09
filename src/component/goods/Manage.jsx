@@ -109,7 +109,6 @@ export default class Manage extends React.Component {
 
 	setNumberOfGood(numberOfGood) {
 		let pageNumber = Math.ceil(numberOfGood / this.state.limit) || 1;
-		console.log(numberOfGood, pageNumber)
 		let params = {
 			page: this.state.page,
 			limit: this.state.limit,
@@ -136,7 +135,6 @@ export default class Manage extends React.Component {
 	}
 
 	renderRowColumn(good, i) {
-		console.log(good)
 		let import_time = parsetime(good.import_time);
 		let estimated_export_time = parsetime(good.estimated_export_time, 0);
 		let location_update_time = parsetime(good.location_update_time);

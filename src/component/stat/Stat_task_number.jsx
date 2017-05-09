@@ -14,6 +14,10 @@ import {
 import RaisedButton from 'material-ui/RaisedButton'
 import Down from 'material-ui/svg-icons/navigation/expand-more'
 
+import {
+	getTaskNumber
+} from '../../libs/callToBack.js'
+
 import echarts from 'echarts'
 
 let buttonStyle = {
@@ -22,45 +26,42 @@ let buttonStyle = {
 	position: 'relative'
 }
 
-let data = [
-	[{
-		value: 2124,
-		name: '入库'
-	}, {
-		value: 765,
-		name: '移动'
-	}, {
-		value: 4576,
-		name: '出库'
-	}],
-	[{
-		value: 9805,
-		name: '入库'
-	}, {
-		value: 860,
-		name: '移动'
-	}, {
-		value: 6890,
-		name: '出库'
-	}],
-	[{
-		value: 25960,
-		name: '入库'
-	}, {
-		value: 49886,
-		name: '移动'
-	}, {
-		value: 19860,
-		name: '出库'
-	}]
-]
-
 export default class Stat_good_type extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			data: [],
 		}
+	}
+
+	setDate(times, type = 0, data = []) {
+		let types = [500, 501, 502, 600]
+		let that = this;
+
+		function nextSet(times, type, data, num) {
+			data.push({
+				name: ['入库', '移动', '出库', '异常'][type - 1],
+				value: num,
+			})
+			console.log('data:', data)
+			if (type <= 3)
+				that.setDate(times, type, data);
+			else {
+				that.getData(data);
+			}
+		}
+		let daySecond = 86400000;
+		let fromTime = new Date(new Date() - daySecond * times);
+		let params = {
+			others: [{
+				"key": "action",
+				"value": types[type],
+			}, {
+				"key": "publish_time",
+				"region": [fromTime, new Date()]
+			}]
+		}
+		getTaskNumber((num) => nextSet(times, ++type, data, num), params)
 	}
 
 	getData(data) {
@@ -71,7 +72,7 @@ export default class Stat_good_type extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getData(data[0]);
+		this.setDate(1, 0);
 	}
 
 	render() {
@@ -82,9 +83,9 @@ export default class Stat_good_type extends React.Component {
 						<ToolbarTitle text="任务数量统计" style={{marginLeft:20}}/>
 					</ToolbarGroup>
 					<ToolbarGroup>
-						<RaisedButton label="今日" style={buttonStyle} onTouchTap={()=>this.getData(data[0])} />
-						<RaisedButton label="最近一周"  style={buttonStyle} onTouchTap={()=>this.getData(data[1])} />
-						<RaisedButton label="最近一月" style={buttonStyle} onTouchTap={()=>this.getData(data[2])} />
+						<RaisedButton label="今日" style={buttonStyle} onTouchTap={()=>this.setDate(1)} />
+						<RaisedButton label="最近一周"  style={buttonStyle} onTouchTap={()=>this.setDate(7)} />
+						<RaisedButton label="最近一月" style={buttonStyle} onTouchTap={()=>this.setDate(30)} />
 						<RaisedButton 
 							label="自定义"
 							icon={<Down/>}

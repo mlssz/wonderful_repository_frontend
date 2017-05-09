@@ -26,6 +26,7 @@ import Stat_task_number from './stat/Stat_task_number.jsx'
 import Stat_good_time from './stat/Stat_good_time.jsx'
 import GoodsManage from './goods/Manage.jsx'
 import PersonManage from './person/Manage.jsx'
+import CameraManage from './cameraManage.jsx'
 
 export default class HashTable extends React.Component {
 	constructor(props) {
@@ -57,6 +58,7 @@ export default class HashTable extends React.Component {
 					<Route path='/stat_good_type' component={Stat_good_type}/>
 					<Route path='/stat_task_number' component={Stat_task_number}/>
 					<Route path='/stat_good_time' component={Stat_good_time}/>
+					<Route path='/cameraManage' component={CameraManage}/>
 				</div>
 			</HashRouter>
 		)

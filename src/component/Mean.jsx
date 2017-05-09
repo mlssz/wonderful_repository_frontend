@@ -123,6 +123,11 @@ export default class ReactClassName extends React.Component {
 									  key={6}
 									  primaryText="人员管理"
 									  onClick={()=>this.handleClick("personManage")}
+								/>,
+								<ListItem
+									  key={7}
+									  primaryText="摄像头管理"
+									  onClick={()=>this.handleClick("cameraManage")}
 								/>
 							]}
 					/>

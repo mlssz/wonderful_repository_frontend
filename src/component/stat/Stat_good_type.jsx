@@ -16,62 +16,15 @@ import Down from 'material-ui/svg-icons/navigation/expand-more'
 
 import echarts from 'echarts'
 
+import {
+	getGoodNumber
+} from '../../libs/callToBack.js'
+
 let buttonStyle = {
 	margin: 0,
 	border: "1px #EAEAEA solid",
 	position: 'relative'
 }
-
-let data = [
-	[{
-		value: 100,
-		name: '生活电器'
-	}, {
-		value: 200,
-		name: '电脑办公'
-	}, {
-		value: 300,
-		name: '衣物服饰'
-	}, {
-		value: 400,
-		name: '酒水饮料'
-	}, {
-		value: 300,
-		name: '食品生鲜'
-	}],
-	[{
-		value: 854,
-		name: '生活电器'
-	}, {
-		value: 924,
-		name: '电脑办公'
-	}, {
-		value: 705,
-		name: '衣物服饰'
-	}, {
-		value: 670,
-		name: '酒水饮料'
-	}, {
-		value: 970,
-		name: '食品生鲜'
-	}],
-	[{
-		value: 4590,
-		name: '生活电器'
-	}, {
-		value: 7690,
-		name: '电脑办公'
-	}, {
-		value: 4890,
-		name: '衣物服饰'
-	}, {
-		value: 1860,
-		name: '酒水饮料'
-	}, {
-		value: 8739,
-		name: '食品生鲜'
-	}]
-]
 
 export default class Stat_good_type extends React.Component {
 	constructor(props) {
@@ -79,6 +32,36 @@ export default class Stat_good_type extends React.Component {
 		this.state = {
 			data: [],
 		}
+	}
+
+	setDate(times, type = 0, data = []) {
+		let types = ["生活电器-生活电器", "电脑办公-电脑办公", "衣物服饰-衣物服饰", "酒水饮料-酒水饮料", "食品生鲜-食品生鲜"]
+		let that = this;
+
+		function nextSet(times, type, data, num) {
+			data.push({
+				name: types[type - 1].slice(0, 4),
+				value: num,
+			})
+			console.log('data:', data)
+			if (type < types.length)
+				that.setDate(times, type, data);
+			else {
+				that.getData(data);
+			}
+		}
+		let daySecond = 86400000;
+		let fromTime = new Date(new Date() - daySecond * times);
+		let params = {
+			others: [{
+				"key": "type",
+				"value": types[type],
+			}, {
+				"key": "import_time",
+				"region": [fromTime, new Date()]
+			}]
+		}
+		getGoodNumber((num) => nextSet(times, ++type, data, num), params)
 	}
 
 	getData(data) {
@@ -89,7 +72,7 @@ export default class Stat_good_type extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getData(data[0]);
+		this.setDate(1, 0);
 	}
 
 	render() {
@@ -100,9 +83,9 @@ export default class Stat_good_type extends React.Component {
 						<ToolbarTitle text="货物类型统计" style={{marginLeft:20}}/>
 					</ToolbarGroup>
 					<ToolbarGroup>
-						<RaisedButton label="今日" style={buttonStyle} onTouchTap={()=>this.getData(data[0])} />
-						<RaisedButton label="最近一周"  style={buttonStyle} onTouchTap={()=>this.getData(data[1])} />
-						<RaisedButton label="最近一月" style={buttonStyle} onTouchTap={()=>this.getData(data[2])} />
+						<RaisedButton label="今日" style={buttonStyle} onTouchTap={()=>this.setDate(1)} />
+						<RaisedButton label="最近一周"  style={buttonStyle} onTouchTap={()=>this.setDate(7)} />
+						<RaisedButton label="最近一月" style={buttonStyle} onTouchTap={()=>this.setDate(30)} />
 						<RaisedButton 
 							label="自定义"
 							icon={<Down/>}
