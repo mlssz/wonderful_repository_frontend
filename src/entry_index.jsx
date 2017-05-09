@@ -62,7 +62,7 @@ class Body extends React.Component {
                         <AppBar
                             title={this.state.title}
                             onLeftIconButtonTouchTap={()=>this.contralMean(true)}
-                            iconElementRight={<p>马佳良<FlatButton label="退出登录" onTouchTap={this.logout}/></p>}/>
+                            iconElementRight={<p>佚名<FlatButton label="退出登录" onTouchTap={this.logout}/></p>}/>
                         <HashTable/>
                         <Mean visible={this.state.meanVisible} closeMean={()=>this.contralMean(false)}/>
                     </div>
