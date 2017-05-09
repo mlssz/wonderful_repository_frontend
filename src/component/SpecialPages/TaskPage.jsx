@@ -101,11 +101,11 @@ export default class TaskPage extends Component {
       })
     }
 
-    tabs.push({
-      label: "更多",
-      component: TaskMore
-    })
-
+    /* tabs.push({
+     *   label: "更多",
+     *   component: TaskMore
+     * })
+     */
     return (
       <Paper style={paperStyle}>
       <Tabs>
@@ -145,8 +145,8 @@ class TaskBase extends Component {
 
         <CardText>
           <CardHeader
-              title={<p style={inheadStyle}> <span>Action</span> : <span>{task.action}</span> (<span>{humanise_task_var(task.action)})</span></p>}
-              subtitle={<p style={inheadStyle}> <span>Status</span> : <span>{task.status}</span> (<span>{humanise_task_var(task.status)})</span></p>} />
+              title={<p style={inheadStyle}><span>{humanise_task_var(task.action)}</span></p>}
+              subtitle={<p style={inheadStyle}> <span>状态</span> : <span>{humanise_task_var(task.status)}</span></p>} />
           <CardHeader title={<p style={inheadStyle}>时间</p>}/>
           <CardText>
             {key_value_table(task_kvmap)}

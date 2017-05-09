@@ -50,7 +50,10 @@ export const titleMap = {
 	"#goodsManage": "物品管理",
 	"#stat_good_type": "货物类型统计",
 	"#stat_task_number": "任务数量统计",
-	"#stat_good_time": "入库时长统计"
+	"#stat_good_time": "入库时长统计",
+  "#task": "任务详情",
+  "#material": "物品详情",
+  "#staff": "职员详情",
 }
 
 export const formName = {
@@ -60,7 +63,6 @@ export const formName = {
 	"import_time": "入库时间",
 	"estimated_export_time": "估计出库时间",
 	"num": "物资数量",
-	"id": "物资编号",
 	"to": "目的位置",
 	"from": "原始位置",
 }

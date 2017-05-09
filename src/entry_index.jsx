@@ -31,11 +31,11 @@ class Body extends React.Component {
 
     componentWillMount() {
         this.setState({
-            title: titleMap[window.location.hash]
+            title: titleMap[window.location.hash.split("/")[0]]
         })
         window.onhashchange = () => {
             this.setState({
-                title: titleMap[window.location.hash] || 'title'
+                title: titleMap[window.location.hash.split("/")[0]] || 'title'
             })
         }
     }
