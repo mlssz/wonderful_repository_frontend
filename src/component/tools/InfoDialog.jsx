@@ -16,9 +16,10 @@ export default class InfoDialog extends Component {
     this.info = "info"
   }
 
-  Open(title, info) {
+  Open(title, info, onClose=console.log) {
     this.title = title
     this.info = info
+    this.onClose = onClose
     this.handleDialogOpen()
   }
 
@@ -32,6 +33,7 @@ export default class InfoDialog extends Component {
 
   handleDialogClose() {
     this.setState({"open": false})
+    this.onClose && this.onClose()
   }
 
   render() {
@@ -58,7 +60,7 @@ export default class InfoDialog extends Component {
 }
 InfoDialog.propTypes = {
   anotherButton: React.PropTypes.element,
-  defaultLabel: React.PropTypes.string
+  defaultLabel: React.PropTypes.string,
 }
 InfoDialog.defaultProps = {
   defaultLabel: "Cancel"

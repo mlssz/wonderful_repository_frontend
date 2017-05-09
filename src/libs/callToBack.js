@@ -4,6 +4,20 @@ function getParam(name) {
     return sessionStorage.getItem(name) || localStorage.getItem(name);
 }
 
+export const createError = (repo, location, layer, error_code) => {
+  return request
+    .post(`/api/errors`)
+    .send({
+      repository: repo,
+      error_code: error_code,
+      location: location,
+      layer: layer,
+      image: "/test.png"
+    })
+    .set('Accept', 'application/json')
+    .then(r => r.body)
+}
+
 export const getTaskByMigrationId = id => {
     return request
         .get(`/api/migration/${id}/task`)

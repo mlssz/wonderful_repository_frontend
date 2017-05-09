@@ -20,7 +20,7 @@ import BetweenButtons from "./buttons/BetweenButtons.jsx"
 import {printable_table} from "./showData.jsx"
 import {Loading} from "./tools/Loading.jsx"
 
-import {getRepoDetail, getErrors} from "../libs/callToBack.js"
+import {getRepoDetail, getErrors, createError} from "../libs/callToBack.js"
 import {paperStyle} from "../libs/common.js"
 import {
   humanise_schedule,
@@ -46,13 +46,18 @@ export default class CheckPage extends Component {
 
     this.changeTab = this.changeTab.bind(this)
     this.handleChange = this.handleChange.bind(this)
+    this.reloadData = this.reloadData.bind(this)
   }
 
-  componentWillMount(){
+  reloadData() {
+    console.log("reload")
+    this.setState({
+      loading: true
+    })
     getRepoDetail(1)
       .then(r => {
         this.setState({
-        "repo": r,
+          "repo": r,
         })
 
         return getErrors()
@@ -62,6 +67,10 @@ export default class CheckPage extends Component {
         errors: e
       }))
       .catch(console.log)
+  }
+
+  componentWillMount(){
+    this.reloadData()
   }
 
   changeTab(tab) {
@@ -99,7 +108,7 @@ export default class CheckPage extends Component {
       <Tabs value={this.state.tab} onChange={this.handleChange}>
         {tabs.map((t, i) => (
            <Tab label={t.label} value={i.toString()} key={i}>
-            <t.component style={this.tabStyle} changeTab={this.changeTab} repo={repo} errors={this.state.errors}/>
+            <t.component style={this.tabStyle} changeTab={this.changeTab} repo={repo} errors={this.state.errors} reload={this.reloadData}/>
            </Tab>
          ))}
       </Tabs>
@@ -119,7 +128,7 @@ class RepositoryOverview extends Component {
   constructor(props){
     super(props)
     this.state = {
-      last_check_time: Date.now() + 12000
+      last_check_time: Date.now()
     }
     this._info = null
 
@@ -133,10 +142,14 @@ class RepositoryOverview extends Component {
   }
 
   manual_check(){
-    this.setState({
-      last_check_time: Date.now()
-    })
-    this._info.Open("提醒", "手动盘点成功！")
+    createError(1, 1, 1, 2)
+      .then(() => {
+        this._info.Open("提醒",
+                        "手动盘点成功！",
+                        this.props.reload
+        )
+      })
+      .catch(console.log)
   }
 
   render() {
@@ -265,7 +278,6 @@ class LocationOverview extends Component {
       let info = `物资数量：${l.materials_num.reduce((a, b) => a+b)}`
       info = err_num > 0 ? info + `, 错误数量：${err_num}` : info
 
-      console.log(l.id)
       return (
         <div style={locationItemStyle} key={l.id}>
           <Chip backgroundColor={color} >
