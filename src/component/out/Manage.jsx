@@ -96,7 +96,7 @@ export default class Manage extends React.Component {
 	}
 
 	initTask(testMove) {
-		let task = testMove;
+		let task = testMove.sort((a, b) => a.status > b.status);
 		let oriTask = [];
 		for (let i in task)
 			oriTask.push(task[i])
@@ -137,6 +137,7 @@ export default class Manage extends React.Component {
 	}
 
 	renderRowColumn(task) {
+		console.log(task)
 		let material = task.material;
 		let publish_time = parsetime(task.publish_time);
 		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
@@ -145,11 +146,12 @@ export default class Manage extends React.Component {
 			<TableRow key={material.id+new Date(task.publish_time)}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.description}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{publish_time}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{fromPlace}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}>{status}</TableRowColumn>
-	        	<TableRowColumn style={{textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)} /></TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{fromPlace}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{task.destination}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{status}</TableRowColumn>
+	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}><RaisedButton label="详情" onTouchTap={() => changeHash(`/task/task_${task._id}`)} /></TableRowColumn>
 			</TableRow>
 		)
 	}
@@ -256,9 +258,10 @@ export default class Manage extends React.Component {
 						<TableRow selectable={false}>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资编号</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资类型</TableRowColumn>
-				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资数量</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>物资名称</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>下单时间</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>原始位置</TableRowColumn>
+				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>去向</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>状态</TableRowColumn>
 				        	<TableRowColumn style={{textAlign:'center',fontWeight: 'bold',fontSize:17}}>详情</TableRowColumn>
 			    		</TableRow>

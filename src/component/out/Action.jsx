@@ -23,6 +23,7 @@ import DropDownMenu from 'material-ui/DropDownMenu'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import Paper from 'material-ui/Paper'
+import Dialog from 'material-ui/Dialog'
 
 import {
 	testGoods,
@@ -59,6 +60,8 @@ export default class Manage extends React.Component {
 			limit: 10,
 			position: {},
 			error: {},
+			destination: {},
+			popOpen: false,
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.meunClick = this.meunClick.bind(this);
@@ -169,6 +172,7 @@ export default class Manage extends React.Component {
 	doAction() {
 		let selected = this.state.selected;
 		let oriGood = this.state.good;
+		let destination = this.state.destination;
 		let goods = [];
 		if (typeof selected === 'object' && selected.length === 0)
 			return false;
@@ -182,11 +186,12 @@ export default class Manage extends React.Component {
 			repository: -1,
 			location: 0,
 			layer: 0,
-			num: goods.length
+			num: goods.length,
 		}
 		move(() => window.location.reload(), {
 			goods: goods,
-			place: place
+			place: place,
+			destination: destination,
 		});
 	}
 
@@ -219,6 +224,19 @@ export default class Manage extends React.Component {
 	}
 
 	render() {
+		const actions = [
+			<FlatButton
+        label="取消出库"
+        primary={true}
+        onTouchTap={()=>this.setState({popOpen:false})}
+      />,
+			<FlatButton
+        label="确认出库"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={()=>this.doAction(true)}
+      />,
+		];
 		return (
 			<Paper style={paperStyle} zDepth={1}>
 			<div>
@@ -244,7 +262,7 @@ export default class Manage extends React.Component {
 			        	<RaisedButton 
 			        		label="确认出库"
 			        		primary={true}
-			        		onTouchTap={this.doAction}
+			        		onTouchTap={()=>this.setState({popOpen:true})}
 			        		style={{display:this.state.isMove?'inline-block':'none'}}
 			        	/>
 			        	<RaisedButton 
@@ -287,6 +305,21 @@ export default class Manage extends React.Component {
 					<SelectPage changePage={this.changePage.bind(this)} page={this.state.page} numberOfPage={this.state.pageNumber}/>
 				</div>
 			</div>
+
+			<Dialog
+			title="去向"
+			actions={actions}
+			modal={false}
+			open={this.state.popOpen}
+			onRequestClose={()=>this.setState({popOpen:false})}
+		    >
+				<TextField
+					floatingLabelText="去向"
+					value={this.state.value}
+					onChange={(e,destination)=>this.setState({destination})}
+		        />
+			</Dialog>
+
 			</Paper>
 		)
 	}

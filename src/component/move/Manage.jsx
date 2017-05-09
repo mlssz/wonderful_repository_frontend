@@ -97,7 +97,7 @@ export default class Manage extends React.Component {
 	}
 
 	initTask(testMove) {
-		let task = testMove;
+		let task = testMove.sort((a, b) => a.status > b.status);
 		let oriTask = [];
 		for (let i in task)
 			oriTask.push(task[i])
