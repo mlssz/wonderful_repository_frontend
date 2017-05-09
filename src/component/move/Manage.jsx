@@ -143,7 +143,7 @@ export default class Manage extends React.Component {
 		let [fromPlace, toPlace] = parseTaskPlace(task.migration);
 		let status = ['未分配', '进行中', '已完成', '已取消'][task.status];
 		return (
-			<TableRow key={material.id}>
+			<TableRow key={material.id+new Date(task.publish_time)}>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.id}</TableRowColumn>
 	        	<TableRowColumn style={{overflow:"visible",textAlign:'center'}}>{material.type}</TableRowColumn>
 	        	<TableRowColumn style={{textAlign:'center'}}>{material.description}</TableRowColumn>

@@ -170,7 +170,7 @@ export default class Manage extends React.Component {
 		)
 	}
 
-	doAction() {
+	doAction(isSelf = false) {
 		let selected = this.state.selected;
 		let oriGood = this.state.good;
 		let goods = [];
@@ -182,8 +182,19 @@ export default class Manage extends React.Component {
 			for (let i of selected)
 				goods.push(oriGood[i]);
 		}
+		let place = false;
+		if (isSelf) {
+			let position = this.state.position;
+			place = {
+				repository: position.repository_id,
+				layer: position.layer - 1,
+				location: position.location_id - 1,
+				num: goods.length
+			};
+		}
 		move(() => window.location.reload(), {
-			goods: goods
+			goods: goods,
+			place: place
 		});
 	}
 
@@ -226,7 +237,7 @@ export default class Manage extends React.Component {
         label="确认移动"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.doAction}
+        onTouchTap={()=>this.doAction(true)}
       />,
 		];
 		return (
